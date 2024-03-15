@@ -1,0 +1,68 @@
+version: '3.8'
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:4.4.5
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./db:/data/db
+      - ./configdb:/data/configdb
+    networks:
+      - mongo-net
+  mongo-express:
+    image: mongo-express:0.54
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: true
+      ME_CONFIG_BASICAUTH_USERNAME: user
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    depends_on:
+      - mongo
+    networks:
+      - mongo-net
+  front:
+    container_name: nuxt
+    build:
+      context: ./front
+      dockerfile: front.Dockerfile
+    ports:
+      - 3001:3000
+    tty: true
+    volumes:
+      - ./front:/src/front:cached
+      - node_modules:/src/front/node_modules
+    working_dir: /src/front
+    environment:
+      - HOST=0.0.0.0
+      - port=3001
+      - CHOKIDAR_USEPOLLING=true
+    command: sh -c "pnpm dev"
+    links:
+      - mongo
+  back:
+    container_name: express
+    build:
+      context: ./back
+      dockerfile: back.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - /src/back/node_modules
+      - ./back:/src/back:cached
+    working_dir: /src/back
+    depends_on:
+      - mongo
+networks:
+  mongo-net:
+volumes:
+  node_modules:

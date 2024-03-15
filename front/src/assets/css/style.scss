@@ -1,0 +1,31 @@
+h1, h2 {
+  margin-bottom: 1em;
+  font-weight: 700 !important;
+}
+p {
+  line-height: 1.8;
+}
+@include mq(sp) {
+  .list {
+    .list__item {
+      width: 100%;
+    }
+  }
+  .indexBoxes {
+    .indexBox {
+      width: 100%;
+    }
+  }
+}
+@include mq(pc) {
+  .list {
+    .list__item {
+      flex-basis: calc(50% - 12px);
+    }
+  }
+  .indexBoxes {
+    .indexBox {
+      flex-basis: calc(33.3333% - 24px);
+    }
+  }
+}

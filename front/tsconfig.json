@@ -1,0 +1,17 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": ["dom", "esnext"],
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./src/*"]
+    },
+    "sourceMap": true,
+    "strict": true,
+    "target": "ESNext",
+    "traceResolution": true,
+    "types": ["vitest/globals", "vue"]
+  },
+  "extends": "./.nuxt/tsconfig.json"
+}
