@@ -61,13 +61,14 @@ definePageMeta({
       </div>
     </div>
 
-    <section class="">ここにもはいるよ</section>
+    <section class="">ここにもはいるよ。</section>
     <PageFooter />
   </div>
 </template>
 <style lang="scss">
 .top {
-  .logo, .headerLogin {
+  .logo,
+  .headerLogin {
     color: #fff;
   }
 }

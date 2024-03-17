@@ -23,11 +23,18 @@ export default defineNuxtConfig({
     '@/assets/css/style.scss',
   ],
   devtools: { enabled: true },
+  modules: ['@nuxtjs/tailwindcss'],
+  nitro: {
+    plugins: ['@/server/plugins/mongodb.ts'],
+  },
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+  runtimeConfig: {
+    mongodbUri: process.env.MONGODB_URI,
   },
   srcDir: 'src/',
   vite: {
