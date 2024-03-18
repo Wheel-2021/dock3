@@ -21,7 +21,14 @@ https://zenn.dev/dqn/articles/7505cfa1bed278
 
 https://merakiui.com/
 
-
+https://www.youtube.com/watch?v=1uWHDdcDZWw
 
 codebase
 https://demo.pixelcave.com/codebase/be_widgets_tiles.html
+
+
+mongoDB security
+https://qiita.com/h6591/items/68a1ec445391be451d0d
+
+monogo exex enter
+https://stackoverflow.com/questions/61532587/docker-mongo-mongoerror-command-insert-requires-authentication

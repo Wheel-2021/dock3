@@ -1,4 +1,4 @@
-import { defineEventHandler, readMultipartFormData } from 'h3';
+import { defineEventHandler, readMultipartFormData, createError } from 'h3';
 import { writeFile } from 'fs/promises';
 
 export default defineEventHandler(async (event) => {

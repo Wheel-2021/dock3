@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
 export default defineNuxtConfig({
   app: {
     head: {
@@ -34,7 +35,7 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    mongodbUri: process.env.MONGODB_URI,
+    MONGODB_URI: process.env.MONGODB_URI,
   },
   srcDir: 'src/',
   vite: {

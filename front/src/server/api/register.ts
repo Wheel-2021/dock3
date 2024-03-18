@@ -1,4 +1,4 @@
-import { defineEventHandler, readMultipartFormData } from 'h3';
+import { defineEventHandler, readMultipartFormData, createError } from 'h3';
 import { writeFile } from 'fs/promises';
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!file || file.length === 0) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Image Not Found',
+      statusMessage: 'DATA Not Found',
     });
   }
 

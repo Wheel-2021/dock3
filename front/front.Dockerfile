@@ -6,6 +6,6 @@ RUN npm install -g pnpm
 COPY ./ ./
 RUN rm -rf package-lock.json node_modules
 RUN pnpm install
-EXPOSE 3001
-EXPOSE 24678
+EXPOSE 3000
+# EXPOSE 24678
 # CMD ["npm", "run", "dev"]

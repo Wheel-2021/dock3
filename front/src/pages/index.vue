@@ -61,7 +61,7 @@ definePageMeta({
       </div>
     </div>
 
-    <section class="">ここにもはいるよ。</section>
+    <section class="text-center">ここにもはいるよ。。。</section>
     <PageFooter />
   </div>
 </template>
