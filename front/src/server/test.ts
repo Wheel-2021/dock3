@@ -1,43 +1,43 @@
-// import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-// const connection = {
-//   isConnected: false,
-//   db: undefined,
-// };
+const connection = {
+  isConnected: false,
+  db: undefined,
+};
 
-// async function connectDB() {
-//   if (connection.isConnected) {
-//     return connection.db;
-//   }
+async function connectDB() {
+  if (connection.isConnected) {
+    return connection.db;
+  }
 
-//   const username = encodeURIComponent(
-//     process.env.MONGO_INITDB_ROOT_USERNAME || '',
-//   );
-//   const password = encodeURIComponent(
-//     process.env.MONGO_INITDB_ROOT_PASSWORD || '',
-//   );
-//   const host = process.env.MONGO_HOST;
+  const username = encodeURIComponent(
+    process.env.MONGO_INITDB_ROOT_USERNAME || '',
+  );
+  const password = encodeURIComponent(
+    process.env.MONGO_INITDB_ROOT_PASSWORD || '',
+  );
+  const host = process.env.MONGO_HOST;
 
-//   let db = undefined;
-//   console.log('connecting');
+  let db = undefined;
+  console.log('connecting');
 
-//   if (process.env.IS_DEV) {
-//     db = await mongoose.connect(`mongodb://${username}:${password}@${host}/`, {
-//       authSource: 'admin',
-//       user: username,
-//       pass: password,
-//     });
-//   } else {
-//     // 本番環境の設定はここに書く
-//   }
+  if (process.env.IS_DEV) {
+    db = await mongoose.connect(`mongodb://${username}:${password}@${host}/`, {
+      authSource: 'admin',
+      user: username,
+      pass: password,
+    });
+  } else {
+    // 本番環境の設定はここに書く
+  }
 
-//   if (!db) return;
+  if (!db) return;
 
-//   console.log('connected');
-//   connection.isConnected = db.connections[0].readyState;
-//   connection.db = db.connections[0].useDb('YOUR_DB_NAME');
+  console.log('connected');
+  // connection.isConnected = db.connections[0].readyState;
+  // connection.db = db.connections[0].useDb('YOUR_DB_NAME');
 
-//   return connection.db;
-// }
+  return connection.db;
+}
 
-// export default connectDB;
+export default connectDB;

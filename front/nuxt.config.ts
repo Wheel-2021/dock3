@@ -26,7 +26,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
   nitro: {
-    plugins: ['@/server/plugins/mongodb.ts'],
+    plugins: ['@/server/plugins/mongodb.ts', '@/server/plugins/mongoose-test.ts'],
   },
   postcss: {
     plugins: {
@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    MONGODB_URI: process.env.MONGODB_URI,
+    apiSecret: { MONGODB_URI: process.env.MONGODB_URI },
   },
   srcDir: 'src/',
   vite: {

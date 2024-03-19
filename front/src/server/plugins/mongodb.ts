@@ -1,13 +1,23 @@
-import type { Nitro } from 'nitropack';
 import mongoose from 'mongoose';
 
-export default async (_nitroApp: Nitro) => {
-  const config = useRuntimeConfig();
-
+export default async () => {
   try {
-    await mongoose.connect(config.MONGODB_URI);
-    console.log('Connect to MongoDB');
-  } catch (e) {
-    console.error(e);
+    console.log('hi');
+    const config = useRuntimeConfig();
+    mongoose.set('strictQuery', true);
+    const client = await mongoose
+      .connect(config.apiSecret.MONGODB_URI)
+      .then(() => console.log('Successfully connected to DB.'))
+      .catch((error) => console.error(`Failed to connect to DB: ${error}`));
+
+    const db = mongoose.connection;
+    const col = db.collection('users');
+    const data = await col.find({ id: 'test' }).toArray();
+    console.log(data);
+  } catch (error) {
+    return createError({
+      statusCode: 500,
+      statusMessage: 'Something went wrong.',
+    });
   }
 };

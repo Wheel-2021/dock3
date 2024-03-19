@@ -10,7 +10,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - ./db:/data/db
+      - mongoDataStore:/data/db
       - ./configdb:/data/configdb
     networks:
       - mongo-net
@@ -50,6 +50,8 @@ services:
       - port=3000
       - CHOKIDAR_USEPOLLING=true
     command: sh -c "pnpm dev"
+    networks:
+      - mongo-net
     links:
       - mongo
   # back:
@@ -69,3 +71,5 @@ networks:
   mongo-net:
 volumes:
   node_modules:
+  mongoDataStore:
+    driver: local
