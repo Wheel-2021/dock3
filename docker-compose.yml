@@ -1,5 +1,14 @@
 version: "3.8"
 services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data
+    networks:
+      - mongo-net
   mongo:
     container_name: mongo
     image: mongo:4.4.5

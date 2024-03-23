@@ -26,7 +26,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
   nitro: {
-    plugins: ['@/server/plugins/mongodb.ts', '@/server/plugins/mongoose-test.ts'],
+    plugins: ['@/server/index.ts'],
   },
   postcss: {
     plugins: {
@@ -35,7 +35,14 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    apiSecret: { MONGODB_URI: process.env.MONGODB_URI },
+    apiSecret: {
+      MONGODB_URI: process.env.MONGODB_URI || 'mongodb://mongo:27017',
+    },
+    sessionCookieName: process.env.SESSION_COOKIE_NAME || '__session', // クッキー作成用シークレットコード
+    sessionCookieSecret: process.env.SESSION_COOKIE_SECRET || 'secret',
+    sessionExpires: parseInt(process.env.SESSION_EXPIRES || '60 * 30', 10), // 30分
+    sessionIdPrefix: process.env.SESSION_ID_PREFIX || 'sess:', // Redisセッション保存用セッションIDプレフィックス
+    sessionRedisUrl: process.env.SESSION_REDIS_URL || 'redis://redis:6379/',
   },
   srcDir: 'src/',
   vite: {

@@ -24,10 +24,22 @@ var db;
 
 const dbname = 'meal';
 const config = useRuntimeConfig();
+const username = encodeURIComponent(
+  process.env.MONGO_INITDB_ROOT_USERNAME || ''
+);
+const password = encodeURIComponent(
+  process.env.MONGO_INITDB_ROOT_PASSWORD || ''
+);
+const host = process.env.MONGO_HOST;
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(config.apiSecret.MONGODB_URI`/${dbname }`);
+    await mongoose.connect(config.apiSecret.MONGODB_URI, {
+      authSource: 'admin',
+      user: username,
+      pass: password,
+    });
+    // console.log(`${dbname}`);
     db = mongoose.connection;
     console.log(`Connected to database on Worker process: ${process.pid}`);
   } catch (error: any) {
@@ -139,7 +151,7 @@ export default async () => {
       console.log(JSON.stringify(result, null, 2));
     }
 
-    // 夕食の全データを削除
+    //夕食の全データを削除
     console.log('夕食の全データを削除します');
     console.log('------------------');
     {
