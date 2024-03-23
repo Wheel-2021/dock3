@@ -4,6 +4,13 @@ import { verify } from '@/utils/password';
 import { sign } from '@/utils/session';
 import type { MyNitroApp } from '@/types/nitro';
 
+const user: UserWithoutPassword = {
+  id: userWithPassword.id,
+  mail: userWithPassword.mail,
+  name: userWithPassword.name,
+  role: userWithPassword.role,
+};
+
 export default defineEventHandler(async (event) => {
   const body = await readBody<{
     mail: string;

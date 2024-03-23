@@ -42,7 +42,7 @@ export async function getSession(event: H3Event) {
     });
 
     // セッション情報の有効期限更新
-    await app.session.touch(config.sessionIdPrefix + unsignedSession);
+    await app.session.touch(config.sessionIdPrefix + unsignedSession, user);
   }
   return user;
 }
