@@ -13,6 +13,10 @@ type Session = {
   cookie?: {
     expires?: string;
   };
+  id?: number;
+  mail?: string;
+  name?: string;
+  role?: string;
 };
 
 export default class RedisSession {
