@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const connection = {
   isConnected: false,
@@ -11,19 +11,19 @@ async function connectDB() {
   }
 
   const username = encodeURIComponent(
-    process.env.MONGO_INITDB_ROOT_USERNAME || '',
+    process.env.MONGO_INITDB_ROOT_USERNAME || ""
   );
   const password = encodeURIComponent(
-    process.env.MONGO_INITDB_ROOT_PASSWORD || '',
+    process.env.MONGO_INITDB_ROOT_PASSWORD || ""
   );
   const host = process.env.MONGO_HOST;
 
   let db = undefined;
-  console.log('connecting');
+  console.log("connecting");
 
   if (process.env.IS_DEV) {
     db = await mongoose.connect(`mongodb://${username}:${password}@${host}/`, {
-      authSource: 'admin',
+      authSource: "admin",
       user: username,
       pass: password,
     });
@@ -33,7 +33,7 @@ async function connectDB() {
 
   if (!db) return;
 
-  console.log('connected');
+  console.log("connected");
   // connection.isConnected = db.connections[0].readyState;
   // connection.db = db.connections[0].useDb('YOUR_DB_NAME');
 
@@ -41,3 +41,26 @@ async function connectDB() {
 }
 
 export default connectDB;
+
+// interface ICounter {
+//   _id: string;
+//   seq: number;
+// }
+// const CounterSchema: Schema<ICounter> = new mongoose.Schema({
+//   _id: { type: String, required: true },
+//   seq: { type: Number, default: 0 },
+// });
+// const counter =
+//   mongoose.models.Counter ||
+//   mongoose.model<ICounter>('counter', CounterSchema);
+
+// User.schema.pre('save', async function () {
+//   console.log('すきーま');
+//   const newId = await counter.findByIdAndUpdate(
+//     { _id: 'userId' },
+//     { $inc: { seq: 1 } },
+//     { new: true, upsert: true }
+//   );
+//   console.log('ima', newId);
+//   this.set({ id: newId.seq });
+// });

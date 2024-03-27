@@ -6,6 +6,7 @@ type ApiResponse = {
     id: number;
     name: string;
     mail: string;
+    animal: string;
     filename?: string;
     role: string;
   };

@@ -1,15 +1,12 @@
 <script lang="ts" setup>
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
+import type { User } from '@/types/user';
 
-const formData = new FormData();
-let dataArray: SubmitForm[] = [];
-type SubmitForm = {
-  name: string;
-  mail: string;
-  password: string;
-  filename?: string | null;
-};
+const router = useRouter();
+const serverMessage = ref();
+let formData = new FormData();
 type ErrorsType = Partial<Record<string, string>>;
 
 const schema = object({
@@ -17,34 +14,57 @@ const schema = object({
   mail: string()
     .required('必須項目です')
     .email('メールアドレスの形式ではありません'),
-  password: string().required('必須項目です'),
+  animal: string()
+    .required('必須項目です')
+    .matches(/^[^ -~｡-ﾟ]/, { message: '全角で入力してください' }),
+  password: string()
+    .required('必須項目です')
+    .min(10, '10文字以上で入力してください'),
 });
 const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
 const { value: name } = useField('name');
-const { value: mail, handleChange } = useField('mail');
-const { value: password } = useField('password');
+const { value: mail, handleChange: handleChangeMail } = useField('mail');
+const { value: animal } = useField('animal');
+const { value: password, handleChange: handleChangePassword } =
+  useField('password');
+
+let data: User = {
+  id: null,
+  name: '',
+  mail: '',
+  animal: '',
+  password: '',
+  filename: null,
+  role: 'user',
+};
 
 const submit = handleSubmit(
   async (values) => {
-    dataArray[0].name = values.name;
-    dataArray[0].mail = values.mail;
-    dataArray[0].password = values.password;
-    formData.append('body', JSON.stringify(dataArray));
+    data.name = values.name;
+    data.mail = values.mail;
+    data.animal = values.animal;
+    data.password = values.password;
 
-    await $fetch('/api/register', {
+    formData.append('body', JSON.stringify(data));
+
+    await $fetch('/api/auth/register', {
       method: 'post',
       body: formData,
     }).then((result: any) => {
-      console.log(result.data.value);
+      serverMessage.value = result.message;
+      if (result.message === '登録成功！') {
+        setTimeout(() => router.push('/dashboard'), 3000);
+      }
     });
+    formData = new FormData();
   },
   ({ errors }: { errors: ErrorsType }) => {
     const firstError = Object.keys(errors)[0];
     const errorElem = document.querySelector<HTMLElement>(
-      `[name="${firstError}"]`,
+      `[name="${firstError}"]`
     );
     if (errorElem) {
       const errorElemOffsetTop = errorElem.offsetTop;
@@ -54,7 +74,7 @@ const submit = handleSubmit(
       });
       errorElem.focus();
     }
-  },
+  }
 );
 
 // image upload
@@ -63,17 +83,9 @@ const uploadFile = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
     const file = target.files[0];
-
-    let data: SubmitForm = {
-      name: name.value as string,
-      mail: mail.value as string,
-      password: password.value as string,
-      filename: file.name,
-    };
-    dataArray.push(data);
-    console.log(dataArray);
-
+    data.filename = file.name;
     formData.append('file', file);
+
     const fileName = file.name;
     const fileExtension = fileName.split('.').pop()?.toLowerCase();
 
@@ -85,6 +97,8 @@ const uploadFile = (event: Event) => {
     }
   }
 };
+
+const EyeOpen = ref(false);
 
 onMounted(() => {
   const avatarImage = document.querySelector('.avatarImage') as HTMLElement;
@@ -119,7 +133,7 @@ onMounted(() => {
         </h1>
 
         <p class="mt-1 text-center text-gray-200 text-sm">
-          下記を入力し、アカウントを作成してください。
+          下記を入力し、アカウントを作成してください。メールアドレスが重複している場合は登録できません。
         </p>
       </div>
       <div class="px-6 py-4">
@@ -145,8 +159,15 @@ onMounted(() => {
                 name="name"
                 v-model="name"
               />
-              <p class="mt-2 text-red-700 text-xs font-bold" v-if="errors.name">
-                {{ errors.name }}
+              <p class="mt-2">
+                <span v-if="!errors.name" class="text-gray-400 text-xs"
+                  >全角か半角で入力してください</span
+                >
+                <span
+                  v-if="errors.name"
+                  class="text-red-700 text-xs font-bold"
+                  >{{ errors.name }}</span
+                >
               </p>
             </div>
 
@@ -168,14 +189,53 @@ onMounted(() => {
                 placeholder="例) xxxxx@xxxxx.xx"
                 aria-label="Email Address"
                 name="mail"
-                @change="handleChange"
+                @change="handleChangeMail"
                 :value="mail"
               />
-              <p class="mt-2 text-red-700 text-xs font-bold" v-if="errors.mail">
-                {{ errors.mail }}
+
+              <p class="mt-2">
+                <span v-if="!errors.mail" class="text-gray-400 text-xs"
+                  >半角で入力してください</span
+                >
+                <span
+                  v-if="errors.mail"
+                  class="text-red-700 text-xs font-bold"
+                  >{{ errors.mail }}</span
+                >
               </p>
             </div>
 
+            <div>
+              <span
+                class="inline-block mr-2 p-1 bg-red-700 text-white font-bold text-xs"
+              >
+                必須
+              </span>
+              <label
+                class="text-gray-700 dark:text-gray-200 text-lg font-bold"
+                for="animal"
+                >好きな動物</label
+              >
+              <input
+                id="animal"
+                class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                type="text"
+                placeholder="例) いぬ"
+                aria-label="Animal"
+                name="animal"
+                v-model="animal"
+              />
+              <p class="mt-2">
+                <span v-if="!errors.animal" class="text-gray-400 text-xs"
+                  >漢字・カタカナ・ひらがなを全角で入力してください</span
+                >
+                <span
+                  v-if="errors.animal"
+                  class="text-red-700 text-xs font-bold"
+                  >{{ errors.animal }}</span
+                >
+              </p>
+            </div>
             <div>
               <span
                 class="inline-block mr-2 p-1 bg-gray-800 text-white font-bold text-xs"
@@ -201,6 +261,11 @@ onMounted(() => {
                 class="hidden"
                 @change="uploadFile"
               />
+              <p class="mt-2">
+                <span class="text-gray-400 text-xs"
+                  >登録後でも設定できます</span
+                >
+              </p>
             </div>
 
             <div>
@@ -214,25 +279,56 @@ onMounted(() => {
                 for="password"
                 >パスワード</label
               >
-              <input
-                id="password"
-                class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-                type="password"
-                placeholder="例) xxxxxxxxx"
-                aria-label="Password"
-                name="password"
-                v-model="password"
-              />
-              <p
-                class="mt-2 text-red-700 text-xs font-bold"
-                v-if="errors.password"
-              >
-                {{ errors.password }}
+              <div class="relative block w-full">
+                <input
+                  id="password"
+                  class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                  :type="EyeOpen ? 'text' : 'password'"
+                  placeholder="例) xxxxxxxxx"
+                  aria-label="Password"
+                  name="password"
+                  v-model="password"
+                  @change="handleChangePassword"
+                />
+                <button
+                  type="button"
+                  class="absolute top-0 bottom-0 right-2"
+                  @click="EyeOpen = !EyeOpen"
+                >
+                  <EyeIcon
+                    v-if="EyeOpen"
+                    class="h-6 w-6 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <EyeSlashIcon
+                    v-else
+                    class="h-6 w-6 text-gray-400"
+                    aria-hidden="false"
+                  />
+                </button>
+              </div>
+
+              <p class="mt-2">
+                <span v-if="!errors.password" class="text-gray-400 text-xs"
+                  >10文字以上の半角英数字・記号を組み合わせて入力してください</span
+                >
+                <span
+                  v-if="errors.password"
+                  class="text-red-700 text-xs font-bold"
+                  >{{ errors.password }}</span
+                >
               </p>
             </div>
           </div>
 
-          <div class="flex items-center justify-end mt-6">
+          <div class="flex items-center justify-between mt-6">
+            <p>
+              <span
+                v-if="serverMessage"
+                class="text-red-700 text-xs font-bold"
+                >{{ serverMessage }}</span
+              >
+            </p>
             <button
               class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
               type="submit"

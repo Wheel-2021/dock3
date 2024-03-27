@@ -23,6 +23,7 @@ const schema = new mongoose.Schema(
     id: { type: Number, required: true, unique: true },
     name: { type: String, required: true, trim: true },
     mail: { type: String, required: true, unique: true, trime: true },
+    animal: { type: String, required: true, trime: true },
     password: { type: String, required: true, trime: true },
     filename: { type: String, trim: true },
     role: {

@@ -33,3 +33,5 @@ https://qiita.com/h6591/items/68a1ec445391be451d0d
 monogo exex enter
 https://stackoverflow.com/questions/61532587/docker-mongo-mongoerror-command-insert-requires-authentication
 https://hugo-de-blog.com/node-mongoose/
+
+https://qiita.com/yuji0602/items/c55e2cb75376fd565b4e

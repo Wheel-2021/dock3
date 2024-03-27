@@ -1,8 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
 import { User } from '@/models';
 import { verify } from '@/utils/password';
-import { sign } from '@/utils/session';
-import type { MyNitroApp } from '@/types/nitro';
+import { createSession } from '@/utils/cookie';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{
@@ -21,6 +19,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const userWithPassword = await User.getUserByEmail(mail);
+
   if (!userWithPassword) {
     return createError({
       statusCode: 401,
@@ -36,32 +35,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const config = useRuntimeConfig();
-  const sessionId = uuidv4();
-  const signedSessionId = sign(sessionId, config.sessionCookieSecret);
-
-  setCookie(event, config.sessionCookieName, signedSessionId, {
-    httpOnly: true,
-    path: '/',
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
-    expires: new Date(Date.now() + config.sessionExpires * 1000),
-  });
-
-  const app = useNitroApp() as MyNitroApp;
-  await app.session.set(config.sessionIdPrefix + sessionId, {
-    id: userWithPassword.id,
-    mail: userWithPassword.mail,
-    name: userWithPassword.name,
-    role: userWithPassword.role,
-  });
-
-  return {
-    user: {
-      id: userWithPassword.id,
-      mail: userWithPassword.mail,
-      name: userWithPassword.name,
-      role: userWithPassword.role,
-    },
-  };
+  return createSession(event, userWithPassword);
 });
