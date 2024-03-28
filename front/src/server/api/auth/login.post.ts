@@ -5,35 +5,32 @@ import { createSession } from '@/utils/cookie';
 export default defineEventHandler(async (event) => {
   const body = await readBody<{
     mail: string;
+    animal: string;
     password: string;
     rememberMe: boolean;
   }>(event);
 
-  const { mail, password, rememberMe } = body;
+  const { mail, animal, password, rememberMe } = body;
 
-  if (!mail || !password) {
-    return createError({
-      statusCode: 400,
-      message: 'Email address and password are required',
-    });
+  if (!mail || !animal || !password) {
+    return { message: '必須項目に記入漏れがあります' };
   }
 
   const userWithPassword = await User.getUserByEmail(mail);
 
   if (!userWithPassword) {
-    return createError({
-      statusCode: 401,
-      message: 'Bad credentials',
-    });
+    return { message: '登録されていません' };
   }
 
   const verified = await verify(password, userWithPassword.password);
   if (!verified) {
-    return createError({
-      statusCode: 401,
-      message: 'Bad credentials',
-    });
+    return { message: '好きな動物かパスワードが間違っています' };
   }
 
-  return createSession(event, userWithPassword);
+  const session = await createSession(event, userWithPassword);
+
+  return {
+    session: session,
+    message: 'ログイン成功！',
+  };
 });

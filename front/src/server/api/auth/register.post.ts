@@ -42,12 +42,14 @@ export default defineEventHandler(async (event) => {
       const userData = new User(body);
       console.log('body', userData);
       await userData.save();
-      const userWithPassword = await User.getUserByEmail(body.mail);
-      return createSession(event, userWithPassword);
+      // const userWithPassword = await User.getUserByEmail(body.mail);
+      const session = createSession(event, body);
+      return {
+        session: session,
+        message: '登録成功！',
+      };
     }
   }
-
-  return {
-    message: '登録成功！',
-  };
+  console.log('success');
+  return {};
 });

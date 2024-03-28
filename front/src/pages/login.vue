@@ -1,12 +1,14 @@
 <script lang="ts" setup>
+import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import type { User } from '@/types/user';
+import { useAdmin } from '@/composables/auth';
 
-const router = useRouter();
+const isAdmin = useAdmin();
+const { login } = useAuth();
 const serverMessage = ref();
-let formData = new FormData();
 type ErrorsType = Partial<Record<string, string>>;
 
 const schema = object({
@@ -27,14 +29,10 @@ const { value: animal } = useField('animal');
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let data: User = {
-  id: null,
-  name: '',
+let data = {
   mail: '',
   animal: '',
   password: '',
-  filename: null,
-  role: 'user',
 };
 
 const submit = handleSubmit(
@@ -43,18 +41,23 @@ const submit = handleSubmit(
     data.animal = values.animal;
     data.password = values.password;
 
-    formData.append('body', JSON.stringify(data));
-
-    await $fetch('/api/auth/login', {
-      method: 'post',
-      body: formData,
-    }).then((result: any) => {
-      serverMessage.value = result.message;
+    const result = await login(data.mail, data.animal, data.password, false);
+    console.log(result);
+    if (result && 'message' in result) {
       if (result.message === 'ログイン成功！') {
-        setTimeout(() => router.push('/dashboard'), 3000);
+        serverMessage.value =
+          result.message + 'この後、ダッシュボードに遷移します。';
+        setTimeout(() => {
+          const redirect = isAdmin.value ? '/admin' : '/dashboard';
+          location.href = redirect;
+        }, 3000);
+      } else {
+        serverMessage.value = result.message;
       }
-    });
-    formData = new FormData();
+    }
+    if (result && 'session' in result) {
+      return result.session;
+    }
   },
   ({ errors }: { errors: ErrorsType }) => {
     const firstError = Object.keys(errors)[0];
@@ -117,7 +120,7 @@ onMounted(() => {});
 
               <p class="mt-2">
                 <span v-if="!errors.mail" class="text-gray-400 text-xs"
-                  >半角で入力してください</span
+                  >登録したメールアドレスを半角で入力してください</span
                 >
                 <span
                   v-if="errors.mail"
@@ -149,7 +152,7 @@ onMounted(() => {});
               />
               <p class="mt-2">
                 <span v-if="!errors.animal" class="text-gray-400 text-xs"
-                  >漢字・カタカナ・ひらがなを全角で入力してください</span
+                  >登録した動物名を入力してください</span
                 >
                 <span
                   v-if="errors.animal"
@@ -201,7 +204,7 @@ onMounted(() => {});
 
               <p class="mt-2">
                 <span v-if="!errors.password" class="text-gray-400 text-xs"
-                  >10文字以上の半角英数字・記号を組み合わせて入力してください</span
+                  >登録したパスワードを入力してください</span
                 >
                 <span
                   v-if="errors.password"

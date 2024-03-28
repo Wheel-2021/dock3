@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import type { User } from '@/types/user';
+import { useAdmin } from '@/composables/auth';
 
-const router = useRouter();
+const isAdmin = useAdmin();
+const { signUp } = useAuth();
 const serverMessage = ref();
 let formData = new FormData();
 type ErrorsType = Partial<Record<string, string>>;
@@ -16,7 +19,9 @@ const schema = object({
     .email('メールアドレスの形式ではありません'),
   animal: string()
     .required('必須項目です')
-    .matches(/^[^ -~｡-ﾟ]/, { message: '全角で入力してください' }),
+    .matches(/^[^ -~｡-ﾟ]/, {
+      message: '漢字・カタカナ・ひらがなを全角で入力してください',
+    }),
   password: string()
     .required('必須項目です')
     .min(10, '10文字以上で入力してください'),
@@ -50,15 +55,28 @@ const submit = handleSubmit(
 
     formData.append('body', JSON.stringify(data));
 
-    await $fetch('/api/auth/register', {
-      method: 'post',
-      body: formData,
-    }).then((result: any) => {
-      serverMessage.value = result.message;
-      if (result.message === '登録成功！') {
-        setTimeout(() => router.push('/dashboard'), 3000);
+    try {
+      const result = await signUp(formData);
+      console.log(result);
+      if (result && 'message' in result) {
+        if (result.message === '登録成功！') {
+          serverMessage.value =
+            result.message + 'この後、ダッシュボードに遷移します。';
+          setTimeout(() => {
+            const redirect = isAdmin.value ? '/admin' : '/dashboard';
+            location.href = redirect;
+          }, 3000);
+        } else {
+          serverMessage.value = result.message;
+        }
       }
-    });
+      if (result && 'session' in result) {
+        return result.session;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     formData = new FormData();
   },
   ({ errors }: { errors: ErrorsType }) => {

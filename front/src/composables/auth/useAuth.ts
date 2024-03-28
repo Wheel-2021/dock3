@@ -2,7 +2,7 @@ import { useAuthUser } from './useAuthUser';
 import type { UserWithoutPassword } from '@/types/user';
 
 type ApiResponse = {
-  user: {
+  user?: {
     id: number;
     name: string;
     mail: string;
@@ -10,6 +10,7 @@ type ApiResponse = {
     filename?: string;
     role: string;
   };
+  message?: string;
 };
 
 export const useAuth = () => {
@@ -23,32 +24,60 @@ export const useAuth = () => {
     document.cookie = cookie || '';
   };
 
+  const signUp = async (formData: FormData) => {
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/register', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (data && data.message) {
+        return data;
+      }
+      if (data && data.user) {
+        setUser(data.user);
+        return authUser;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error; // ここでエラーをスロー
+    }
+  };
+
   const login = async (
     mail: string,
+    animal: string,
     password: string,
-    role: string,
-    rememberMe: boolean,
-    filename?: string
+    rememberMe: boolean
   ) => {
+    console.log('useAuth1');
     const data = await $fetch<ApiResponse>('/api/auth/login', {
       method: 'POST',
       body: {
         mail,
+        animal,
         password,
-        role,
         rememberMe,
-        filename,
       },
     });
-    setUser(data.user);
-    return authUser;
+    console.log('useAuth2');
+    if (data && data.message) {
+      return data;
+    }
+    if (data && data.user) {
+      setUser(data.user);
+      return authUser;
+    }
   };
 
   const logout = async () => {
     const data = await $fetch<ApiResponse>('/api/auth/logout', {
       method: 'POST',
     });
-    setUser(data.user);
+    if (data && data.user) {
+      setUser(data.user);
+      return data;
+    }
   };
 
   const me = async () => {
@@ -57,7 +86,9 @@ export const useAuth = () => {
         const data = await $fetch<ApiResponse>('/api/auth/me', {
           headers: useRequestHeaders(['cookie']) as HeadersInit,
         });
-        setUser(data.user);
+        if (data && data.user) {
+          setUser(data.user);
+        }
       } catch (error) {
         setCookie(null);
       }
@@ -65,6 +96,7 @@ export const useAuth = () => {
     return authUser;
   };
   return {
+    signUp,
     login,
     logout,
     me,

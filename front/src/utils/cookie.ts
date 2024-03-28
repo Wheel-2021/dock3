@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '@/models';
 import { sign } from '@/utils/session';
 import type { MyNitroApp } from '@/types/nitro';
 import type { H3Event } from 'h3';
