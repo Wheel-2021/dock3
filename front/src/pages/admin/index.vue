@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { useAuthUser } from '@/composables/auth';
 const currentUser = useAuthUser();
+
 definePageMeta({
-  middleware: 'user',
+  middleware: 'admin',
 });
 </script>
 <template>
@@ -11,8 +12,9 @@ definePageMeta({
       class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
       <span v-if="currentUser">{{ currentUser.name }}</span>
-
-      <a href="/dashboard/sample">サンプルページ</a>
+      <a href="/admin/sample">サンプルページ</a><br />
+      こんてんつ<br />
+      <a href="/dashboard/">ダッシュボード</a>
     </div>
   </article>
 </template>

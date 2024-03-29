@@ -12,7 +12,7 @@ definePageMeta({
     >
       <span v-if="currentUser">{{ currentUser.name }}</span>
 
-      <a href="/dashboard/sample">サンプルページ</a>
+      <a href="/dashboard/">管理画面トップページ</a>
     </div>
   </article>
 </template>
