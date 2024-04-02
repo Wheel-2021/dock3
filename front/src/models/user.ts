@@ -1,9 +1,11 @@
 import mongoose, { Document, Model } from 'mongoose';
 import { userRoles } from './types/role';
 
+
 const { roles } = userRoles();
 
 interface IUser extends Document {
+  _id: mongoose.Types.ObjectId;
   id: number;
   name: string;
   mail: string;
@@ -14,12 +16,13 @@ interface IUser extends Document {
 
 interface IUserModel extends Model<IUser> {
   getUserByEmail(email: string): Promise<IUser>;
-  getUserById(id: number): Promise<IUser>;
+  getUserById(_id: mongoose.Types.ObjectId): Promise<IUser>;
   getUsers(): Promise<IUser[]>;
 }
 
 const schema = new mongoose.Schema(
   {
+    _id: { type: mongoose.Types.ObjectId },
     id: { type: Number, required: true, unique: true },
     name: { type: String, required: true, trim: true },
     mail: { type: String, required: true, unique: true, trime: true },
@@ -40,8 +43,8 @@ schema.statics.getUserByEmail = async (email: string) => {
   return user;
 };
 
-schema.statics.getUserById = async (id: number) => {
-  const user = await User.findOne({ id: id });
+schema.statics.getUserById = async (_id: mongoose.Types.ObjectId) => {
+  const user = await User.findOne({ _id: _id });
   return user;
 };
 

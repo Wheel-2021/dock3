@@ -1,5 +1,18 @@
 version: "3.8"
 services:
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp
+    volumes:
+      - maildir:/tmp
+    networks:
+      - mongo-net
   redis:
     container_name: redis
     image: redis:latest
@@ -94,3 +107,4 @@ volumes:
   node_modules:
   mongoDataStore:
     driver: local
+  maildir: {}

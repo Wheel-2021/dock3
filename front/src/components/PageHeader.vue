@@ -19,29 +19,6 @@ const out = async () => {
 </script>
 <template>
   <header class="inset-x-0 top-0 z-50">
-    <div class="">
-      <!-- v-if="currentUser" -->
-      <button
-        @click="out"
-        class="headerLogin flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
-      >
-        ログアウト
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-5 h-5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-          ></path>
-        </svg>
-      </button>
-    </div>
     <nav
       class="flex items-center justify-between p-6 lg:px-8"
       aria-label="Global"
@@ -51,8 +28,30 @@ const out = async () => {
           <span class="logo">会社ロゴ</span>
         </a>
       </div>
+      <div v-if="currentUser" class="hidden sm:!block">
+        <button
+          @click="out"
+          class="headerLogin flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
+        >
+          ログアウト
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+            ></path>
+          </svg>
+        </button>
+      </div>
 
-      <div class="flex lg:hidden">
+      <div class="flex sm:hidden">
         <button
           type="button"
           class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -62,6 +61,7 @@ const out = async () => {
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
+
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         <a
           href="/login"
@@ -109,7 +109,7 @@ const out = async () => {
         </div>
         <div class="mt-6 flow-root">
           <div class="-my-6 divide-y divide-gray-500/10">
-            <div class="py-6">
+            <div v-if="!currentUser" class="py-6">
               <a
                 href="/login"
                 class="flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
@@ -129,6 +129,28 @@ const out = async () => {
                     d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
                   ></path></svg
               ></a>
+            </div>
+            <div v-if="currentUser" class="py-6">
+              <button
+                @click="out"
+                class="headerLogin w-full flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
+              >
+                ログアウト
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                  ></path>
+                </svg>
+              </button>
             </div>
           </div>
         </div>

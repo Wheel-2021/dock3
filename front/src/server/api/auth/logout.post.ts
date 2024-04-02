@@ -20,7 +20,6 @@ export default defineEventHandler(async (event) => {
     secure: process.env.NODE_ENV === 'production',
   });
 
-  console.log('kiteru');
   return {
     user: null,
     message: 'ログアウト',

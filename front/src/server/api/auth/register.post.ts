@@ -26,12 +26,11 @@ export default defineEventHandler(async (event) => {
     if (file[i].name === 'body') {
       body = JSON.parse(file[i].data.toString());
       console.log('送られてきたデータ', body);
-      const getUserTotalNumber = await mongoose.model('User').countDocuments();
+      const getUserTotalNumber = await User.countDocuments();
       const setId = Number(getUserTotalNumber) + 1;
       body.id = setId;
       body.password = await hash(body.password);
-      const existingUser = await mongoose
-        .model('User')
+      const existingUser = await User
         .findOne({ mail: body.mail });
       if (existingUser) {
         return {
@@ -40,7 +39,7 @@ export default defineEventHandler(async (event) => {
       }
 
       const userData = new User(body);
-      console.log('body', userData);
+
       await userData.save();
       // const userWithPassword = await User.getUserByEmail(body.mail);
       const session = createSession(event, body);

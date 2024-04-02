@@ -15,5 +15,7 @@
     "traceResolution": true,
     "types": ["vitest/globals", "vue"]
   },
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  // "exclude": ["node_modules", "**/*.test.ts"],
+  // "include": ["./src/**/*"]
 }

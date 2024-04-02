@@ -7,10 +7,9 @@ export default defineEventHandler(async (event) => {
     mail: string;
     animal: string;
     password: string;
-    rememberMe: boolean;
   }>(event);
 
-  const { mail, animal, password, rememberMe } = body;
+  const { mail, animal, password } = body;
 
   if (!mail || !animal || !password) {
     return { message: '必須項目に記入漏れがあります' };

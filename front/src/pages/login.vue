@@ -3,7 +3,6 @@ import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
-import type { User } from '@/types/user';
 import { useAdmin } from '@/composables/auth';
 
 const isAdmin = useAdmin();
@@ -41,7 +40,7 @@ const submit = handleSubmit(
     data.animal = values.animal;
     data.password = values.password;
 
-    const result = await login(data.mail, data.animal, data.password, false);
+    const result = await login(data.mail, data.animal, data.password);
     console.log(result);
     if (result && 'message' in result) {
       if (result.message === 'ログイン成功！') {
@@ -82,15 +81,15 @@ onMounted(() => {});
 <template>
   <article class="contents__inner bg-gray-100 h-screen py-16 px-4">
     <div
-      class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800"
+      class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
     >
       <div class="px-6 py-4 bg-indigo-600">
         <h1 class="mb-2 text-xl font-medium text-center text-white">
-          登録画面
+          ログイン画面
         </h1>
 
         <p class="mt-1 text-center text-gray-200 text-sm">
-          下記を入力し、アカウントを作成してください。メールアドレスが重複している場合は登録できません。
+          下記を入力し、ログインしてください。
         </p>
       </div>
       <div class="px-6 py-4">
@@ -210,6 +209,18 @@ onMounted(() => {});
                   v-if="errors.password"
                   class="text-red-700 text-xs font-bold"
                   >{{ errors.password }}</span
+                >
+              </p>
+            </div>
+
+            <div>
+              <p class="mt-2">
+                <span class="text-xs"
+                  >パスワードを変更したい・忘れた方は<a
+                    href="/reset"
+                    class="text-blue-500"
+                    >こちら</a
+                  ></span
                 >
               </p>
             </div>
