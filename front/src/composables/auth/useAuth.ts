@@ -65,6 +65,7 @@ export const useAuth = () => {
       return data;
     }
     if (data && data.user) {
+      console.log('useAuth', data.user, authUser);
       setUser(data.user);
       return authUser;
     }

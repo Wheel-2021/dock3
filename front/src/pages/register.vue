@@ -6,6 +6,7 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import type { User } from '@/types/user';
 import { useAdmin } from '@/composables/auth';
 
+const router = useRouter();
 const isAdmin = useAdmin();
 const { signUp } = useAuth();
 const serverMessage = ref();
@@ -64,7 +65,7 @@ const submit = handleSubmit(
             result.message + 'この後、ダッシュボードに遷移します。';
           setTimeout(() => {
             const redirect = isAdmin.value ? '/admin' : '/dashboard';
-            location.href = redirect;
+            router.push({ path: redirect });
           }, 3000);
         } else {
           serverMessage.value = result.message;

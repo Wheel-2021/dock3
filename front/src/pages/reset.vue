@@ -2,6 +2,7 @@
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 
+const router = useRouter();
 const { pwReset } = useAuth();
 const serverMessage = ref();
 type ErrorsType = Partial<Record<string, string>>;
@@ -32,7 +33,7 @@ const submit = handleSubmit(
           result.message + 'この後、ログイン画面に遷移します。';
         setTimeout(() => {
           const redirect = '/login';
-          location.href = redirect;
+          router.push({ path: redirect });
         }, 3000);
       } else {
         serverMessage.value = result.message;

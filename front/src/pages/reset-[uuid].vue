@@ -4,13 +4,13 @@ import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 
+const router = useRouter();
 const { checkUuid, updatePw } = useAuth();
 const serverMessage = ref();
 type ErrorsType = Partial<Record<string, string>>;
 
 // dbのuuidとexpiresの確認
 const route = useRoute();
-console.log(route);
 const urlParams = route.params.uuid;
 const resetData = await checkUuid(urlParams);
 console.log(resetData);
@@ -53,13 +53,13 @@ const submit = handleSubmit(
             result.message + 'この後、ログイン画面に遷移します。';
           setTimeout(() => {
             const redirect = '/login';
-            location.href = redirect;
+          router.push({ path: redirect });
           }, 3000);
         } else {
           serverMessage.value = result.message;
           setTimeout(() => {
             const redirect = '/login';
-            location.href = redirect;
+          router.push({ path: redirect });
           }, 3000);
         }
       }
@@ -142,7 +142,7 @@ const EyeOpen = ref(false);
 
               <p class="mt-2">
                 <span v-if="!errors.password" class="text-gray-400 text-xs"
-                  >新しいパスワードを入力してください</span
+                  >10文字以上の半角英数字・記号を組み合わせて入力してください</span
                 >
                 <span
                   v-if="errors.password"

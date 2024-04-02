@@ -5,6 +5,7 @@ import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import { useAdmin } from '@/composables/auth';
 
+const router = useRouter();
 const isAdmin = useAdmin();
 const { login } = useAuth();
 const serverMessage = ref();
@@ -41,14 +42,14 @@ const submit = handleSubmit(
     data.password = values.password;
 
     const result = await login(data.mail, data.animal, data.password);
-    console.log(result);
+    console.log('login.vue', result);
     if (result && 'message' in result) {
       if (result.message === 'ログイン成功！') {
         serverMessage.value =
           result.message + 'この後、ダッシュボードに遷移します。';
         setTimeout(() => {
           const redirect = isAdmin.value ? '/admin' : '/dashboard';
-          location.href = redirect;
+          router.push({ path: redirect });
         }, 3000);
       } else {
         serverMessage.value = result.message;
