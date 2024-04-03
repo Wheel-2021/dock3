@@ -28,9 +28,11 @@ export default defineEventHandler(async (event) => {
       console.log('送られてきたデータ', body);
       const getUserTotalNumber = await User.countDocuments();
       const setId = Number(getUserTotalNumber) + 1;
+      body._id = new mongoose.Types.ObjectId();
       body.id = setId;
       body.password = await hash(body.password);
       const existingUser = await User.findOne({ mail: body.mail });
+
       if (existingUser) {
         return {
           message: 'メールアドレスが重複しています',
@@ -40,10 +42,11 @@ export default defineEventHandler(async (event) => {
       const userData = new User(body);
 
       await userData.save();
-      // const userWithPassword = await User.getUserByEmail(body.mail);
-      const session = createSession(event, body);
+      const dbUser = await User.getUserByEmail(body.mail);
+      const user = await createSession(event, dbUser);
+      console.log('register.ts', user);
       return {
-        user: session,
+        ...user,
         message: '登録成功！',
       };
     }

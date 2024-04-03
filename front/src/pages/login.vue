@@ -3,7 +3,7 @@ import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
-import { useAdmin } from '@/composables/auth';
+import { useAdmin, useUser } from '@/composables/auth';
 
 const router = useRouter();
 const { login } = useAuth();

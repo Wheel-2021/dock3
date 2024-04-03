@@ -4,10 +4,9 @@ import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import type { User } from '@/types/user';
-import { useAdmin } from '@/composables/auth';
+import { useUser } from '@/composables/auth';
 
 const router = useRouter();
-const isAdmin = useAdmin();
 const { signUp } = useAuth();
 const serverMessage = ref();
 let formData = new FormData();
@@ -58,13 +57,14 @@ const submit = handleSubmit(
 
     try {
       const result = await signUp(formData);
-      console.log(result);
+      console.log('register.vue', result);
       if (result && 'message' in result) {
         if (result.message === '登録成功！') {
+        const isUser = useUser();
           serverMessage.value =
             result.message + 'この後、ダッシュボードに遷移します。';
           setTimeout(() => {
-            const redirect = isAdmin.value ? '/admin' : '/dashboard';
+            const redirect = isUser.value ? '/dashboard' : '/';
             router.push({ path: redirect });
           }, 3000);
         } else {

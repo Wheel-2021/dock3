@@ -53,13 +53,13 @@ const submit = handleSubmit(
             result.message + 'この後、ログイン画面に遷移します。';
           setTimeout(() => {
             const redirect = '/login';
-          router.push({ path: redirect });
+            router.push({ path: redirect });
           }, 3000);
         } else {
           serverMessage.value = result.message;
           setTimeout(() => {
             const redirect = '/login';
-          router.push({ path: redirect });
+            router.push({ path: redirect });
           }, 3000);
         }
       }
@@ -170,7 +170,6 @@ const EyeOpen = ref(false);
           </div>
         </form>
       </div>
-      tekisuto
     </div>
   </article>
 </template>

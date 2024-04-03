@@ -36,14 +36,14 @@ export const useAuth = () => {
         method: 'POST',
         body: formData,
       });
-
+      console.log('useAuth', data);
+      if (data && data.user) {
+        setUser(data.user);
+      }
       if (data && data.message) {
         return data;
       }
-      if (data && data.user) {
-        setUser(data.user);
-        return authUser;
-      }
+      return authUser;
     } catch (error) {
       console.log(error);
       throw error; // ここでエラーをスロー
