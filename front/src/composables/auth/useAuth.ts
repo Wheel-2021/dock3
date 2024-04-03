@@ -22,7 +22,6 @@ type CheckUuidResponse = {
 
 export const useAuth = () => {
   const authUser = useAuthUser();
-
   const setUser = (user: UserWithoutPassword | null) => {
     authUser.value = user;
   };
@@ -61,14 +60,13 @@ export const useAuth = () => {
       },
     });
 
+    if (data && data.user) {
+      setUser(data.user);
+    }
     if (data && data.message) {
       return data;
     }
-    if (data && data.user) {
-      console.log('useAuth', data.user, authUser);
-      setUser(data.user);
-      return authUser;
-    }
+    return authUser;
   };
 
   const logout = async () => {

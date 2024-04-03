@@ -30,8 +30,7 @@ export default defineEventHandler(async (event) => {
       const setId = Number(getUserTotalNumber) + 1;
       body.id = setId;
       body.password = await hash(body.password);
-      const existingUser = await User
-        .findOne({ mail: body.mail });
+      const existingUser = await User.findOne({ mail: body.mail });
       if (existingUser) {
         return {
           message: 'メールアドレスが重複しています',
@@ -44,7 +43,7 @@ export default defineEventHandler(async (event) => {
       // const userWithPassword = await User.getUserByEmail(body.mail);
       const session = createSession(event, body);
       return {
-        session: session,
+        user: session,
         message: '登録成功！',
       };
     }

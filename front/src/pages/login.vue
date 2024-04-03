@@ -6,7 +6,6 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import { useAdmin } from '@/composables/auth';
 
 const router = useRouter();
-const isAdmin = useAdmin();
 const { login } = useAuth();
 const serverMessage = ref();
 type ErrorsType = Partial<Record<string, string>>;
@@ -42,12 +41,19 @@ const submit = handleSubmit(
     data.password = values.password;
 
     const result = await login(data.mail, data.animal, data.password);
-    console.log('login.vue', result);
+
     if (result && 'message' in result) {
       if (result.message === 'ログイン成功！') {
+        const isAdmin = useAdmin();
+        const isUser = useUser();
         serverMessage.value =
           result.message + 'この後、ダッシュボードに遷移します。';
+        console.log('login.vue', isAdmin.value, isUser.value);
         setTimeout(() => {
+          if (isUser) {
+            const redirect = isUser.value ? '/dashboard' : '/';
+            router.push({ path: redirect });
+          }
           const redirect = isAdmin.value ? '/admin' : '/dashboard';
           router.push({ path: redirect });
         }, 3000);
