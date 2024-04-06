@@ -5,6 +5,7 @@ import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import useImageUpload from '@/composables/useImageUpload';
 import useErrorHandler from '@/composables/useErrorHandler';
+import { prepareFormData } from '@/utils/prepareImageFormData';
 import type { User } from '@/types/user';
 
 const currentUser = useAuthUser();
@@ -12,6 +13,7 @@ const { getDBUser, infoUpdate } = useAuth();
 const userDBData = currentUser.value
   ? ((await getDBUser(currentUser.value.mail)) as { user: User })
   : null;
+const dirName = 'avator';
 const serverMessage = ref();
 const name = ref('');
 const mail = ref('');
@@ -54,8 +56,11 @@ let data: User = {
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
+const { uploadFile, fileData } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
+  let { formData, newFileName } = prepareFormData(fileData, dirName);
+  data.filename = newFileName;
   if (values.name !== userDBData?.user.name) {
     data.name = values.name;
   }
@@ -91,8 +96,6 @@ const submit = handleSubmit(async (values) => {
   formData = new FormData();
 }, handleError);
 
-const { uploadFile } = useImageUpload();
-
 const EyeOpen = ref(false);
 
 onMounted(async () => {
@@ -101,7 +104,7 @@ onMounted(async () => {
     mail.value = userDBData.user.mail;
     animal.value = userDBData.user.animal;
     if (userDBData.user.filename) {
-      filename.value = `/avator/${userDBData.user.filename}`;
+      filename.value = `/${dirName}/${userDBData.user.filename}`;
     }
   }
 });
@@ -210,11 +213,6 @@ definePageMeta({
               </p>
             </div>
             <div>
-              <span
-                class="inline-block mr-2 p-1 bg-gray-800 text-white font-bold text-xs"
-              >
-                任意
-              </span>
               <label
                 class="text-gray-700 dark:text-gray-200 font-bold"
                 for="passwordConfirmation"
@@ -239,6 +237,13 @@ definePageMeta({
                   >登録後でも設定できます</span
                 >
               </p>
+              <NuxtImg
+                v-if="filename"
+                :src="filename"
+                width="36"
+                alt="アバター"
+              />
+              {{ name }}
             </div>
 
             <div>

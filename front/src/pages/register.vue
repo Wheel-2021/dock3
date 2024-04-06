@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
@@ -7,11 +6,11 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import { useUser } from '@/composables/auth';
 import useImageUpload from '@/composables/useImageUpload';
 import useErrorHandler from '@/composables/useErrorHandler';
+import { prepareFormData } from '@/utils/prepareImageFormData';
 import type { User } from '@/types/user';
 
 const router = useRouter();
 const { signUp } = useAuth();
-const uuid = uuidv4();
 const dirName = 'avator';
 const serverMessage = ref();
 let formData = new FormData();
@@ -54,14 +53,8 @@ const handleError = useErrorHandler(errors);
 const { uploadFile, fileData } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
-  if (fileData.value) {
-    const extension = fileData.value.name.split('.').pop();
-    const newFileName = `${dirName}_${uuid}.${extension}`;
-    data.filename = newFileName;
-    formData.append('newFileName', newFileName);
-    formData.append('dirName', dirName);
-    formData.append('file', fileData.value);
-  }
+  let { formData, newFileName } = prepareFormData(fileData, dirName);
+  data.filename = newFileName;
   data.name = values.name;
   data.mail = values.mail;
   data.animal = values.animal;
