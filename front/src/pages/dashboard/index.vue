@@ -10,9 +10,9 @@ definePageMeta({
     <div
       class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
-      <span v-if="currentUser">{{ currentUser.name }}</span>
+      <span v-if="currentUser">{{ currentUser.name }}</span><br>
 
-      <a href="/dashboard/sample">サンプルページ</a>
+      <NuxtLink to="/dashboard/settings">セッティング</NuxtLink>
     </div>
   </article>
 </template>

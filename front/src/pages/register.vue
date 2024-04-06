@@ -1,16 +1,20 @@
 <script lang="ts" setup>
+import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
-import type { User } from '@/types/user';
 import { useUser } from '@/composables/auth';
+import useImageUpload from '@/composables/useImageUpload';
+import useErrorHandler from '@/composables/useErrorHandler';
+import type { User } from '@/types/user';
 
 const router = useRouter();
 const { signUp } = useAuth();
+const uuid = uuidv4();
+const dirName = 'avator';
 const serverMessage = ref();
 let formData = new FormData();
-type ErrorsType = Partial<Record<string, string>>;
 
 const schema = object({
   name: string().required('必須項目です'),
@@ -45,101 +49,53 @@ let data: User = {
   filename: null,
   role: 'user',
 };
+// veevalidateのエラー表示部分
+const handleError = useErrorHandler(errors);
+const { uploadFile, fileData } = useImageUpload();
 
-const submit = handleSubmit(
-  async (values) => {
-    data.name = values.name;
-    data.mail = values.mail;
-    data.animal = values.animal;
-    data.password = values.password;
+const submit = handleSubmit(async (values) => {
+  if (fileData.value) {
+    const extension = fileData.value.name.split('.').pop();
+    const newFileName = `${dirName}_${uuid}.${extension}`;
+    data.filename = newFileName;
+    formData.append('newFileName', newFileName);
+    formData.append('dirName', dirName);
+    formData.append('file', fileData.value);
+  }
+  data.name = values.name;
+  data.mail = values.mail;
+  data.animal = values.animal;
+  data.password = values.password;
 
-    formData.append('body', JSON.stringify(data));
+  formData.append('body', JSON.stringify(data));
 
-    try {
-      const result = await signUp(formData);
-      console.log('register.vue', result);
-      if (result && 'message' in result) {
-        if (result.message === '登録成功！') {
+  try {
+    const result = await signUp(formData);
+    console.log('register.vue', result);
+    if (result && 'message' in result) {
+      if (result.message === '登録成功！') {
         const isUser = useUser();
-          serverMessage.value =
-            result.message + 'この後、ダッシュボードに遷移します。';
-          setTimeout(() => {
-            const redirect = isUser.value ? '/dashboard' : '/';
-            router.push({ path: redirect });
-          }, 3000);
-        } else {
-          serverMessage.value = result.message;
-        }
+        serverMessage.value =
+          result.message + 'この後、ダッシュボードに遷移します。';
+        setTimeout(() => {
+          const redirect = isUser.value ? '/dashboard' : '/';
+          router.push({ path: redirect });
+        }, 3000);
+      } else {
+        serverMessage.value = result.message;
       }
-      if (result && 'session' in result) {
-        return result.session;
-      }
-    } catch (error) {
-      console.log(error);
     }
-
-    formData = new FormData();
-  },
-  ({ errors }: { errors: ErrorsType }) => {
-    const firstError = Object.keys(errors)[0];
-    const errorElem = document.querySelector<HTMLElement>(
-      `[name="${firstError}"]`
-    );
-    if (errorElem) {
-      const errorElemOffsetTop = errorElem.offsetTop;
-      window.scrollTo({
-        top: errorElemOffsetTop,
-        behavior: 'smooth',
-      });
-      errorElem.focus();
+    if (result && 'session' in result) {
+      return result.session;
     }
+  } catch (error) {
+    console.log(error);
   }
-);
 
-// image upload
-const uploadDataName = ref();
-const uploadFile = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  if (target.files && target.files.length > 0) {
-    const file = target.files[0];
-    data.filename = file.name;
-    formData.append('file', file);
-
-    const fileName = file.name;
-    const fileExtension = fileName.split('.').pop()?.toLowerCase();
-
-    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
-    if (fileExtension && imageExtensions.includes(fileExtension)) {
-      uploadDataName.value = fileName;
-    } else {
-      alert('画像ファイルを選択してください。');
-    }
-  }
-};
+  formData = new FormData();
+}, handleError);
 
 const EyeOpen = ref(false);
-
-onMounted(() => {
-  const avatarImage = document.querySelector('.avatarImage') as HTMLElement;
-  avatarImage?.addEventListener('click', () => {
-    (document.querySelector('#avatarInput') as HTMLElement)?.click();
-  });
-  avatarImage?.addEventListener('keydown', (event) => {
-    if (!avatarImage.isEqualNode(event.target as Node)) {
-      return;
-    }
-
-    if (event.keyCode === 32 || event.keyCode === 13) {
-      event.preventDefault();
-      (document.querySelector('#avatarInput') as HTMLElement)?.click();
-    }
-  });
-  watch(uploadDataName, (newValue) => {
-    if (newValue) {
-      avatarImage.innerText = newValue;
-    }
-  });
-});
 </script>
 <template>
   <article class="contents__inner bg-gray-100 h-screen py-16 px-4">
@@ -269,13 +225,13 @@ onMounted(() => {
               <div
                 role="button"
                 tabindex="0"
-                class="avatarImage block whitespace-nowrap overflow-hidden w-full px-4 py-2 mt-2 text-gray-400 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                class="imageButton block whitespace-nowrap overflow-hidden w-full px-4 py-2 mt-2 text-gray-400 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
               >
                 ファイルを選択
               </div>
               <input
-                id="avatarInput"
-                name="avatarInput"
+                id="imageInput"
+                name="imageInput"
                 type="file"
                 class="hidden"
                 @change="uploadFile"

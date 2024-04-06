@@ -1,5 +1,5 @@
 import { defineEventHandler, readMultipartFormData, createError } from 'h3';
-import { writeFile } from 'fs/promises';
+import { writeFile, access, mkdir } from 'fs/promises';
 import mongoose from 'mongoose';
 import User from '@/models/user';
 import { hash } from '@/utils/password';
@@ -7,7 +7,17 @@ import { createSession } from '@/utils/cookie';
 
 export default defineEventHandler(async (event) => {
   let body;
+  let newFileName;
+  let dirName;
+
   const file = await readMultipartFormData(event);
+  async function createDirectoryIfNotExists(dir: string) {
+    try {
+      await access(dir);
+    } catch {
+      await mkdir(dir, { recursive: true });
+    }
+  }
 
   if (!file || file.length === 0) {
     throw createError({
@@ -15,19 +25,29 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'DATA Not Found',
     });
   }
-
+  console.log('register.ts', file);
   for (let i = 0; i < file.length; i++) {
+    if (file[i].name === 'newFileName') {
+      newFileName = file[i].data.toString();
+    }
+    if (file[i].name === 'dirName') {
+      dirName = file[i].data.toString();
+    }
     if (file[i].name === 'file') {
-      const filename = file[i].filename;
-      const data = file[i].data;
-      const filePath = `./src/public/${filename}`;
-      await writeFile(filePath, data);
+      // 送られてきたファイル名
+      console.log('register.ts ファイル', file[i]);
+      const oldFilename = file[i].filename;
+      if (typeof oldFilename === 'string') {
+        await createDirectoryIfNotExists(`./src/public/${dirName}`);
+        const data = file[i].data;
+        const filePath = `./src/public/${dirName}/${newFileName}`;
+        await writeFile(filePath, data);
+      }
     }
     if (file[i].name === 'body') {
       body = JSON.parse(file[i].data.toString());
-      console.log('送られてきたデータ', body);
-      const getUserTotalNumber = await User.countDocuments();
-      const setId = Number(getUserTotalNumber) + 1;
+      const getMaxId = await User.find().sort({ id: -1 }).limit(1);
+      const setId = getMaxId[0] ? getMaxId[0].id + 1 : 1;
       body._id = new mongoose.Types.ObjectId();
       body.id = setId;
       body.password = await hash(body.password);
@@ -51,6 +71,4 @@ export default defineEventHandler(async (event) => {
       };
     }
   }
-  console.log('success');
-  return {};
 });

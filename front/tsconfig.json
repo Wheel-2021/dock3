@@ -13,9 +13,9 @@
     "strict": true,
     "target": "ESNext",
     "traceResolution": true,
-    "types": ["vitest/globals", "vue"]
+    "types": ["vitest/globals", "vue", "@nuxt/types", "@nuxt/image"]
   },
-  "extends": "./.nuxt/tsconfig.json",
+  "extends": "./.nuxt/tsconfig.json"
   // "exclude": ["node_modules", "**/*.test.ts"],
   // "include": ["./src/**/*"]
 }

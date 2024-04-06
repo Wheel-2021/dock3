@@ -4,11 +4,11 @@ import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import { useAdmin, useUser } from '@/composables/auth';
+import useErrorHandler from '@/composables/useErrorHandler';
 
 const router = useRouter();
 const { login } = useAuth();
 const serverMessage = ref();
-type ErrorsType = Partial<Record<string, string>>;
 
 const schema = object({
   mail: string()
@@ -33,53 +33,39 @@ let data = {
   animal: '',
   password: '',
 };
+// veevalidateのエラー表示部分
+const handleError = useErrorHandler(errors);
 
-const submit = handleSubmit(
-  async (values) => {
-    data.mail = values.mail;
-    data.animal = values.animal;
-    data.password = values.password;
+const submit = handleSubmit(async (values) => {
+  data.mail = values.mail;
+  data.animal = values.animal;
+  data.password = values.password;
 
-    const result = await login(data.mail, data.animal, data.password);
+  const result = await login(data.mail, data.animal, data.password);
 
-    if (result && 'message' in result) {
-      if (result.message === 'ログイン成功！') {
-        const isAdmin = useAdmin();
-        const isUser = useUser();
-        serverMessage.value =
-          result.message + 'この後、ダッシュボードに遷移します。';
-        console.log('login.vue', isAdmin.value, isUser.value);
-        setTimeout(() => {
-          if (isUser) {
-            const redirect = isUser.value ? '/dashboard' : '/';
-            router.push({ path: redirect });
-          }
-          const redirect = isAdmin.value ? '/admin' : '/dashboard';
+  if (result && 'message' in result) {
+    if (result.message === 'ログイン成功！') {
+      const isAdmin = useAdmin();
+      const isUser = useUser();
+      serverMessage.value =
+        result.message + 'この後、ダッシュボードに遷移します。';
+      console.log('login.vue', isAdmin.value, isUser.value);
+      setTimeout(() => {
+        if (isUser) {
+          const redirect = isUser.value ? '/dashboard' : '/';
           router.push({ path: redirect });
-        }, 3000);
-      } else {
-        serverMessage.value = result.message;
-      }
-    }
-    if (result && 'session' in result) {
-      return result.session;
-    }
-  },
-  ({ errors }: { errors: ErrorsType }) => {
-    const firstError = Object.keys(errors)[0];
-    const errorElem = document.querySelector<HTMLElement>(
-      `[name="${firstError}"]`
-    );
-    if (errorElem) {
-      const errorElemOffsetTop = errorElem.offsetTop;
-      window.scrollTo({
-        top: errorElemOffsetTop,
-        behavior: 'smooth',
-      });
-      errorElem.focus();
+        }
+        const redirect = isAdmin.value ? '/admin' : '/dashboard';
+        router.push({ path: redirect });
+      }, 3000);
+    } else {
+      serverMessage.value = result.message;
     }
   }
-);
+  if (result && 'session' in result) {
+    return result.session;
+  }
+}, handleError);
 
 const EyeOpen = ref(false);
 

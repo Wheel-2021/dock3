@@ -121,7 +121,34 @@ export const useAuth = () => {
     }
     return data;
   };
+  const getDBUser = async (mail: string) => {
+    const data = await $fetch<ApiResponse>('/api/auth/getdbuser', {
+      method: 'POST',
+      body: {
+        mail,
+      },
+    });
 
+    if (data && data.message) {
+      return data;
+    }
+  };
+
+  const infoUpdate = async (formData: FormData) => {
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/infoupdate', {
+        method: 'POST',
+        body: formData,
+      });
+      console.log('useAuth', data);
+      if (data && data.message) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error; // ここでエラーをスロー
+    }
+  };
   const me = async () => {
     if (!authUser.value) {
       try {
@@ -144,6 +171,8 @@ export const useAuth = () => {
     pwReset,
     updatePw,
     checkUuid,
+    getDBUser,
+    infoUpdate,
     me,
   };
 };

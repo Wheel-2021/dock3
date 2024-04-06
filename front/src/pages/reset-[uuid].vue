@@ -3,11 +3,12 @@ import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
+import useErrorHandler from '@/composables/useErrorHandler';
+import type { ErrorsType } from '@/types/error';
 
 const router = useRouter();
 const { checkUuid, updatePw } = useAuth();
 const serverMessage = ref();
-type ErrorsType = Partial<Record<string, string>>;
 
 // dbのuuidとexpiresの確認
 const route = useRoute();
@@ -38,48 +39,34 @@ const { value: password, handleChange: handleChangePassword } =
 let data = {
   password: '',
 };
+// veevalidateのエラー表示部分
+const handleError = useErrorHandler(errors);
 
-const submit = handleSubmit(
-  async (values) => {
-    data.password = values.password;
+const submit = handleSubmit(async (values) => {
+  data.password = values.password;
 
-    if (resetData) {
-      const result = await updatePw(resetData.userId, data.password);
+  if (resetData) {
+    const result = await updatePw(resetData.userId, data.password);
 
-      console.log(result);
-      if (result && 'message' in result) {
-        if (result.message === '送信成功！') {
-          serverMessage.value =
-            result.message + 'この後、ログイン画面に遷移します。';
-          setTimeout(() => {
-            const redirect = '/login';
-            router.push({ path: redirect });
-          }, 3000);
-        } else {
-          serverMessage.value = result.message;
-          setTimeout(() => {
-            const redirect = '/login';
-            router.push({ path: redirect });
-          }, 3000);
-        }
+    console.log(result);
+    if (result && 'message' in result) {
+      if (result.message === '送信成功！') {
+        serverMessage.value =
+          result.message + 'この後、ログイン画面に遷移します。';
+        setTimeout(() => {
+          const redirect = '/login';
+          router.push({ path: redirect });
+        }, 3000);
+      } else {
+        serverMessage.value = result.message;
+        setTimeout(() => {
+          const redirect = '/login';
+          router.push({ path: redirect });
+        }, 3000);
       }
     }
-  },
-  ({ errors }: { errors: ErrorsType }) => {
-    const firstError = Object.keys(errors)[0];
-    const errorElem = document.querySelector<HTMLElement>(
-      `[name="${firstError}"]`
-    );
-    if (errorElem) {
-      const errorElemOffsetTop = errorElem.offsetTop;
-      window.scrollTo({
-        top: errorElemOffsetTop,
-        behavior: 'smooth',
-      });
-      errorElem.focus();
-    }
   }
-);
+}, handleError);
 const EyeOpen = ref(false);
 </script>
 

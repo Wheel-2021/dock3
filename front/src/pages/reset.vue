@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
+import useErrorHandler from '@/composables/useErrorHandler';
 
 const router = useRouter();
 const { pwReset } = useAuth();
 const serverMessage = ref();
-type ErrorsType = Partial<Record<string, string>>;
 
 const schema = object({
   mail: string()
@@ -20,6 +20,8 @@ const { value: mail, handleChange: handleChangeMail } = useField('mail');
 let data = {
   mail: '',
 };
+// veevalidateのエラー表示部分
+const handleError = useErrorHandler(errors);
 
 const submit = handleSubmit(
   async (values) => {
@@ -40,20 +42,7 @@ const submit = handleSubmit(
       }
     }
   },
-  ({ errors }: { errors: ErrorsType }) => {
-    const firstError = Object.keys(errors)[0];
-    const errorElem = document.querySelector<HTMLElement>(
-      `[name="${firstError}"]`
-    );
-    if (errorElem) {
-      const errorElemOffsetTop = errorElem.offsetTop;
-      window.scrollTo({
-        top: errorElemOffsetTop,
-        behavior: 'smooth',
-      });
-      errorElem.focus();
-    }
-  }
+  handleError
 );
 </script>
 

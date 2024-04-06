@@ -24,7 +24,11 @@ export default defineNuxtConfig({
     '@/assets/css/style.scss',
   ],
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss'],
+  image: {
+    domains: [],
+    screens: {},
+  },
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
   nitro: {
     plugins: ['@/server/index.ts'],
   },
