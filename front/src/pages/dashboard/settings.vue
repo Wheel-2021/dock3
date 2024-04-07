@@ -13,6 +13,7 @@ const { getDBUser, infoUpdate } = useAuth();
 const userDBData = currentUser.value
   ? ((await getDBUser(currentUser.value.mail)) as { user: User })
   : null;
+
 const dirName = 'avator';
 const serverMessage = ref();
 const name = ref('');
@@ -39,13 +40,14 @@ const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { value: fieldName } = useField('name');
-const { value: fieldMail, handleChange: handleChangeMail } = useField('mail');
-const { value: fieldAnimal } = useField('animal');
+const { value: fieldName, setValue: setName } = useField('name');
+const { value: fieldMail, setValue: setMail } = useField('mail');
+const { value: fieldAnimal, setValue: setAnimal } = useField('animal');
 const { value: fieldPassword, handleChange: handleChangePassword } =
   useField('password');
 
 let data: User = {
+  _id: null,
   id: null,
   name: '',
   mail: '',
@@ -60,7 +62,12 @@ const { uploadFile, fileData } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
   let { formData, newFileName } = prepareFormData(fileData, dirName);
-  data.filename = newFileName;
+  formData.append('userId', userDBData?.user._id);
+  console.log('userDBData', values, userDBData?.user);
+  if (newFileName) {
+    data.filename = newFileName;
+  }
+
   if (values.name !== userDBData?.user.name) {
     data.name = values.name;
   }
@@ -73,7 +80,7 @@ const submit = handleSubmit(async (values) => {
   if (values.password) {
     data.password = values.password;
   }
-
+  console.log('settings', data);
   formData.append('body', JSON.stringify(data));
 
   try {
@@ -103,6 +110,9 @@ onMounted(async () => {
     name.value = userDBData.user.name;
     mail.value = userDBData.user.mail;
     animal.value = userDBData.user.animal;
+    setName(userDBData.user.name);
+    setMail(userDBData.user.mail);
+    setAnimal(userDBData.user.animal);
     if (userDBData.user.filename) {
       filename.value = `/${dirName}/${userDBData.user.filename}`;
     }
@@ -170,7 +180,6 @@ definePageMeta({
                 placeholder="例) xxxxx@xxxxx.xx"
                 aria-label="Email Address"
                 name="mail"
-                @change="handleChangeMail"
                 :value="mail"
               />
 
