@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
         }
       }
       console.log('infoupdate.ts', body);
-      // await User.updateOne({ _id: userId }, body);
+      await User.updateOne({ _id: userId }, body);
 
       // const userData = new User(body);
       // await userData.save();

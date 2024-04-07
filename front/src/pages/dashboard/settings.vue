@@ -8,6 +8,7 @@ import useErrorHandler from '@/composables/useErrorHandler';
 import { prepareFormData } from '@/utils/prepareImageFormData';
 import type { User } from '@/types/user';
 
+const router = useRouter();
 const currentUser = useAuthUser();
 const { getDBUser, infoUpdate } = useAuth();
 const userDBData = currentUser.value
@@ -40,9 +41,10 @@ const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { value: fieldName, setValue: setName } = useField('name');
-const { value: fieldMail, setValue: setMail } = useField('mail');
-const { value: fieldAnimal, setValue: setAnimal } = useField('animal');
+const { value: fieldName, handleChange: handleChangeName } = useField('name');
+const { value: fieldMail, handleChange: handleChangeMail } = useField('mail');
+const { value: fieldAnimal, handleChange: handleChangeAnimal } =
+  useField('animal');
 const { value: fieldPassword, handleChange: handleChangePassword } =
   useField('password');
 
@@ -89,6 +91,10 @@ const submit = handleSubmit(async (values) => {
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
         serverMessage.value = result.message;
+        setTimeout(() => {
+          const redirect = '/dashboard';
+          router.push({ path: redirect });
+        }, 3000);
       } else {
         serverMessage.value = result.message;
       }
@@ -110,9 +116,9 @@ onMounted(async () => {
     name.value = userDBData.user.name;
     mail.value = userDBData.user.mail;
     animal.value = userDBData.user.animal;
-    setName(userDBData.user.name);
-    setMail(userDBData.user.mail);
-    setAnimal(userDBData.user.animal);
+    // setName(userDBData.user.name);
+    // setMail(userDBData.user.mail);
+    // setAnimal(userDBData.user.animal);
     if (userDBData.user.filename) {
       filename.value = `/${dirName}/${userDBData.user.filename}`;
     }
@@ -154,6 +160,7 @@ definePageMeta({
                 aria-label="Name"
                 name="name"
                 v-model="name"
+                @change="handleChangeName"
               />
               <p class="mt-2">
                 <span v-if="!errors.name" class="text-gray-400 text-xs"
@@ -181,6 +188,7 @@ definePageMeta({
                 aria-label="Email Address"
                 name="mail"
                 :value="mail"
+                @change="handleChangeMail"
               />
 
               <p class="mt-2">
@@ -209,6 +217,7 @@ definePageMeta({
                 aria-label="Animal"
                 name="animal"
                 v-model="animal"
+                @change="handleChangeAnimal"
               />
               <p class="mt-2">
                 <span v-if="!errors.animal" class="text-gray-400 text-xs"
