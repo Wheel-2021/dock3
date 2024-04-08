@@ -44,7 +44,7 @@ let userData: User = {
   mail: '',
   animal: '',
   password: '',
-  filename: null,
+  filename: undefined,
   role: 'user',
 };
 // veevalidateのエラー表示部分

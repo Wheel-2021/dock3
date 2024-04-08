@@ -7,6 +7,7 @@ interface UserWithPassword {
   id: number;
   mail: string;
   name: string;
+  filename?: string | undefined;
   role: string;
   password: string;
 }
@@ -40,6 +41,7 @@ export async function createSession(
       id: userWithPassword.id,
       mail: userWithPassword.mail,
       name: userWithPassword.name,
+      filename: userWithPassword.filename,
       role: userWithPassword.role,
     },
   };

@@ -63,6 +63,7 @@ export const useAuth = () => {
       });
 
       if (data && data.user) {
+        console.log(data.user);
         setUser(data.user);
       }
       if (data && data.message) {

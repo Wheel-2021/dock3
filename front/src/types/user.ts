@@ -5,7 +5,7 @@ export interface User {
   mail: string;
   animal: string;
   password: string;
-  filename?: string | null;
+  filename?: string | undefined;
   role: string;
 }
 

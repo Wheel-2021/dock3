@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const user = await createSession(event, userWithPassword);
-
+  console.log('login', user);
   return {
     ...user,
     message: 'ログイン成功！',
