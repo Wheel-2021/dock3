@@ -17,10 +17,11 @@ const avator = ref({
   name: null as string | null,
 });
 if (currentUser.value !== null) {
-  avator.value.image = avator.value.image
+  avator.value.image = currentUser.value.filename
     ? `/avator/${currentUser.value.filename}`
     : null;
   avator.value.name = currentUser.value.name;
+  console.log(avator.value, currentUser.value.filename);
 }
 
 const out = async () => {
