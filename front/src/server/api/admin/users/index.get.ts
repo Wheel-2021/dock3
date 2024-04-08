@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   try {
     const userData = await User.find();
     return userData.map((user) => ({
+      _id: user._id ? user._id : null,
       id: user.id,
       mail: user.mail,
       name: user.name,

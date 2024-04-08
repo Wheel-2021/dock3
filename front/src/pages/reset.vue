@@ -17,16 +17,16 @@ const { errors, handleSubmit } = useForm({
 });
 const { value: mail, handleChange: handleChangeMail } = useField('mail');
 
-let data = {
+let userData = {
   mail: '',
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
 
-const submit = handleSubmit(
-  async (values) => {
-    data.mail = values.mail;
-    const result = await pwReset(data.mail);
+const submit = handleSubmit(async (values) => {
+  userData.mail = values.mail;
+  try {
+    const result = await pwReset(userData.mail);
 
     console.log(result);
     if (result && 'message' in result) {
@@ -41,9 +41,10 @@ const submit = handleSubmit(
         serverMessage.value = result.message;
       }
     }
-  },
-  handleError
-);
+  } catch (error) {
+    console.log('Error updating information:', error);
+  }
+}, handleError);
 </script>
 
 <template>

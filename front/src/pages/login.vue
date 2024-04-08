@@ -28,7 +28,7 @@ const { value: animal } = useField('animal');
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let data = {
+let userData = {
   mail: '',
   animal: '',
   password: '',
@@ -37,33 +37,37 @@ let data = {
 const handleError = useErrorHandler(errors);
 
 const submit = handleSubmit(async (values) => {
-  data.mail = values.mail;
-  data.animal = values.animal;
-  data.password = values.password;
+  userData.mail = values.mail;
+  userData.animal = values.animal;
+  userData.password = values.password;
 
-  const result = await login(data.mail, data.animal, data.password);
+  try {
+    const result = await login(userData.mail, userData.animal, userData.password);
 
-  if (result && 'message' in result) {
-    if (result.message === 'ログイン成功！') {
-      const isAdmin = useAdmin();
-      const isUser = useUser();
-      serverMessage.value =
-        result.message + 'この後、ダッシュボードに遷移します。';
-      console.log('login.vue', isAdmin.value, isUser.value);
-      setTimeout(() => {
-        if (isUser) {
-          const redirect = isUser.value ? '/dashboard' : '/';
+    if (result && 'message' in result) {
+      if (result.message === 'ログイン成功！') {
+        const isAdmin = useAdmin();
+        const isUser = useUser();
+        serverMessage.value =
+          result.message + 'この後、ダッシュボードに遷移します。';
+        console.log('login.vue', isAdmin.value, isUser.value);
+        setTimeout(() => {
+          if (isUser) {
+            const redirect = isUser.value ? '/dashboard' : '/';
+            router.push({ path: redirect });
+          }
+          const redirect = isAdmin.value ? '/admin' : '/dashboard';
           router.push({ path: redirect });
-        }
-        const redirect = isAdmin.value ? '/admin' : '/dashboard';
-        router.push({ path: redirect });
-      }, 3000);
-    } else {
-      serverMessage.value = result.message;
+        }, 3000);
+      } else {
+        serverMessage.value = result.message;
+      }
     }
-  }
-  if (result && 'session' in result) {
-    return result.session;
+    if (result && 'session' in result) {
+      return result.session;
+    }
+  } catch (error) {
+    console.log('Error updating information:', error);
   }
 }, handleError);
 

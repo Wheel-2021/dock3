@@ -36,34 +36,38 @@ const { errors, handleSubmit } = useForm({
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let data = {
+let userData = {
   password: '',
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
 
 const submit = handleSubmit(async (values) => {
-  data.password = values.password;
+  userData.password = values.password;
 
   if (resetData) {
-    const result = await updatePw(resetData.userId, data.password);
+    try {
+      const result = await updatePw(resetData.userId, userData.password);
 
-    console.log(result);
-    if (result && 'message' in result) {
-      if (result.message === '送信成功！') {
-        serverMessage.value =
-          result.message + 'この後、ログイン画面に遷移します。';
-        setTimeout(() => {
-          const redirect = '/login';
-          router.push({ path: redirect });
-        }, 3000);
-      } else {
-        serverMessage.value = result.message;
-        setTimeout(() => {
-          const redirect = '/login';
-          router.push({ path: redirect });
-        }, 3000);
+      console.log(result);
+      if (result && 'message' in result) {
+        if (result.message === '送信成功！') {
+          serverMessage.value =
+            result.message + 'この後、ログイン画面に遷移します。';
+          setTimeout(() => {
+            const redirect = '/login';
+            router.push({ path: redirect });
+          }, 3000);
+        } else {
+          serverMessage.value = result.message;
+          setTimeout(() => {
+            const redirect = '/login';
+            router.push({ path: redirect });
+          }, 3000);
+        }
       }
+    } catch (error) {
+      console.log('Error updating information:', error);
     }
   }
 }, handleError);

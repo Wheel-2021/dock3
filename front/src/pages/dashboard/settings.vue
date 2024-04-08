@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useAuthUser } from '@/composables/auth';
+import { useAuthUser, useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
@@ -15,7 +15,7 @@ const userDBData = currentUser.value
   ? ((await getDBUser(currentUser.value.mail)) as { user: User })
   : null;
 
-const dirName = 'avator';
+const setDirName = 'avator';
 const serverMessage = ref();
 const name = ref('');
 const mail = ref('');
@@ -48,7 +48,7 @@ const { value: fieldAnimal, handleChange: handleChangeAnimal } =
 const { value: fieldPassword, handleChange: handleChangePassword } =
   useField('password');
 
-let data: User = {
+let userData: User = {
   _id: null,
   id: null,
   name: '',
@@ -63,27 +63,27 @@ const handleError = useErrorHandler(errors);
 const { uploadFile, fileData } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
-  let { formData, newFileName } = prepareFormData(fileData, dirName);
-  formData.append('userId', userDBData?.user._id);
+  let { formData, newFileName } = prepareFormData(fileData, setDirName);
+  formData.append('userId', userDBData?.user._id || '');
   console.log('userDBData', values, userDBData?.user);
   if (newFileName) {
-    data.filename = newFileName;
+    userData.filename = newFileName;
   }
 
   if (values.name !== userDBData?.user.name) {
-    data.name = values.name;
+    userData.name = values.name;
   }
   if (values.mail !== userDBData?.user.mail) {
-    data.mail = values.mail;
+    userData.mail = values.mail;
   }
   if (values.animal !== userDBData?.user.animal) {
-    data.animal = values.animal;
+    userData.animal = values.animal;
   }
   if (values.password) {
-    data.password = values.password;
+    userData.password = values.password;
   }
-  console.log('settings', data);
-  formData.append('body', JSON.stringify(data));
+  console.log('settings', userData);
+  formData.append('body', JSON.stringify(userData));
 
   try {
     const result = await infoUpdate(formData);
@@ -103,7 +103,7 @@ const submit = handleSubmit(async (values) => {
       return result.session;
     }
   } catch (error) {
-    console.log(error);
+    console.log('Error updating information:', error);
   }
 
   formData = new FormData();
@@ -112,16 +112,17 @@ const submit = handleSubmit(async (values) => {
 const EyeOpen = ref(false);
 
 onMounted(async () => {
-  if (userDBData && userDBData.user) {
-    name.value = userDBData.user.name;
-    mail.value = userDBData.user.mail;
-    animal.value = userDBData.user.animal;
-    // setName(userDBData.user.name);
-    // setMail(userDBData.user.mail);
-    // setAnimal(userDBData.user.animal);
-    if (userDBData.user.filename) {
-      filename.value = `/${dirName}/${userDBData.user.filename}`;
+  try {
+    if (userDBData && userDBData.user) {
+      name.value = userDBData.user.name;
+      mail.value = userDBData.user.mail;
+      animal.value = userDBData.user.animal;
+      if (userDBData.user.filename) {
+        filename.value = `/${setDirName}/${userDBData.user.filename}`;
+      }
     }
+  } catch (error) {
+    console.error('Error mounting component:', error);
   }
 });
 

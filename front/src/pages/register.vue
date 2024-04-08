@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { useAuth } from '@/composables/auth';
+import { useAuth, useUser } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
-import { useUser } from '@/composables/auth';
 import useImageUpload from '@/composables/useImageUpload';
 import useErrorHandler from '@/composables/useErrorHandler';
 import { prepareFormData } from '@/utils/prepareImageFormData';
@@ -11,7 +10,7 @@ import type { User } from '@/types/user';
 
 const router = useRouter();
 const { signUp } = useAuth();
-const dirName = 'avator';
+const setDirName = 'avator';
 const serverMessage = ref();
 let formData = new FormData();
 
@@ -39,7 +38,7 @@ const { value: animal } = useField('animal');
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let data: User = {
+let userData: User = {
   id: null,
   name: '',
   mail: '',
@@ -53,14 +52,14 @@ const handleError = useErrorHandler(errors);
 const { uploadFile, fileData } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
-  let { formData, newFileName } = prepareFormData(fileData, dirName);
-  data.filename = newFileName;
-  data.name = values.name;
-  data.mail = values.mail;
-  data.animal = values.animal;
-  data.password = values.password;
+  let { formData, newFileName } = prepareFormData(fileData, setDirName);
+  userData.filename = newFileName;
+  userData.name = values.name;
+  userData.mail = values.mail;
+  userData.animal = values.animal;
+  userData.password = values.password;
 
-  formData.append('body', JSON.stringify(data));
+  formData.append('body', JSON.stringify(userData));
 
   try {
     const result = await signUp(formData);
@@ -82,7 +81,7 @@ const submit = handleSubmit(async (values) => {
       return result.session;
     }
   } catch (error) {
-    console.log(error);
+    console.log('Error updating information:', error);
   }
 
   formData = new FormData();

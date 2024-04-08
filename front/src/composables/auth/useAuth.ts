@@ -3,6 +3,7 @@ import type { UserWithoutPassword } from '@/types/user';
 
 type ApiResponse = {
   user?: {
+    _id?: string;
     id: number;
     name: string;
     mail: string;
@@ -46,36 +47,46 @@ export const useAuth = () => {
       return authUser;
     } catch (error) {
       console.log(error);
-      throw error; // ここでエラーをスロー
+      throw error;
     }
   };
 
   const login = async (mail: string, animal: string, password: string) => {
-    const data = await $fetch<ApiResponse>('/api/auth/login', {
-      method: 'POST',
-      body: {
-        mail,
-        animal,
-        password,
-      },
-    });
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/login', {
+        method: 'POST',
+        body: {
+          mail,
+          animal,
+          password,
+        },
+      });
 
-    if (data && data.user) {
-      setUser(data.user);
+      if (data && data.user) {
+        setUser(data.user);
+      }
+      if (data && data.message) {
+        return data;
+      }
+      return authUser;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-    if (data && data.message) {
-      return data;
-    }
-    return authUser;
   };
 
   const logout = async () => {
-    const data = await $fetch<ApiResponse>('/api/auth/logout', {
-      method: 'POST',
-    });
-    if (data && data.user) {
-      setUser(data.user);
-      return data;
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/logout', {
+        method: 'POST',
+      });
+      if (data && data.user) {
+        setUser(data.user);
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   };
 
@@ -109,28 +120,39 @@ export const useAuth = () => {
   };
 
   const checkUuid = async (urlParams: string) => {
-    const data = await $fetch<CheckUuidResponse>('/api/auth/checkuuid', {
-      method: 'POST',
-      body: {
-        urlParams,
-      },
-    });
+    try {
+      const data = await $fetch<CheckUuidResponse>('/api/auth/checkuuid', {
+        method: 'POST',
+        body: {
+          urlParams,
+        },
+      });
 
-    if ('message' in data) {
+      if ('message' in data) {
+        return data;
+      }
       return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-    return data;
   };
-  const getDBUser = async (mail: string) => {
-    const data = await $fetch<ApiResponse>('/api/auth/getdbuser', {
-      method: 'POST',
-      body: {
-        mail,
-      },
-    });
 
-    if (data && data.message) {
-      return data;
+  const getDBUser = async (mail: string) => {
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/getdbuser', {
+        method: 'POST',
+        body: {
+          mail,
+        },
+      });
+
+      if (data && data.message) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   };
 
@@ -146,7 +168,7 @@ export const useAuth = () => {
       }
     } catch (error) {
       console.log(error);
-      throw error; // ここでエラーをスロー
+      throw error;
     }
   };
   const me = async () => {
@@ -160,6 +182,7 @@ export const useAuth = () => {
         }
       } catch (error) {
         setCookie(null);
+        throw error;
       }
     }
     return authUser;
