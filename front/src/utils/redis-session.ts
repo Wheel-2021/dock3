@@ -16,6 +16,7 @@ type Session = {
   id?: number;
   mail?: string;
   name?: string;
+  filename?: string;
   role?: string;
 };
 

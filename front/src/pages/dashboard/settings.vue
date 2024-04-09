@@ -86,6 +86,7 @@ const submit = handleSubmit(async (values) => {
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
         serverMessage.value = result.message;
+
         setTimeout(() => {
           const redirect = '/dashboard';
           router.push({ path: redirect });

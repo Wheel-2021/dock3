@@ -16,6 +16,7 @@ const avator = ref({
   image: null as string | null,
   name: null as string | null,
 });
+
 if (currentUser.value !== null) {
   avator.value.image = currentUser.value.filename
     ? `/avator/${currentUser.value.filename}`

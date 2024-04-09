@@ -163,7 +163,10 @@ export const useAuth = () => {
         method: 'POST',
         body: formData,
       });
-      console.log('useAuth', data);
+      if (data && data.user) {
+        console.log(data.user);
+        setUser(data.user);
+      }
       if (data && data.message) {
         return data;
       }

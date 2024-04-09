@@ -1,6 +1,8 @@
 import { defineEventHandler, readMultipartFormData, createError } from 'h3';
 import { writeFile, access, mkdir } from 'fs/promises';
 import mongoose from 'mongoose';
+import { verify } from '@/utils/password';
+import { createSession } from '@/utils/cookie';
 import User from '@/models/user';
 import { hash } from '@/utils/password';
 
@@ -86,13 +88,19 @@ export default defineEventHandler(async (event) => {
       console.log('infoupdate.ts', body);
       await User.updateOne({ _id: userId }, body);
 
-      // const userData = new User(body);
-      // await userData.save();
-      // const dbUser = await User.getUserByEmail(body.mail);
+      const objectId = new mongoose.Types.ObjectId(userId);
+      const userWithPassword = await User.getUserById(objectId);
+
+      if (!userWithPassword) {
+        return { message: '登録されていません' };
+      }
+
+      const user = await createSession(event, userWithPassword);
+      console.log('login', user);
+      return {
+        ...user,
+        message: '更新成功！',
+      };
     }
   }
-
-  return {
-    message: '更新成功！',
-  };
 });

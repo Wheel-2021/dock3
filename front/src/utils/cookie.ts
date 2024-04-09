@@ -33,6 +33,7 @@ export async function createSession(
     id: userWithPassword.id,
     mail: userWithPassword.mail,
     name: userWithPassword.name,
+    filename: userWithPassword.filename,
     role: userWithPassword.role,
   });
 
