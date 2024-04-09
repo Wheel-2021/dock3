@@ -250,18 +250,18 @@ definePageMeta({
                     class="hidden"
                     @change="uploadFile"
                   />
-                  <p class="mt-2">
+                  <!-- <p class="mt-2">
                     <span class="text-gray-400 text-xs"
                       >登録後でも設定できます</span
                     >
-                  </p>
+                  </p> -->
                   <NuxtImg
                     v-if="filename"
                     :src="filename"
                     width="36"
                     alt="アバター"
+                    class="mt-2"
                   />
-                  {{ name }}
                 </div>
 
                 <div>
@@ -329,8 +329,6 @@ definePageMeta({
               </div>
             </form>
           </div>
-          <span v-if="currentUser">{{ currentUser.name }}</span
-          ><br />
 
           <NuxtLink to="/dashboard/">管理画面トップページ</NuxtLink>
         </div>
