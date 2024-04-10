@@ -1,7 +1,4 @@
-<script lang="ts" setup>
-const changeImage = ref('');
-console.log('custom', changeImage.value);
-</script>
+<script lang="ts" setup></script>
 <template>
   <div class="main">
     <AdminHeader />

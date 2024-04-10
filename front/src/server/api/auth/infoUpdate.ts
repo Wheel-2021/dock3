@@ -1,19 +1,15 @@
 import { defineEventHandler, readMultipartFormData, createError } from 'h3';
 import { writeFile, access, mkdir } from 'fs/promises';
 import mongoose from 'mongoose';
-import { verify } from '@/utils/password';
 import { createSession } from '@/utils/cookie';
 import User from '@/models/user';
 import { hash } from '@/utils/password';
 
 export default defineEventHandler(async (event) => {
-  let body;
-  let newFileName;
-  let dirName;
-  let userId;
+  let body, newFileName, dirName, userId;
 
   const file = await readMultipartFormData(event);
-  console.log('formData', file);
+
   async function createDirectoryIfNotExists(dir: string) {
     try {
       await access(dir);
@@ -28,7 +24,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'DATA Not Found',
     });
   }
-  console.log('infoupdate.ts', file);
+
   for (let i = 0; i < file.length; i++) {
     if (file[i].name === 'userId') {
       userId = file[i].data.toString();
@@ -40,8 +36,6 @@ export default defineEventHandler(async (event) => {
       dirName = file[i].data.toString();
     }
     if (file[i].name === 'file') {
-      // 送られてきたファイル名
-      console.log('register.ts ファイル', file[i]);
       const oldFilename = file[i].filename;
       if (typeof oldFilename === 'string') {
         await createDirectoryIfNotExists(`./src/public/${dirName}`);
@@ -85,7 +79,7 @@ export default defineEventHandler(async (event) => {
           };
         }
       }
-      console.log('infoupdate.ts', body);
+
       await User.updateOne({ _id: userId }, body);
 
       const objectId = new mongoose.Types.ObjectId(userId);
@@ -96,7 +90,7 @@ export default defineEventHandler(async (event) => {
       }
 
       const user = await createSession(event, userWithPassword);
-      console.log('login', user);
+
       return {
         ...user,
         message: '更新成功！',
