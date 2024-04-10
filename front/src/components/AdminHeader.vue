@@ -7,6 +7,7 @@ import {
   Cog6ToothIcon,
   PencilIcon,
   ExclamationCircleIcon,
+  HomeIcon,
 } from '@heroicons/vue/24/outline';
 import { useAuth, useAuthUser } from '@/composables/auth';
 
@@ -122,7 +123,7 @@ const out = async () => {
           </div>
           <div class="mt-6 flow-root">
             <div class="-my-6 divide-y divide-dashed">
-              <div class="py-6">
+              <div class="sm:w-1/4 py-6">
                 <button
                   @click="out"
                   class="headerLogin w-full flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
@@ -145,17 +146,23 @@ const out = async () => {
                 </button>
               </div>
               <NuxtLink class="flex items-center py-4" to="/dashboard/">
-                <PencilIcon class="w-6 h-6 mb-2 text-sky-500" />
+                <HomeIcon class="w-6 h-6 mr-4 text-grey-500" />
                 ダッシュボード
               </NuxtLink>
-              <NuxtLink class="flex items-center" to="/dashboard/settings">
-                <PencilIcon class="w-6 h-6 mb-2 text-sky-500" />
+              <NuxtLink class="flex items-center py-4" to="/dashboard/settings">
+                <PencilIcon class="w-6 h-6 mr-4 text-grey-500" />
                 記事作成
               </NuxtLink>
-              <NuxtLink class="flex items-center" to="/dashboard/settings">
-                <Cog6ToothIcon class="w-6 h-6 mb-2 text-sky-500" />
-                設定変更
+
+              <NuxtLink class="flex items-center py-4" to="/dashboard/settings">
+                <Cog6ToothIcon class="w-6 h-6 mr-4 text-grey-500" />
+                <p>設定変更</p>
               </NuxtLink>
+              <NuxtLink class="flex items-center py-4" to="/dashboard/settings">
+                <ExclamationCircleIcon class="w-6 h-6 mr-4 text-grey-500" />
+                <p>退会</p>
+              </NuxtLink>
+              <div class="border-b-1 border-dashed"></div>
             </div>
           </div>
         </DialogPanel>
