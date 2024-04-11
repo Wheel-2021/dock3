@@ -30,7 +30,7 @@ definePageMeta({
         </div>
         <div class="sm:flex mt-4">
           <div
-            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-4 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
@@ -42,7 +42,7 @@ definePageMeta({
           </div>
 
           <div
-            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-4 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
@@ -54,7 +54,7 @@ definePageMeta({
           </div>
 
           <div
-            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-4 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"

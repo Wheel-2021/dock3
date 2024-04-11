@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { Dialog, DialogPanel } from '@headlessui/vue';
 import {
   Bars3Icon,
   XMarkIcon,
@@ -29,7 +28,7 @@ if (currentUser.value !== null) {
   console.log(avator.value, currentUser.value.filename);
 }
 
-const out = async () => {
+const signOut = async () => {
   try {
     await logout().then((result) => {
       console.log(result);
@@ -39,11 +38,19 @@ const out = async () => {
     console.log(error);
   }
 };
+const menuBtnAction = (flag: boolean) => {
+  if (flag === true) {
+    mobileMenuOpen.value = true;
+  } else {
+    mobileMenuOpen.value = false;
+  }
+  console.log('click', mobileMenuOpen.value);
+};
 </script>
 <template>
   <header class="inset-x-0 top-0 z-50">
     <nav
-      class="flex items-center justify-between p-6 lg:px-8"
+      class="flex items-center justify-between p-6 lg:p-8"
       aria-label="Global"
     >
       <div class="flex lg:flex-1">
@@ -67,7 +74,7 @@ const out = async () => {
         </div>
         <div class="hidden sm:!block mr-6">
           <button
-            @click="out"
+            @click="signOut"
             class="headerLogin flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
           >
             ログアウト
@@ -90,83 +97,91 @@ const out = async () => {
         <div class="flex">
           <button
             type="button"
-            class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            @click="mobileMenuOpen = true"
+            class="naviWrap__open -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            @click="menuBtnAction(true)"
           >
             <Bars3Icon class="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      <Dialog
-        as="div"
-        class=""
-        :open="mobileMenuOpen"
-        @close="mobileMenuOpen = false"
+      <div
+        class="naviWrap fixed -z-50 opacity-0 inset-0 px-6 lg:px-8 py-10 bg-white transition duration-200 ease-in-out"
+        :class="{
+          '-z-50 opacity-0': !mobileMenuOpen,
+          'z-50 opacity-100': mobileMenuOpen,
+        }"
       >
-        <div class="fixed inset-0 z-50" />
-        <DialogPanel
-          class="fixed inset-y-0 left-0 z-50 w-full overflow-y-auto bg-white px-6 py-6"
-        >
-          <div class="flex items-center justify-between">
-            <a href="/" class="-m-1.5 p-1.5">
-              <span>会社ロゴ</span>
-            </a>
-            <button
-              type="button"
-              class="-m-2.5 rounded-md p-2.5 text-gray-700"
-              @click="mobileMenuOpen = false"
-            >
-              <span class="sr-only">Close menu</span>
-              <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div class="mt-6 flow-root">
-            <div class="-my-6 divide-y divide-dashed">
-              <div class="sm:w-1/4 py-6">
-                <button
-                  @click="out"
-                  class="headerLogin w-full flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
+        <div class="flex items-center justify-end">
+          <button
+            type="button"
+            class="menu__btn naviWrap__close -m-2.5 rounded-md p-2.5 text-gray-700"
+            @click="menuBtnAction(false)"
+          >
+            <XMarkIcon class="h-6 w-6" aria-hidden="true" />
+          </button>
+        </div>
+        <div class="mt-6 flow-root">
+          <div class="-my-6 divide-y divide-dashed">
+            <div class="sm:w-1/4 py-6">
+              <button
+                @click="signOut"
+                class="naviWrap__close headerLogin w-full flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
+              >
+                ログアウト
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
                 >
-                  ログアウト
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-              <NuxtLink class="flex items-center py-4" to="/dashboard/">
-                <HomeIcon class="w-6 h-6 mr-4 text-grey-500" />
-                ダッシュボード
-              </NuxtLink>
-              <NuxtLink class="flex items-center py-4" to="/dashboard/settings">
-                <PencilIcon class="w-6 h-6 mr-4 text-grey-500" />
-                記事作成
-              </NuxtLink>
-
-              <NuxtLink class="flex items-center py-4" to="/dashboard/settings">
-                <Cog6ToothIcon class="w-6 h-6 mr-4 text-grey-500" />
-                <p>設定変更</p>
-              </NuxtLink>
-              <NuxtLink class="flex items-center py-4" to="/dashboard/settings">
-                <ExclamationCircleIcon class="w-6 h-6 mr-4 text-grey-500" />
-                <p>退会</p>
-              </NuxtLink>
-              <div class="border-b-1 border-dashed"></div>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                  ></path>
+                </svg>
+              </button>
             </div>
+            <NuxtLink
+              class="naviWrap__close flex items-center py-4"
+              @click="menuBtnAction(false)"
+              to="/dashboard/"
+            >
+              <HomeIcon class="w-6 h-6 mr-4 text-grey-500" />
+              ダッシュボード
+            </NuxtLink>
+            <NuxtLink
+              class="naviWrap__close flex items-center py-4"
+              @click="menuBtnAction(false)"
+              to="/dashboard/settings"
+            >
+              <PencilIcon class="w-6 h-6 mr-4 text-grey-500" />
+              記事作成
+            </NuxtLink>
+
+            <NuxtLink
+              class="naviWrap__close flex items-center py-4"
+              @click="menuBtnAction(false)"
+              to="/dashboard/settings"
+            >
+              <Cog6ToothIcon class="w-6 h-6 mr-4 text-grey-500" />
+              <p>設定変更</p>
+            </NuxtLink>
+            <NuxtLink
+              class="naviWrap__close flex items-center py-4"
+              @click="menuBtnAction(false)"
+              to="/dashboard/settings"
+            >
+              <ExclamationCircleIcon class="w-6 h-6 mr-4 text-grey-500" />
+              退会
+            </NuxtLink>
+            <div class="border-b-1 border-dashed"></div>
           </div>
-        </DialogPanel>
-      </Dialog>
+        </div>
+      </div>
     </nav>
   </header>
 </template>
