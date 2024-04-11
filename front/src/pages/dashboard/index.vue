@@ -15,8 +15,8 @@ definePageMeta({
   <div>
     <NuxtLayout name="custom">
       <section class="bg-white py-12">
-        <h1 class="mb-2 text-xl font-medium text-center">ダッシュボード</h1>
-        <p class="text-center text-gray-400 text-sm">
+        <h1 class="mb-4 text-3xl font-medium text-center">ダッシュボード</h1>
+        <p class="text-center text-gray-400 text-sm leading-relaxed">
           <span v-if="currentUser"
             >{{ currentUser.name }}さん、ようこそ管理画面へ。</span
           >

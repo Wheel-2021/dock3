@@ -131,8 +131,12 @@ definePageMeta({
   <div>
     <NuxtLayout name="custom">
       <section class="bg-white py-12">
-        <h1 class="mb-2 text-xl font-medium text-center">アカウント設定画面</h1>
-        <p class="mt-1 px-4 text-left sm:text-center text-gray-600 text-sm">
+        <h1 class="mb-4 text-3xl font-medium text-center">
+          アカウント設定画面
+        </h1>
+        <p
+          class="mt-1 px-4 text-left sm:text-center text-gray-600 text-sm leading-relaxed"
+        >
           設定を変更する場合は、情報を更新してください。<br
             class="hidden sm:!block"
           />メールアドレスが重複している場合は更新できません。
@@ -142,8 +146,7 @@ definePageMeta({
         <div class="sm:flex"></div>
         <div
           class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
-        >
-        </div>
+        ></div>
         <div class="sm:px-6">
           <form @submit.prevent="submit">
             <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">

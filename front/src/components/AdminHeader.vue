@@ -173,7 +173,7 @@ const menuBtnAction = (flag: boolean) => {
             <NuxtLink
               class="naviWrap__close flex items-center py-4"
               @click="menuBtnAction(false)"
-              to="/dashboard/settings"
+              to="/dashboard/cancel"
             >
               <ExclamationCircleIcon class="w-6 h-6 mr-4 text-grey-500" />
               退会
