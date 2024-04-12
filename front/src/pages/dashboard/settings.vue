@@ -52,6 +52,7 @@ let userData: User = {
   password: '',
   filename: '',
   role: 'user',
+  deleted: false
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
@@ -76,6 +77,9 @@ const submit = handleSubmit(async (values) => {
   }
   if (values.password) {
     userData.password = values.password;
+  }
+  if (values.deleted !== userDBData?.user.deleted) {
+    userData.deleted = values.deleted;
   }
   console.log('settings', userData);
   formData.append('body', JSON.stringify(userData));

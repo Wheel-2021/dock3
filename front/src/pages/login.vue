@@ -42,7 +42,11 @@ const submit = handleSubmit(async (values) => {
   userData.password = values.password;
 
   try {
-    const result = await login(userData.mail, userData.animal, userData.password);
+    const result = await login(
+      userData.mail,
+      userData.animal,
+      userData.password
+    );
 
     if (result && 'message' in result) {
       if (result.message === 'ログイン成功！') {
@@ -215,6 +219,13 @@ onMounted(() => {});
                 <span class="text-xs"
                   >パスワードを変更したい・忘れた方は<a
                     href="/reset"
+                    class="text-blue-500"
+                    >こちら</a
+                  ></span
+                ><br />
+                <span class="text-xs"
+                  >アカウント復活については<a
+                    href="/restore"
                     class="text-blue-500"
                     >こちら</a
                   ></span

@@ -46,6 +46,7 @@ let userData: User = {
   password: '',
   filename: undefined,
   role: 'user',
+  deleted: false
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);

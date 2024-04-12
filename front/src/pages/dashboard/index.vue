@@ -58,7 +58,7 @@ definePageMeta({
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
-              to="/dashboard/settings"
+              to="/dashboard/cancel"
             >
               <ExclamationCircleIcon class="w-6 h-6 mb-2 text-sky-500" />
               退会

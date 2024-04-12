@@ -3,6 +3,7 @@ import { useAuthUser, useAuth } from '@/composables/auth';
 import { useForm } from 'vee-validate';
 import useErrorHandler from '@/composables/useErrorHandler';
 
+const router = useRouter();
 const currentUser = useAuthUser();
 const { logout, cancel } = useAuth();
 const serverMessage = ref();
@@ -21,6 +22,19 @@ let deletedInfo: DeletedInfo = {
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
 
+const signOut = async () => {
+  try {
+    await logout().then((result) => {
+      console.log(result);
+      // location.href = '/';
+      const redirect = '/';
+      router.push({ path: redirect });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const submit = handleSubmit(async (values) => {
   deletedInfo.mail = currentUser.value?.mail;
   deletedInfo.deletedFlag = true;
@@ -32,9 +46,7 @@ const submit = handleSubmit(async (values) => {
       if (result.message === '退会成功！') {
         serverMessage.value = result.message + 'トップページに遷移します。';
         // logout後に遷移しない
-        setTimeout(() => {
-          logout();
-        }, 3000);
+        signOut();
       } else {
         serverMessage.value = result.message;
       }

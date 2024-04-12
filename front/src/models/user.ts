@@ -12,6 +12,8 @@ interface IUser extends Document {
   password: string;
   filename?: string;
   role: string;
+  deleted: boolean;
+  deletedAt: Date;
 }
 
 interface IUserModel extends Model<IUser> {
@@ -33,6 +35,14 @@ const schema = new mongoose.Schema(
       type: String,
       enum: roles,
       default: 'user',
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: '',
     },
   },
   { timestamps: true, strict: true }

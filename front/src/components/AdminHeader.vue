@@ -10,6 +10,7 @@ import {
 } from '@heroicons/vue/24/outline';
 import { useAuth, useAuthUser } from '@/composables/auth';
 
+const router = useRouter();
 const currentUser = useAuthUser();
 console.log('AdminHeader', currentUser);
 const { logout } = useAuth();
@@ -32,12 +33,15 @@ const signOut = async () => {
   try {
     await logout().then((result) => {
       console.log(result);
-      location.href = '/';
+      // location.href = '/';
+      const redirect = '/';
+      router.push({ path: redirect });
     });
   } catch (error) {
     console.log(error);
   }
 };
+
 const menuBtnAction = (flag: boolean) => {
   if (flag === true) {
     mobileMenuOpen.value = true;

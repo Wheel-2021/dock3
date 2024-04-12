@@ -11,6 +11,7 @@ type ApiResponse = {
     animal: string;
     filename?: string;
     role: string;
+    deleted: boolean;
   };
   message?: string;
 };

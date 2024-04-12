@@ -17,6 +17,9 @@ export default defineEventHandler(async (event) => {
 
   const userWithPassword = await User.getUserByEmail(mail);
 
+  if (userWithPassword.deleted) {
+    return { message: '削除されたアカウントです' };
+  }
   if (!userWithPassword) {
     return { message: '登録されていません' };
   }

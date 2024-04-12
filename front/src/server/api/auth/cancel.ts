@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   // deletedFlagのアップデート
   console.log('cancel', mail, deletedFlag);
-  await User.updateOne({ mail: mail }, { deleted: deletedFlag });
+  await User.updateOne({ mail: mail }, { deleted: deletedFlag, deletedAt: Date.now() });
 
   return {
     message: '退会成功！',
