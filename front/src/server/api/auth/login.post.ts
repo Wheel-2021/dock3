@@ -26,6 +26,8 @@ export default defineEventHandler(async (event) => {
     return { message: '好きな動物かパスワードが間違っています' };
   }
 
+  // deletedFlagがtrueなら見つからないも加える
+
   const user = await createSession(event, userWithPassword);
   console.log('login', user);
   return {

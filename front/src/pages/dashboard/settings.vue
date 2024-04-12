@@ -82,10 +82,10 @@ const submit = handleSubmit(async (values) => {
 
   try {
     const result = await infoUpdate(formData);
-    console.log('register.vue', result);
+    console.log('settings.vue', result);
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
-        serverMessage.value = result.message;
+        serverMessage.value = result.message + 'この後、ダッシュボードに遷移します。';
 
         setTimeout(() => {
           const redirect = '/dashboard';

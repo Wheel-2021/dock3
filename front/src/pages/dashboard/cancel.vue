@@ -1,61 +1,39 @@
 <script lang="ts" setup>
 import { useAuthUser, useAuth } from '@/composables/auth';
-import { useField, useForm } from 'vee-validate';
-import { object, string } from 'yup';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
-import useImageUpload from '@/composables/useImageUpload';
+import { useForm } from 'vee-validate';
 import useErrorHandler from '@/composables/useErrorHandler';
-import { prepareFormData } from '@/utils/prepareImageFormData';
-import type { User } from '@/types/user';
 
-const router = useRouter();
 const currentUser = useAuthUser();
-const { getDBUser, infoUpdate } = useAuth();
-const userDBData = currentUser.value
-  ? ((await getDBUser(currentUser.value.mail)) as { user: User })
-  : null;
-
-const setDirName = 'avator';
+const { logout, cancel } = useAuth();
 const serverMessage = ref();
 
+const { errors, handleSubmit } = useForm({});
 
-let formData = new FormData();
+type DeletedInfo = {
+  mail: string | undefined;
+  deletedFlag: boolean;
+};
 
-const { errors, handleSubmit } = useForm({
-});
-
-let userData: User = {
-  _id: null,
-  id: null,
-  name: '',
+let deletedInfo: DeletedInfo = {
   mail: '',
-  animal: '',
-  password: '',
-  filename: '',
-  role: 'user',
+  deletedFlag: false,
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
 
-
 const submit = handleSubmit(async (values) => {
-
-  formData.append('userId', userDBData?.user._id || '');
-  console.log('userDBData', values, userDBData?.user);
-
-  console.log('settings', userData);
-  formData.append('body', JSON.stringify(userData));
+  deletedInfo.mail = currentUser.value?.mail;
+  deletedInfo.deletedFlag = true;
 
   try {
-    const result = await cancel(formData);
+    const result = await cancel(deletedInfo.mail, deletedInfo.deletedFlag);
 
     if (result && 'message' in result) {
       if (result.message === '退会成功！') {
-        serverMessage.value = result.message;
-
+        serverMessage.value = result.message + 'トップページに遷移します。';
+        // logout後に遷移しない
         setTimeout(() => {
-          const redirect = '/dashboard';
-          router.push({ path: redirect });
+          logout();
         }, 3000);
       } else {
         serverMessage.value = result.message;
@@ -67,10 +45,7 @@ const submit = handleSubmit(async (values) => {
   } catch (error) {
     console.log('Error updating information:', error);
   }
-
-  formData = new FormData();
 }, handleError);
-gi
 
 definePageMeta({
   middleware: 'user',
@@ -96,9 +71,7 @@ definePageMeta({
       </section>
       <article class="contents__inner bg-gray-100 py-12 px-4">
         <div class="sm:flex"></div>
-        <div
-          class="bg-white rounded-lg shadow-sm dark:bg-gray-800"
-        ></div>
+        <div class="bg-white rounded-lg shadow-sm dark:bg-gray-800"></div>
         <div class="sm:px-6">
           <form @submit.prevent="submit">
             <div class="">

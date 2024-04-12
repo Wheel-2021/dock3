@@ -1,3 +1,4 @@
+import { boolean } from 'yup';
 import { useAuthUser } from './useAuthUser';
 import type { UserWithoutPassword } from '@/types/user';
 
@@ -168,6 +169,7 @@ export const useAuth = () => {
         setUser(data.user);
       }
       if (data && data.message) {
+        console.log(data);
         return data;
       }
     } catch (error) {
@@ -175,6 +177,26 @@ export const useAuth = () => {
       throw error;
     }
   };
+
+  const cancel = async (mail: string | undefined, deletedFlag: boolean) => {
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/cancel', {
+        method: 'POST',
+        body: {
+          mail,
+          deletedFlag,
+        },
+      });
+
+      if (data && data.message) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   const me = async () => {
     if (!authUser.value) {
       try {
@@ -200,6 +222,7 @@ export const useAuth = () => {
     checkUuid,
     getDBUser,
     infoUpdate,
+    cancel,
     me,
   };
 };
