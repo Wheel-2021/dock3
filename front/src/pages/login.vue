@@ -80,7 +80,7 @@ const EyeOpen = ref(false);
 onMounted(() => {});
 </script>
 <template>
-  <article class="contents__inner bg-gray-100 h-screen py-16 px-4">
+  <article class="contents__inner bg-gray-100 py-16 px-4">
     <div
       class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
     >
@@ -225,7 +225,7 @@ onMounted(() => {});
                 ><br />
                 <span class="text-xs"
                   >アカウント復活については<a
-                    href="/restore"
+                    href="/inquiry"
                     class="text-blue-500"
                     >こちら</a
                   ></span

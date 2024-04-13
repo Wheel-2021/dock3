@@ -198,6 +198,26 @@ export const useAuth = () => {
     }
   };
 
+  const sendMail = async (name: string, mail: string, textarea: string) => {
+    try {
+      const data = await $fetch<ApiResponse>('/api/auth/sendmail', {
+        method: 'POST',
+        body: {
+          name,
+          mail,
+          textarea,
+        },
+      });
+      console.log('useAuth', data);
+      if (data && data.message) {
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   const me = async () => {
     if (!authUser.value) {
       try {
@@ -224,6 +244,7 @@ export const useAuth = () => {
     getDBUser,
     infoUpdate,
     cancel,
+    sendMail,
     me,
   };
 };

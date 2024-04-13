@@ -3,6 +3,7 @@ import {
   Cog6ToothIcon,
   PencilIcon,
   ExclamationCircleIcon,
+  EnvelopeIcon,
 } from '@heroicons/vue/24/outline';
 import { useAuthUser } from '@/composables/auth';
 const currentUser = useAuthUser();
@@ -65,7 +66,15 @@ definePageMeta({
             </NuxtLink>
           </div>
 
-          <div class="sm:w-1/4 p-4 bg-white rounded-lg shadow-sm">適当</div>
+          <div class="sm:w-1/4 p-4 bg-white rounded-lg shadow-sm">
+            <NuxtLink
+              class="flex flex-col justify-center items-center"
+              to="/dashboard/inquiry"
+            >
+              <EnvelopeIcon class="w-6 h-6 mb-2 text-sky-500" />
+              問い合わせ
+            </NuxtLink>
+          </div>
         </div>
       </article>
     </NuxtLayout>

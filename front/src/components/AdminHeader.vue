@@ -182,6 +182,15 @@ const menuBtnAction = (flag: boolean) => {
               <ExclamationCircleIcon class="w-6 h-6 mr-4 text-grey-500" />
               退会
             </NuxtLink>
+            <NuxtLink
+              class="naviWrap__close flex items-center py-4"
+              @click="menuBtnAction(false)"
+              to="/dashboard/inquiry"
+            >
+              <EnvelopeIcon class="w-6 h-6 mr-4 text-grey-500" />
+              問い合わせ
+            </NuxtLink>
+
             <div class="border-b-1 border-dashed"></div>
           </div>
         </div>
