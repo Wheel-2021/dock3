@@ -7,6 +7,7 @@ import {
   PencilIcon,
   ExclamationCircleIcon,
   HomeIcon,
+  EnvelopeIcon
 } from '@heroicons/vue/24/outline';
 import { useAuth, useAuthUser } from '@/composables/auth';
 

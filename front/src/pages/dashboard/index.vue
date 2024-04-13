@@ -66,7 +66,9 @@ definePageMeta({
             </NuxtLink>
           </div>
 
-          <div class="sm:w-1/4 p-4 bg-white rounded-lg shadow-sm">
+          <div
+            class="sm:w-1/4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+          >
             <NuxtLink
               class="flex flex-col justify-center items-center"
               to="/dashboard/inquiry"
@@ -76,6 +78,11 @@ definePageMeta({
             </NuxtLink>
           </div>
         </div>
+        <NuxtImg
+          src="/avator/avator_94e100cb-530b-4109-a726-412c49a2dfdb.png"
+          width="36"
+          alt="avator"
+        />
       </article>
     </NuxtLayout>
   </div>

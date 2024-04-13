@@ -75,8 +75,10 @@ const submit = handleSubmit(async (values) => {
           お問い合わせ
         </h1>
 
-        <p class="mt-1 text-center text-gray-200 text-sm leading-6">
-          下記を入力し、送信ボタンを押してください。<br />アカウント復活は一週間以内なら可能です。
+        <p class="mt-1 text-center text-gray-200 text-sm leading-relaxed">
+          下記を入力し、送信ボタンを押してください。<br
+            class="hidden sm:!block"
+          />アカウント復活は一週間以内なら可能です。
         </p>
       </div>
       <div class="px-6 py-4">
