@@ -95,7 +95,7 @@ onMounted(() => {});
       </div>
       <div class="px-6 py-4">
         <form @submit.prevent="submit">
-          <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+          <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2">
             <div>
               <span
                 class="inline-block mr-2 p-1 bg-red-700 text-white font-bold text-xs"

@@ -35,8 +35,12 @@
     - /preview (プレビュー画面)
     - /publish (公開設定画面)
   - /profile (ユーザープロフィール設定画面)
+  - /cancel (退会)
+  - /inquiry (問い合わせ)
 - /admin (管理者ダッシュボード)
   - /users (ユーザー管理画面)
   - /roles (ロール管理画面)
   - /settings (システム設定画面)
-
+  - /user-list (登録者一覧)
+  - /cancel-list (退会一覧)
+  - /pw-reset (パスワードリセット一覧)

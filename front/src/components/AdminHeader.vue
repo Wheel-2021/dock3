@@ -7,7 +7,11 @@ import {
   PencilIcon,
   ExclamationCircleIcon,
   HomeIcon,
-  EnvelopeIcon
+  EnvelopeIcon,
+  UsersIcon,
+  ListBulletIcon,
+  QueueListIcon,
+  ComputerDesktopIcon,
 } from '@heroicons/vue/24/outline';
 import { useAuth, useAuthUser } from '@/composables/auth';
 
@@ -16,6 +20,8 @@ const currentUser = useAuthUser();
 console.log('AdminHeader', currentUser);
 const { logout } = useAuth();
 const mobileMenuOpen = ref(false);
+
+const adminUser = ref();
 
 const avator = ref({
   image: null as string | null,
@@ -28,6 +34,7 @@ if (currentUser.value !== null) {
     : null;
   avator.value.name = currentUser.value.name;
   console.log(avator.value, currentUser.value.filename);
+  adminUser.value = currentUser.value.role === 'admin' ? true : false;
 }
 
 const signOut = async () => {
@@ -111,7 +118,7 @@ const menuBtnAction = (flag: boolean) => {
       </div>
 
       <div
-        class="naviWrap fixed -z-50 opacity-0 inset-0 px-6 lg:px-8 py-10 bg-white transition duration-200 ease-in-out"
+        class="naviWrap fixed inset-0 px-6 lg:px-8 py-10 bg-white overflow-y-auto transition duration-200 ease-in-out"
         :class="{
           '-z-50 opacity-0': !mobileMenuOpen,
           'z-50 opacity-100': mobileMenuOpen,
@@ -150,10 +157,49 @@ const menuBtnAction = (flag: boolean) => {
                 </svg>
               </button>
             </div>
+
+            <NuxtLink
+              v-if="adminUser"
+              class="naviWrap__close flex items-center py-4 text-red-300"
+              @click="menuBtnAction(false)"
+              to="/admin"
+            >
+              <HomeIcon class="w-6 h-6 mr-4" />
+              ダッシュボード(管理者専用)
+            </NuxtLink>
+
+            <NuxtLink
+              v-if="adminUser"
+              class="naviWrap__close flex items-center py-4 text-red-300"
+              @click="menuBtnAction(false)"
+              to="/admin/users"
+            >
+              <UsersIcon class="w-6 h-6 mr-4" />
+              ユーザー一覧(管理者専用)
+            </NuxtLink>
+            <NuxtLink
+              v-if="adminUser"
+              class="naviWrap__close flex items-center py-4 text-red-300"
+              @click="menuBtnAction(false)"
+              to="/admin/cancel"
+            >
+              <ListBulletIcon class="w-6 h-6 mr-4" />
+              現在の退会申請一覧(管理者専用)
+            </NuxtLink>
+            <NuxtLink
+              v-if="adminUser"
+              class="naviWrap__close flex items-center py-4 text-red-300"
+              @click="menuBtnAction(false)"
+              to="/admin/pwreset"
+            >
+              <QueueListIcon class="w-6 h-6 mr-4" />
+              パスワードリセット一覧(管理者専用)
+            </NuxtLink>
+
             <NuxtLink
               class="naviWrap__close flex items-center py-4"
               @click="menuBtnAction(false)"
-              to="/dashboard/"
+              to="/dashboard"
             >
               <HomeIcon class="w-6 h-6 mr-4 text-grey-500" />
               ダッシュボード

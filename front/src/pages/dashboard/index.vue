@@ -4,9 +4,16 @@ import {
   PencilIcon,
   ExclamationCircleIcon,
   EnvelopeIcon,
+  WrenchScrewdriverIcon
 } from '@heroicons/vue/24/outline';
 import { useAuthUser } from '@/composables/auth';
 const currentUser = useAuthUser();
+const adminUser = ref();
+
+if (currentUser.value !== null) {
+  adminUser.value = currentUser.value.role === 'admin' ? true : false;
+}
+
 definePageMeta({
   middleware: 'user',
   layout: false,
@@ -29,9 +36,9 @@ definePageMeta({
         >
           ここにメッセージが入る。
         </div>
-        <div class="sm:flex mt-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 mt-4">
           <div
-            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
@@ -43,7 +50,7 @@ definePageMeta({
           </div>
 
           <div
-            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
@@ -55,7 +62,7 @@ definePageMeta({
           </div>
 
           <div
-            class="sm:w-1/4 sm:mr-4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
@@ -67,7 +74,7 @@ definePageMeta({
           </div>
 
           <div
-            class="sm:w-1/4 mb-4 sm:!mb-0 p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
           >
             <NuxtLink
               class="flex flex-col justify-center items-center"
@@ -77,12 +84,20 @@ definePageMeta({
               問い合わせ
             </NuxtLink>
           </div>
+
+          <div
+            v-if="adminUser"
+            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+          >
+            <NuxtLink
+              class="flex flex-col justify-center items-center"
+              to="/admin"
+            >
+              <WrenchScrewdriverIcon class="w-6 h-6 mb-2 text-sky-500" />
+              管理者画面
+            </NuxtLink>
+          </div>
         </div>
-        <NuxtImg
-          src="/avator/avator_94e100cb-530b-4109-a726-412c49a2dfdb.png"
-          width="36"
-          alt="avator"
-        />
       </article>
     </NuxtLayout>
   </div>
