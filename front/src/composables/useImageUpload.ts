@@ -45,7 +45,7 @@ const useImageUpload = () => {
         (document.querySelector('#imageInput') as HTMLElement)?.click();
       }
     });
-    watch(uploadDataName, (newValue) => {
+    watch(uploadDataName, (newValue: string) => {
       if (newValue) {
         imageButton.innerText = newValue;
       }

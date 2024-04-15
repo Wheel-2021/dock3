@@ -1,20 +1,6 @@
-import { boolean } from 'yup';
 import { useAuthUser } from './useAuthUser';
 import type { UserWithoutPassword } from '@/types/user';
-
-type ApiResponse = {
-  user?: {
-    _id?: string;
-    id: number;
-    name: string;
-    mail: string;
-    animal: string;
-    filename?: string;
-    role: string;
-    deleted: boolean;
-  };
-  message?: string;
-};
+import type { ApiResponse } from '@/types/apires';
 
 type CheckUuidResponse = {
   userId: string;
