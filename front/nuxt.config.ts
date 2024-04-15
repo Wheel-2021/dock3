@@ -38,6 +38,11 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  routeRules: {
+    '@/server/api/admin/**': {
+      cors: true,
+    },
+  },
   runtimeConfig: {
     apiSecret: {
       MONGODB_URI: process.env.MONGODB_URI || 'mongodb://mongo:27017',
