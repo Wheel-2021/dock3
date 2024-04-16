@@ -59,6 +59,9 @@ https://test.com/user_name/reset_password?token="_3655oOiko89AYHKL
 https://qiita.com/hareku/items/28c11b286733d172e6aa
 https://qiita.com/i_110/items/b44879cb6efb3308d8f7
 
+https://tuk.dev/components/webapp/table/advance_table
+
+
 指定されたURLのように、一意のトークンを含むURLを生成し、そのトークンに有効期限を設けることでセキュリティを確保する方法は、以下のように実装できます。
 
 一意のトークンの生成: 一意のトークンを生成するためには、cryptoモジュールなどを使用することができます。以下に一例を示します。
