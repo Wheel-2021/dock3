@@ -63,31 +63,59 @@ definePageMeta({
       </section>
       <article class="contents__inner bg-gray-100 py-16 px-4">
         <section
-          class="mx-auto p-4 overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
+          class="mx-auto p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800"
         >
-          <div class="relative h-screen pt-16 overscroll-y-auto">
+          <div class="relative pt-16 overscroll-y-auto">
             <dl
-              class="absolute top-0 left-0 items-center w-full bg-white border-b font-normal"
+              class="absolute top-0 left-0 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 w-full font-normal"
             >
-              <dt class="w-20 p-2 text-center">#</dt>
-              <dt class="w-40 p-2 text-center">名前</dt>
-              <dt class="w-50 p-2 text-center">メールアドレス</dt>
-              <dt class="w-32 p-2 text-center">動物名</dt>
-              <dt class="w-40 p-2 text-center">権限</dt>
-              <dt class="w-40 p-2 text-center">削除</dt>
-              <dt class="p-2 text-center">操作</dt>
+              <dt
+                class="w-full p-2 border border-b border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                ID
+              </dt>
+              <dt
+                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                名前
+              </dt>
+              <dt
+                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                メールアドレス
+              </dt>
+              <dt
+                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                動物名
+              </dt>
+              <dt
+                class="w-full p-2 tborder border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                権限
+              </dt>
+              <dt
+                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                削除
+              </dt>
+              <dt
+                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+              >
+                操作
+              </dt>
             </dl>
 
             <dl
-              class="w-full border-b"
+              class="grid sm:grid-cols-3 grid-cols-5 lg:grid-cols-7 w-full border-b"
               v-for="(user, index) in users"
               :key="index"
             >
-              <dt class="w-20 p-2 text-right">
+              <dt class="flex items-center justify-end w-20 p-2  font-normal">
                 {{ user.id }}
               </dt>
 
-              <dd class="w-40 p-2 text-left">
+              <dd class="flex items-center w-50 p-2 text-left">
                 <NuxtImg
                   v-if="user.filename"
                   :src="user.filename"
@@ -102,29 +130,41 @@ definePageMeta({
                 />
                 <span class="ml-2">{{ user.name }}</span>
               </dd>
-              <dd class="w-50 p-2 text-left">
+              <dd class="flex items-center w-70 p-2 text-left">
                 {{ user.mail }}
               </dd>
-              <dd class="w-32 p-2 text-left">
+              <dd class="flex items-center w-32 p-2 text-left">
                 {{ user.animal }}
               </dd>
-              <dd class="w-40 p-2 text-left">
-                <span v-if="user.role === 'admin'">管理者</span>
-                <span v-if="user.role === 'user'">一般ユーザー</span>
+              <dd class="flex items-center w-40 p-2 text-left">
+                <span
+                  v-if="user.role === 'admin'"
+                  class="p-2 rounded-full bg-blue-600 text-white text-sm"
+                  >管理者</span
+                >
+                <span
+                  v-if="user.role === 'user'"
+                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-sm"
+                  >一般ユーザー</span
+                >
               </dd>
-              <dd class="w-40 p-2 text-center">
-                <span v-if="user.delated">削除対象</span>
-                <span v-else>普通だよ</span>
+              <dd class="flex items-center w-20 p-2 text-center">
+                <span
+                  v-if="user.delated"
+                  class="p-2 rounded-full bg-blue-600 text-white text-sm"
+                  >削除対象</span
+                >
+                <span v-else></span>
               </dd>
-              <dd class="p-2 text-center">
+              <dd class="flex items-center w-full p-2 text-center whitespace-nowrap">
                 <button
-                  class="mr-1 px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="mr-1 px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                 >
                   編集
                 </button>
                 <button
-                  class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                 >
                   削除
