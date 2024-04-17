@@ -152,8 +152,8 @@ definePageMeta({
                 >
                 <span
                   v-if="user.role === 'user'"
-                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-xs"
-                  >一般ユーザー</span
+                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-xs whitespace-nowrap"
+                  >ユーザー</span
                 >
               </dd>
               <dd

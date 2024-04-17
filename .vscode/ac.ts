@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   const user = event.context.user;
-  console.log('middleware', user);
+  console.log('middleware', event.context);
   if (event.node.req.originalUrl?.indexOf('/api/admin') === 0) {
     if (!(user && user.role === 'admin')) {
       sendError(
