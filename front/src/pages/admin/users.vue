@@ -62,60 +62,62 @@ definePageMeta({
         </p>
       </section>
       <article class="contents__inner bg-gray-100 py-16 px-4">
-        <section
-          class="mx-auto p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800"
-        >
-          <div class="relative pt-16 overscroll-y-auto">
+        <section class="mx-auto p-4 bg-white rounded-lg shadow-sm">
+          <div class="relative pt-40 md:pt-20 lg:pt-12 overscroll-y-auto">
             <dl
-              class="absolute top-0 left-0 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 w-full font-normal"
+              class="absolute top-0 left-0 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full bg-gray-800 text-gray-200"
             >
               <dt
-                class="w-full p-2 border border-b border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="p-2 bg-gray-800 border-b border-gray-600 lg:border-0 font-normal text-sm"
               >
                 ID
               </dt>
               <dt
-                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="col-span-2 p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 名前
               </dt>
               <dt
-                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="col-span-2 p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 メールアドレス
               </dt>
               <dt
-                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 動物名
               </dt>
               <dt
-                class="w-full p-2 tborder border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 権限
               </dt>
               <dt
-                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="p-2 bg-gray-800 border-b border-l border-r border-gray-600 md:border-r-0 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 削除
               </dt>
               <dt
-                class="w-full p-2 border border-b border-l border-gray-200 bg-gray-800 text-white text-center text-sm"
+                class="col-span-2 p-2 border-b border-l border-r border-gray-600 lg:border-b-0 lg:border-l bg-gray-800 font-normal text-sm"
               >
                 操作
               </dt>
             </dl>
 
             <dl
-              class="grid sm:grid-cols-3 grid-cols-5 lg:grid-cols-7 w-full border-b"
+              class="grid lg:gap-2 grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
               v-for="(user, index) in users"
               :key="index"
             >
-              <dt class="flex items-center justify-end w-20 p-2  font-normal">
+              <dt
+                class="flex items-center justify-end p-2 border-b border-l border-gray-200 border-dotted lg:border-none font-normal"
+              >
                 {{ user.id }}
               </dt>
 
-              <dd class="flex items-center w-50 p-2 text-left">
+              <dd
+                class="flex items-center col-span-2 p-2 border-b border-l border-gray-200 border-dotted lg:border-none"
+              >
                 <NuxtImg
                   v-if="user.filename"
                   :src="user.filename"
@@ -130,48 +132,57 @@ definePageMeta({
                 />
                 <span class="ml-2">{{ user.name }}</span>
               </dd>
-              <dd class="flex items-center w-70 p-2 text-left">
+              <dd
+                class="flex items-center col-span-2 p-2 border-b border-l border-r-0 border-gray-200 border-dotted sm:border-r lg:border-none"
+              >
                 {{ user.mail }}
               </dd>
-              <dd class="flex items-center w-32 p-2 text-left">
+              <dd
+                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none"
+              >
                 {{ user.animal }}
               </dd>
-              <dd class="flex items-center w-40 p-2 text-left">
+              <dd
+                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none"
+              >
                 <span
                   v-if="user.role === 'admin'"
-                  class="p-2 rounded-full bg-blue-600 text-white text-sm"
+                  class="p-2 rounded-full bg-blue-600 text-white text-xs"
                   >管理者</span
                 >
                 <span
                   v-if="user.role === 'user'"
-                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-sm"
+                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-xs"
                   >一般ユーザー</span
                 >
               </dd>
-              <dd class="flex items-center w-20 p-2 text-center">
+              <dd
+                class="flex items-center p-2 border-b border-l border-r border-gray-200 border-dotted md:border-r-0 md:border-b-0 lg:border-none"
+              >
                 <span
                   v-if="user.delated"
-                  class="p-2 rounded-full bg-blue-600 text-white text-sm"
+                  class="p-2 border-blue-600 text-blue-600 text-xs"
                   >削除対象</span
                 >
                 <span v-else></span>
               </dd>
-              <dd class="flex items-center w-full p-2 text-center whitespace-nowrap">
+              <dd
+                class="flex items-center justify-end col-span-2 p-2 border-l border-r border-gray-200 border-dotted lg:border-none whitespace-nowrap"
+              >
                 <button
-                  class="mr-1 px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="mr-1 px-6 py-2 text-xs font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                 >
                   編集
                 </button>
                 <button
-                  class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="px-6 py-2 text-xs font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-400 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                 >
                   削除
                 </button>
               </dd>
             </dl>
-            <div class="divide-dashed"></div>
           </div>
         </section>
       </article>
