@@ -52,35 +52,36 @@ let userData: User = {
   password: '',
   filename: '',
   role: 'user',
-  deleted: false
+  deleted: false,
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
 const { uploadFile, fileData } = useImageUpload();
+// const updateIfChanged = (value: string, oldValue: string, key: string) => {
+//   if (value !== oldValue) {
+//     userData[key] = value;
+//   }
+// };
 
 const submit = handleSubmit(async (values) => {
   let { formData, newFileName } = prepareFormData(fileData, setDirName);
   formData.append('userId', userDBData?.user._id || '');
-  console.log('userDBData', values, userDBData?.user);
+
   if (newFileName) {
     userData.filename = newFileName;
   }
 
-  if (values.name !== userDBData?.user.name) {
-    userData.name = values.name;
-  }
-  if (values.mail !== userDBData?.user.mail) {
-    userData.mail = values.mail;
-  }
-  if (values.animal !== userDBData?.user.animal) {
-    userData.animal = values.animal;
-  }
   if (values.password) {
     userData.password = values.password;
   }
-  if (values.deleted !== userDBData?.user.deleted) {
-    userData.deleted = values.deleted;
-  }
+
+  const fieldsToUpdate = ['name', 'mail', 'animal', 'deleted'];
+
+  fieldsToUpdate.forEach((field) => {
+    if (values[field] !== userDBData?.user[field]) {
+      userData[field] = values[field];
+    }
+  });
   console.log('settings', userData);
   formData.append('body', JSON.stringify(userData));
 
@@ -89,7 +90,8 @@ const submit = handleSubmit(async (values) => {
     console.log('settings.vue', result);
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
-        serverMessage.value = result.message + 'この後、ダッシュボードに遷移します。';
+        serverMessage.value =
+          result.message + 'この後、ダッシュボードに遷移します。';
 
         setTimeout(() => {
           const redirect = '/dashboard';
@@ -153,7 +155,9 @@ definePageMeta({
         ></div>
         <div class="sm:px-6">
           <form @submit.prevent="submit">
-            <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+            <div
+              class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <div class="p-4 bg-white rounded-lg shadow-sm">
                 <label
                   class="text-gray-700 dark:text-gray-200 text-lg font-bold"

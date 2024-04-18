@@ -8,6 +8,7 @@ export interface User {
   filename?: string | undefined;
   role: string;
   deleted: boolean;
+  [key: string]: any;
 }
 
 export type UserWithoutPassword = Omit<User, 'password'>;
