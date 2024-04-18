@@ -31,10 +31,10 @@ const animal = ref('');
 const filename = ref('');
 
 const isOpen = ref(false);
-const setIsOpen = (value: Boolean) => {
+const setIsOpen = (value: boolean) => {
   isOpen.value = value;
 };
-const sendData = (userData: Object) => {
+const sendData = (userData: object) => {
   console.log(userData);
 };
 let formData = new FormData();
@@ -279,7 +279,7 @@ definePageMeta({
                   leave="duration-150 ease-in"
                   leave-to="opacity-0"
                 >
-                  <DialogOverlay class="fixed inset-0 bg-gray-800 opacity-60" />
+                  <DialogOverlay class="fixed inset-0 bg-gray-800 opacity-80" />
                 </TransitionChild>
 
                 <TransitionChild
@@ -291,7 +291,7 @@ definePageMeta({
                   leave-to="opacity-0 scale-0"
                 >
                   <div
-                    class="relative w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg"
+                    class="relative w-10/12 p-4 mx-auto overflow-y-auto bg-white rounded-lg"
                   >
                     <div class="flex justify-end">
                       <button
@@ -302,7 +302,7 @@ definePageMeta({
                       </button>
                     </div>
                     <DialogTitle>
-                      <h1 class="mb-4 text-3xl font-medium text-center">
+                      <h1 class="mb-4 text-xl font-medium text-center">
                         アカウント設定画面
                       </h1>
                     </DialogTitle>
@@ -318,10 +318,8 @@ definePageMeta({
                     </DialogDescription>
 
                     <form @submit.prevent="submit">
-                      <div
-                        class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2 lg:grid-cols-3"
-                      >
-                        <div class="p-4 bg-white rounded-lg shadow-sm">
+                      <div class="grid grid-cols-1 gap-6 mt-8 sm:grid-cols-3">
+                        <div class="">
                           <label
                             class="text-gray-700 dark:text-gray-200 text-lg font-bold"
                             for="name"
@@ -351,7 +349,7 @@ definePageMeta({
                           </p>
                         </div>
 
-                        <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <div class="">
                           <label
                             class="text-gray-700 dark:text-gray-200 font-bold"
                             for="mail"
@@ -382,7 +380,7 @@ definePageMeta({
                           </p>
                         </div>
 
-                        <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <div class="">
                           <label
                             class="text-gray-700 dark:text-gray-200 text-lg font-bold"
                             for="animal"
@@ -412,7 +410,7 @@ definePageMeta({
                           </p>
                         </div>
 
-                        <div class="p-4 bg-white rounded-lg shadow-sm">
+                        <div class="">
                           <label
                             class="text-gray-700 dark:text-gray-200 font-bold"
                             for="passwordConfirmation"
@@ -432,21 +430,52 @@ definePageMeta({
                             class="hidden"
                             @change="uploadFile"
                           />
-                          <!-- <p class="mt-2">
-                    <span class="text-gray-400 text-xs"
-                      >登録後でも設定できます</span
-                    >
-                  </p> -->
-                          <!-- <NuxtImg
-                    v-if="filename"
-                    :src="filename"
-                    width="36"
-                    alt="アバター"
-                    class="mt-2"
-                  /> -->
                         </div>
 
-                        <div class="flex items-end justify-between mt-6 pb-4">
+                        <div class="">
+                          <label
+                            class="text-gray-700 dark:text-gray-200 font-bold"
+                            for="role"
+                            >役割</label
+                          >
+                          <select
+                            id="role"
+                            class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          >
+                            <option selected>役割</option>
+                            <option value="admin">管理者</option>
+                            <option value="user">ユーザー</option>
+                          </select>
+                        </div>
+
+                        <div class="">
+                          <label
+                            class="text-gray-700 dark:text-gray-200 font-bold"
+                            for="deleted"
+                            >削除</label
+                          >
+                          <div
+                            class="flex items-cente mt-2 ps-4 border border-gray-200 rounded-lg"
+                          >
+                            <input
+                              checked
+                              id="deleted"
+                              type="checkbox"
+                              value=""
+                              name="bordered-checkbox"
+                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <label
+                              for="deleted"
+                              class="w-full p-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                              >削除する</label
+                            >
+                          </div>
+                        </div>
+
+                        <div
+                          class="col-span-3 flex items-end justify-between mt-6"
+                        >
                           <p>
                             <span
                               v-if="serverMessage"
