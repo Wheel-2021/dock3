@@ -28,14 +28,20 @@ const serverMessage = ref();
 const name = ref('');
 const mail = ref('');
 const animal = ref('');
-const filename = ref('');
+const selectedRole = ref('');
+const checkDeleted = ref('');
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
 };
-const sendData = (userData: object) => {
+const sendData = (userData: any) => {
   console.log(userData);
+  name.value = userData.name;
+  mail.value = userData.mail;
+  animal.value = userData.animal;
+  selectedRole.value = userData.role;
+  checkDeleted.value = userData.deleted;
 };
 let formData = new FormData();
 
@@ -183,7 +189,7 @@ definePageMeta({
             </dl>
 
             <dl
-              class="grid lg:gap-2 grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
+              class="grid lg:gap-2 grid-cols-2 md:grid-cols-5 lg:grid-cols-10 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
               v-for="(user, index) in users"
               :key="index"
             >
@@ -291,16 +297,14 @@ definePageMeta({
                   leave-to="opacity-0 scale-0"
                 >
                   <div
-                    class="relative w-10/12 p-4 mx-auto overflow-y-auto bg-white rounded-lg"
+                    class="relative w-10/12 p-8 mx-auto overflow-y-auto bg-white rounded-lg"
                   >
-                    <div class="flex justify-end">
-                      <button
-                        class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-                        @click="setIsOpen(false)"
-                      >
-                        <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-                      </button>
-                    </div>
+                    <button
+                      class="absolute top-2.5 right-2.5 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                      @click="setIsOpen(false)"
+                    >
+                      <XMarkIcon class="h-6 w-6" aria-hidden="true" />
+                    </button>
                     <DialogTitle>
                       <h1 class="mb-4 text-xl font-medium text-center">
                         アカウント設定画面
@@ -440,9 +444,9 @@ definePageMeta({
                           >
                           <select
                             id="role"
+                            v-model="selectedRole"
                             class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           >
-                            <option selected>役割</option>
                             <option value="admin">管理者</option>
                             <option value="user">ユーザー</option>
                           </select>
@@ -454,28 +458,25 @@ definePageMeta({
                             for="deleted"
                             >削除</label
                           >
-                          <div
-                            class="flex items-cente mt-2 ps-4 border border-gray-200 rounded-lg"
+                          <!-- <div
+                            class="flex items-center mt-2 ps-4 border border-gray-200 rounded-lg"
                           >
                             <input
-                              checked
                               id="deleted"
                               type="checkbox"
-                              value=""
-                              name="bordered-checkbox"
-                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                              v-model="checkDeleted"
+                              name="deleted"
+                              class="h-4 w-4 rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400"
                             />
                             <label
                               for="deleted"
                               class="w-full p-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                               >削除する</label
                             >
-                          </div>
+                          </div> -->
                         </div>
 
-                        <div
-                          class="col-span-3 flex items-end justify-between mt-6"
-                        >
+                        <div class="col-span-3 flex items-end justify-between">
                           <p>
                             <span
                               v-if="serverMessage"

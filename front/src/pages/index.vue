@@ -26,7 +26,9 @@ definePageMeta({
             <p class="mt-6 text-lg leading-8 text-white">
               リード文と登録への誘導がはいるよ。リード文と登録への誘導がはいるよ。リード文と登録への誘導がはいるよ。リード文と登録への誘導がはいるよ。リード文と登録への誘導がはいるよ。
             </p>
-            <div class="mt-10 sm:flex sm:items-center sm:justify-center gap-x-6">
+            <div
+              class="mt-10 sm:flex sm:items-center sm:justify-center gap-x-6"
+            >
               <a
                 href="/register"
                 class="relative inline-block w-full p-px rounded-lg sm:w-auto group h-11 bg-gradient-to-r from-purple-600 to-sky-500 dark:from-purple-600 dark:to-blue-400 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-400 before:to-sky-400 dark:before:from-purple-600 dark:before:to-sky-500 before:scale-75 before:opacity-50 before:rounded-md before:blur-lg before:transition before:duration-300 active:before:scale-90 focus:before:scale-90 focus:before:opacity-75 hover:before:scale-100 hover:before:opacity-100"
@@ -62,7 +64,19 @@ definePageMeta({
     </div>
 
     <section class="text-center">ここにもはいるよ。。。</section>
-
+    <div class="flex items-center mt-2 ps-4 border border-gray-200 rounded-lg">
+      <input
+        id="deleted"
+        type="checkbox"
+        name="deleted"
+        class="h-4 w-4 rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400"
+      />
+      <label
+        for="deleted"
+        class="w-full p-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        >削除する</label
+      >
+    </div>
     <PageFooter />
   </div>
 </template>
