@@ -6,8 +6,18 @@ import {
   DialogDescription,
   TransitionRoot,
   TransitionChild,
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+  Switch,
 } from '@headlessui/vue';
-import { UserCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import {
+  UserCircleIcon,
+  XMarkIcon,
+  CheckIcon,
+  ChevronUpDownIcon,
+} from '@heroicons/vue/24/outline';
 import { useAuthUser, useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
@@ -28,8 +38,12 @@ const serverMessage = ref();
 const name = ref('');
 const mail = ref('');
 const animal = ref('');
-const selectedRole = ref('');
-const checkDeleted = ref('');
+const roleList = [
+  { id: 1, name: '管理者', role: 'admin' },
+  { id: 2, name: 'ユーザー', role: 'user' },
+];
+const selectedRole = ref();
+const checkDeleted = ref(false);
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
@@ -442,6 +456,72 @@ definePageMeta({
                             for="role"
                             >役割</label
                           >
+                          <Listbox id="role" name="role" v-model="selectedRole">
+                            <div class="relative mt-1">
+                              <ListboxButton
+                                class="relative w-full cursor-default border border-gray-200 rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                              >
+                                <span class="block truncate">{{
+                                  selectedRole.name
+                                }}</span>
+                                <span
+                                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                >
+                                  <ChevronUpDownIcon
+                                    class="h-5 w-5 text-gray-400"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              </ListboxButton>
+
+                              <transition
+                                leave-active-class="transition duration-100 ease-in"
+                                leave-from-class="opacity-100"
+                                leave-to-class="opacity-0"
+                              >
+                                <ListboxOptions
+                                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                                >
+                                  <ListboxOption
+                                    v-slot="{ active, selected }"
+                                    v-for="role in roleList"
+                                    :key="role.name"
+                                    :value="role"
+                                    as="template"
+                                  >
+                                    <li
+                                      :value="role.role"
+                                      :class="[
+                                        active
+                                          ? 'bg-amber-100 text-amber-900'
+                                          : 'text-gray-900',
+                                        'relative cursor-default select-none py-2 pl-10 pr-4',
+                                      ]"
+                                    >
+                                      <span
+                                        :class="[
+                                          selected
+                                            ? 'font-medium'
+                                            : 'font-normal',
+                                          'block truncate',
+                                        ]"
+                                        >{{ role.name }} {{ role.role }}</span
+                                      >
+                                      <span
+                                        v-if="selected"
+                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                      >
+                                        <CheckIcon
+                                          class="h-5 w-5"
+                                          aria-hidden="true"
+                                        />
+                                      </span>
+                                    </li>
+                                  </ListboxOption>
+                                </ListboxOptions>
+                              </transition>
+                            </div>
+                          </Listbox>
                           <select
                             id="role"
                             v-model="selectedRole"
@@ -458,22 +538,27 @@ definePageMeta({
                             for="deleted"
                             >削除</label
                           >
-                          <!-- <div
-                            class="flex items-center mt-2 ps-4 border border-gray-200 rounded-lg"
-                          >
-                            <input
+                          <div class="block mt-2">
+                            <Switch
                               id="deleted"
-                              type="checkbox"
-                              v-model="checkDeleted"
                               name="deleted"
-                              class="h-4 w-4 rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400"
-                            />
-                            <label
-                              for="deleted"
-                              class="w-full p-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                              >削除する</label
+                              v-model="checkDeleted"
+                              :class="
+                                checkDeleted ? 'bg-blue-600' : 'bg-gray-200'
+                              "
+                              class="relative inline-flex h-6 w-11 items-center rounded-full"
                             >
-                          </div> -->
+                              <span class="sr-only">Enable notifications</span>
+                              <span
+                                :class="
+                                  checkDeleted
+                                    ? 'translate-x-6'
+                                    : 'translate-x-1'
+                                "
+                                class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                              />
+                            </Switch>
+                          </div>
                         </div>
 
                         <div class="col-span-3 flex items-end justify-between">
