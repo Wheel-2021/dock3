@@ -36,7 +36,7 @@ const { errors, handleSubmit } = useForm({
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let userData = {
+const userData = {
   password: '',
 };
 // veevalidateのエラー表示部分

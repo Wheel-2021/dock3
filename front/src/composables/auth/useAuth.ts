@@ -40,6 +40,7 @@ export const useAuth = () => {
   };
 
   const login = async (mail: string, animal: string, password: string) => {
+    // メールアドレスのないアカウントへの対応
     try {
       const data = await $fetch<ApiResponse>('/api/auth/login', {
         method: 'POST',
@@ -91,7 +92,10 @@ export const useAuth = () => {
       if (data && data.message) {
         return data;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
   const updatePw = async (userId: string, password: string) => {

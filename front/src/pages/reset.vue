@@ -17,7 +17,7 @@ const { errors, handleSubmit } = useForm({
 });
 const { value: mail, handleChange: handleChangeMail } = useField('mail');
 
-let userData = {
+const userData = {
   mail: '',
 };
 // veevalidateのエラー表示部分

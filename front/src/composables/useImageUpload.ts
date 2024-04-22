@@ -2,6 +2,9 @@
 const useImageUpload = () => {
   const uploadDataName = ref();
   const fileData = ref();
+  const isErrorOpen = ref<boolean>(false);
+  const errorMessage = ref<string>('');
+
   const uploadFile = (event: Event) => {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -25,7 +28,9 @@ const useImageUpload = () => {
       if (fileExtension && imageExtensions.includes(fileExtension)) {
         uploadDataName.value = fileName;
       } else {
-        alert('画像ファイルを選択してください。');
+        // alert('画像ファイルを選択してください。');
+        errorMessage.value = '画像ファイルを選択してください。';
+        isErrorOpen.value = true;
       }
     }
   };
@@ -34,6 +39,7 @@ const useImageUpload = () => {
     const imageButton = document.querySelector('.imageButton') as HTMLElement;
     imageButton?.addEventListener('click', () => {
       (document.querySelector('#imageInput') as HTMLElement)?.click();
+      console.log('click');
     });
     imageButton?.addEventListener('keydown', (event) => {
       if (!imageButton.isEqualNode(event.target as Node)) {
@@ -55,6 +61,8 @@ const useImageUpload = () => {
   return {
     uploadFile,
     fileData,
+    isErrorOpen,
+    errorMessage,
   };
 };
 

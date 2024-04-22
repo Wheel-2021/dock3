@@ -9,44 +9,45 @@ import {
   Switch,
 } from '@headlessui/vue';
 import { UserCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { useAuth } from '@/composables/auth';
+import { useAuthUser, useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { useAdmini } from '@/composables/admin';
+import useImageUpload from '@/composables/useImageUpload';
 import useErrorHandler from '@/composables/useErrorHandler';
+import { prepareFormData } from '@/utils/prepareImageFormData';
 import type { User } from '@/types/user';
 
+const currentUser = useAuthUser();
 const { getAllUsers } = useAdmini();
 const { getDBUser, infoUpdate } = useAuth();
-let formData = new FormData();
+const userDBData = currentUser.value
+  ? ((await getDBUser(currentUser.value.mail)) as { user: User })
+  : null;
 const users = ref();
+const setDirName = 'avator';
 const serverMessage = ref();
-
 const name = ref('');
 const mail = ref('');
 const animal = ref('');
-const role = ref();
-const deleted = ref(false);
+
+const filename = ref('');
+const selectedRole = ref();
+const checkDeleted = ref(false);
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
 };
-let userDBData: { user: User } | null;
-
-// 修正ボタンを押したらモーダル画面にデータ反映
-const sendData = async (userData: any) => {
+const sendData = (userData: any) => {
+  console.log(userData);
   name.value = userData.name;
   mail.value = userData.mail;
   animal.value = userData.animal;
-  role.value = userData.role;
-  deleted.value = userData.deleted;
-
-  // 現在のユーザーになっている
-  userDBData = userData.mail
-    ? ((await getDBUser(userData.mail)) as { user: User })
-    : null;
+  selectedRole.value = userData.role;
+  checkDeleted.value = userData.deleted;
 };
+// const formData = new FormData();
 
 const schema = object({
   mail: string().email('メールアドレスの形式ではありません'),
@@ -59,15 +60,15 @@ const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { handleChange: handleChangeName } = useField('name');
-const { handleChange: handleChangeMail } = useField('mail');
-const { handleChange: handleChangeAnimal } = useField('animal');
-const { handleChange: handleChangeRole } = useField('role');
-const { handleChange: handleChangeDeleted } = useField('deleted');
+const { value: fieldName, handleChange: handleChangeName } = useField('name');
+const { value: fieldMail, handleChange: handleChangeMail } = useField('mail');
+const { value: fieldAnimal, handleChange: handleChangeAnimal } =
+  useField('animal');
 
 const allDBUsers = async () => {
   try {
     const result = await getAllUsers();
+    console.log('users.vue', result);
     return result;
   } catch (error) {
     console.log(error);
@@ -86,21 +87,27 @@ const userData: User = {
   deleted: false,
 };
 const handleError = useErrorHandler(errors);
+const { uploadFile, fileData, isErrorOpen, errorMessage } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
+  let { formData, newFileName } = prepareFormData(fileData, setDirName);
   formData.append('userId', userDBData?.user._id || '');
-  console.log('submit', deleted.value); //deleted.valueは値がとれる
+
+  if (newFileName) {
+    userData.filename = newFileName;
+  }
+
+  if (values.password) {
+    userData.password = values.password;
+  }
+
   const fieldsToUpdate = ['name', 'mail', 'animal', 'role', 'deleted'];
 
   fieldsToUpdate.forEach((field) => {
     if (values[field] !== userDBData?.user[field]) {
       userData[field] = values[field];
     }
-    if (field === 'deleted') {
-      userData[field] = deleted.value;
-    }
   });
-
   console.log('users', userData);
   formData.append('body', JSON.stringify(userData));
 
@@ -127,18 +134,21 @@ const submit = handleSubmit(async (values) => {
 
 onMounted(async () => {
   users.value = await allDBUsers();
-
-  if (userDBData && userDBData.user) {
-    name.value = userDBData.user.name;
-    mail.value = userDBData.user.mail;
-    animal.value = userDBData.user.animal;
-    role.value = userDBData.user.role;
-    deleted.value = userDBData.user.deleted;
+  try {
+    if (userDBData && userDBData.user) {
+      name.value = userDBData.user.name;
+      mail.value = userDBData.user.mail;
+      animal.value = userDBData.user.animal;
+      if (userDBData.user.filename) {
+        filename.value = `/${setDirName}/${userDBData.user.filename}`;
+      }
+    }
+  } catch (error) {
+    console.error('Error mounting component:', error);
   }
 });
 
 definePageMeta({
-  middleware: 'admin',
   layout: false,
 });
 </script>
@@ -421,8 +431,100 @@ definePageMeta({
                           >
                         </p>
                       </div>
+                      <div class="col-span-1">
+                        <label
+                          class="text-gray-700 dark:text-gray-200 font-bold"
+                          for="passwordConfirmation"
+                          >アバター</label
+                        >
+                        <div
+                          role="button"
+                          tabindex="0"
+                          class="imageButton block whitespace-nowrap overflow-hidden w-full px-4 py-2 mt-2 text-gray-400 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                        >
+                          ファイルを選択
+                        </div>
+                        <input
+                          id="imageInput"
+                          name="imageInput"
+                          type="file"
+                          class="hidden imageInputs"
+                          @change="uploadFile"
+                          @click="uploadFile"
+                        />
+                        <ErrorDialog
+                          v-model:isErrorDialog="isErrorOpen"
+                          :message="errorMessage"
+                        />
+                      </div>
 
                       <div class="col-span-1">
+                        <!-- <Listbox id="role" name="role" v-model="selectedRole">
+                            <ListboxLabel>役割</ListboxLabel>
+                            <div class="relative mt-1">
+                              <ListboxButton
+                                class="relative w-full cursor-default border border-gray-200 rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                              >
+                                <span class="block truncate">{{
+                                  selectedRole.name
+                                }}</span>
+                                <span
+                                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                >
+                                  <ChevronUpDownIcon
+                                    class="h-5 w-5 text-gray-400"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              </ListboxButton>
+
+                              <transition
+                                leave-active-class="transition duration-100 ease-in"
+                                leave-from-class="opacity-100"
+                                leave-to-class="opacity-0"
+                              >
+                                <ListboxOptions
+                                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                                >
+                                  <ListboxOption
+                                    v-slot="{ active, selected }"
+                                    v-for="role in roleList"
+                                    :key="role.name"
+                                    :value="role"
+                                    as="template"
+                                  >
+                                    <li
+                                      :class="[
+                                        active
+                                          ? 'bg-amber-100 text-amber-900'
+                                          : 'text-gray-900',
+                                        'relative cursor-default select-none py-2 pl-10 pr-4',
+                                      ]"
+                                    >
+                                      <span
+                                        :class="[
+                                          selected
+                                            ? 'font-medium'
+                                            : 'font-normal',
+                                          'block truncate',
+                                        ]"
+                                        >{{ role.name }} {{ role.role }}</span
+                                      >
+                                      <span
+                                        v-if="selected"
+                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                      >
+                                        <CheckIcon
+                                          class="h-5 w-5"
+                                          aria-hidden="true"
+                                        />
+                                      </span>
+                                    </li>
+                                  </ListboxOption>
+                                </ListboxOptions>
+                              </transition>
+                            </div>
+                          </Listbox> -->
                         <label
                           class="text-gray-700 dark:text-gray-200 font-bold"
                           for="role"
@@ -430,8 +532,7 @@ definePageMeta({
                         >
                         <select
                           id="role"
-                          v-model="role"
-                          @change="handleChangeRole"
+                          v-model="selectedRole"
                           class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         >
                           <option value="admin">管理者</option>
@@ -449,15 +550,18 @@ definePageMeta({
                           <Switch
                             id="deleted"
                             name="deleted"
-                            v-model="deleted"
-                            @change="handleChangeDeleted"
-                            :class="deleted ? 'bg-blue-600' : 'bg-gray-200'"
+                            v-model="checkDeleted"
+                            :class="
+                              checkDeleted ? 'bg-blue-600' : 'bg-gray-200'
+                            "
                             class="relative inline-flex h-10 w-20 items-center rounded-full"
                           >
                             <span class="sr-only">Enable notifications</span>
                             <span
                               :class="
-                                deleted ? 'translate-x-10' : 'translate-x-1'
+                                checkDeleted
+                                  ? 'translate-x-10'
+                                  : 'translate-x-1'
                               "
                               class="inline-block h-8 w-8 transform rounded-full bg-white transition"
                             />

@@ -6,17 +6,22 @@
     "vue/setup-compiler-macros": true
   },
   "extends": [
+    "plugin:vue/vue3-essential",
     "eslint:recommended",
-    "plugin:vue/vue3-recommended",
     "@vue/typescript/recommended",
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 13,
-    "sourceType": "module"
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "vueFeatures": {
+      "vModel": true
+    }
   },
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
+    "vue/valid-v-model": "off",
+    "vue/no-v-model-argument": "off",
     "vue/multi-word-component-names": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "off"

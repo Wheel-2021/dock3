@@ -28,7 +28,7 @@ const { value: mail, handleChange: handleChangeMail } =
   useField<string>('mail');
 const { value: contents } = useField<string>('contents');
 
-let mailData = {
+const mailData = {
   name: '',
   mail: '',
   contents: '',

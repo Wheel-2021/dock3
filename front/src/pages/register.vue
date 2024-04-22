@@ -12,7 +12,7 @@ const router = useRouter();
 const { signUp } = useAuth();
 const setDirName = 'avator';
 const serverMessage = ref();
-let formData = new FormData();
+const formData = new FormData();
 
 const schema = object({
   name: string().required('必須項目です'),
@@ -38,7 +38,7 @@ const { value: animal } = useField('animal');
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let userData: User = {
+const userData: User = {
   id: null,
   name: '',
   mail: '',

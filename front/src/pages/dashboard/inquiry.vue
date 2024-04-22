@@ -28,7 +28,7 @@ const { value: mail, handleChange: handleChangeMail } =
   useField<string>('mail');
 const { value: contents } = useField<string>('contents');
 
-let mailData = {
+const mailData = {
   name: '',
   mail: '',
   contents: '',
@@ -72,6 +72,7 @@ definePageMeta({
 </script>
 <template>
   <div>
+    <!--　名前とメールアドレスはわかっているので、除いてもいい -->
     <NuxtLayout name="custom">
       <section class="bg-white py-12">
         <h1 class="mb-4 text-3xl font-medium text-center">お問い合わせ</h1>

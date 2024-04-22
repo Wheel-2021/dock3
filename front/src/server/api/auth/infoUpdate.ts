@@ -17,7 +17,7 @@ interface FileItem {
 }
 
 async function processFile(file: FileItem[], event: H3Event) {
-  let body, newFileName, dirName, userId;
+  let body, newFileName, dirName, userId, roleFlag;
 
   for (const item of file) {
     switch (item.name) {
@@ -31,19 +31,21 @@ async function processFile(file: FileItem[], event: H3Event) {
         dirName = item.data.toString();
         break;
       case 'file':
-        const oldFilename = item.filename;
-        if (typeof oldFilename === 'string') {
-          await createDirectoryIfNotExists(`./src/public/${dirName}`);
-          const data = item.data;
-          const filePath = `./src/public/${dirName}/${newFileName}`;
-          await writeFile(filePath, data);
+        {
+          const oldFilename = item.filename;
+          if (typeof oldFilename === 'string') {
+            await createDirectoryIfNotExists(`./src/public/${dirName}`);
+            const data = item.data;
+            const filePath = `./src/public/${dirName}/${newFileName}`;
+            await writeFile(filePath, data);
+          }
         }
         break;
       case 'body':
         body = JSON.parse(item.data.toString());
         deleteSpecificProperties(body);
         deleteEmptyProperties(body);
-
+        console.log('info', body);
         // パスワード対応
         if (body.password) {
           body.password = await hash(body.password);
@@ -58,6 +60,11 @@ async function processFile(file: FileItem[], event: H3Event) {
             };
           }
         }
+
+        // roleを取得
+        if (body.role === 'user') {
+          roleFlag = true;
+        }
     }
   }
   await User.updateOne({ _id: userId }, body);
@@ -69,10 +76,17 @@ async function processFile(file: FileItem[], event: H3Event) {
     return { message: '登録されていません' };
   }
 
-  const user = await createSession(event, userWithPassword);
-  console.log('infoupdate', user);
+  // roleがuserの時だけセッションを設定。ログイン情報にも関連
+  if (roleFlag) {
+    const user = await createSession(event, userWithPassword);
+    console.log('infoupdate', user);
+    return {
+      ...user,
+      message: '更新成功！',
+    };
+  }
+
   return {
-    ...user,
     message: '更新成功！',
   };
 }

@@ -8,7 +8,7 @@ type FileData = {
 
 export function prepareFormData(fileData: FileData, dirName: string) {
   const uuid = uuidv4();
-  let formData = new FormData();
+  const formData = new FormData();
   let newFileName;
   if (fileData.value) {
     const extension = fileData.value.name.split('.').pop();

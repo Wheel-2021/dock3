@@ -15,7 +15,7 @@ type DeletedInfo = {
   deletedFlag: boolean;
 };
 
-let deletedInfo: DeletedInfo = {
+const deletedInfo: DeletedInfo = {
   mail: '',
   deletedFlag: false,
 };

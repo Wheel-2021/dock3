@@ -23,7 +23,7 @@ const animal = ref('');
 const filename = ref('');
 const password = ref('');
 
-let formData = new FormData();
+// const formData = new FormData();
 
 const schema = object({
   mail: string().email('メールアドレスの形式ではありません'),
@@ -43,7 +43,7 @@ const { value: fieldAnimal, handleChange: handleChangeAnimal } =
 const { value: fieldPassword, handleChange: handleChangePassword } =
   useField('password');
 
-let userData: User = {
+const userData: User = {
   _id: null,
   id: null,
   name: '',
@@ -56,7 +56,8 @@ let userData: User = {
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
-const { uploadFile, fileData } = useImageUpload();
+const { uploadFile, fileData, isErrorOpen, errorMessage } = useImageUpload();
+console.log(isErrorOpen, errorMessage);
 // const updateIfChanged = (value: string, oldValue: string, key: string) => {
 //   if (value !== oldValue) {
 //     userData[key] = value;
@@ -262,6 +263,10 @@ definePageMeta({
                   type="file"
                   class="hidden"
                   @change="uploadFile"
+                />
+                <ErrorDialog
+                  v-model:isErrorDialog="isErrorOpen"
+                  :message="errorMessage"
                 />
                 <!-- <p class="mt-2">
                     <span class="text-gray-400 text-xs"

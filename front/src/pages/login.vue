@@ -28,7 +28,7 @@ const { value: animal } = useField('animal');
 const { value: password, handleChange: handleChangePassword } =
   useField('password');
 
-let userData = {
+const userData = {
   mail: '',
   animal: '',
   password: '',

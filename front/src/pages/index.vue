@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { Dialog, DialogPanel } from '@headlessui/vue';
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+import useImageUpload from '@/composables/useImageUpload';
+
+const { uploadFile, fileData, isErrorOpen, errorMessage } = useImageUpload();
 
 definePageMeta({
   layout: false,
@@ -64,19 +65,26 @@ definePageMeta({
     </div>
 
     <section class="text-center">ここにもはいるよ。。。</section>
-    <div class="flex items-center mt-2 ps-4 border border-gray-200 rounded-lg">
-      <input
-        id="deleted"
-        type="checkbox"
-        name="deleted"
-        class="h-4 w-4 rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400"
-      />
-      <label
-        for="deleted"
-        class="w-full p-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-        >削除する</label
-      >
+    <label
+      class="text-gray-700 dark:text-gray-200 font-bold"
+      for="passwordConfirmation"
+      >アバター</label
+    >
+    <div
+      role="button"
+      tabindex="0"
+      class="imageButton block whitespace-nowrap overflow-hidden w-full px-4 py-2 mt-2 text-gray-400 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+    >
+      ファイルを選択
     </div>
+    <input
+      id="imageInput"
+      name="imageInput"
+      type="file"
+      class="hidden"
+      @change="uploadFile"
+    />
+    <ErrorDialog v-model:isErrorDialog="isErrorOpen" :message="errorMessage" />
     <PageFooter />
   </div>
 </template>
