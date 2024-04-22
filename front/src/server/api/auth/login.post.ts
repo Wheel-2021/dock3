@@ -16,20 +16,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const userWithPassword = await User.getUserByEmail(mail);
-
-  if (userWithPassword.deleted) {
-    return { message: '削除されたアカウントです' };
-  }
+  console.log(userWithPassword);
   if (!userWithPassword) {
     return { message: '登録されていません' };
+  }
+  if (userWithPassword.deleted) {
+    return { message: '削除されたアカウントです' };
   }
 
   const verified = await verify(password, userWithPassword.password);
   if (!verified) {
     return { message: '好きな動物かパスワードが間違っています' };
   }
-
-  // deletedFlagがtrueなら見つからないも加える
 
   const user = await createSession(event, userWithPassword);
   console.log('login', user);

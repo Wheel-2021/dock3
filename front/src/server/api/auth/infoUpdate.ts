@@ -43,9 +43,10 @@ async function processFile(file: FileItem[], event: H3Event) {
         break;
       case 'body':
         body = JSON.parse(item.data.toString());
+        console.log('info', body);
         deleteSpecificProperties(body);
         deleteEmptyProperties(body);
-        console.log('info', body);
+
         // パスワード対応
         if (body.password) {
           body.password = await hash(body.password);
@@ -108,7 +109,7 @@ async function createDirectoryIfNotExists(dir: string) {
 }
 
 function deleteSpecificProperties(obj: { [key: string]: string | undefined }) {
-  const propertiesToDelete = ['_id', 'id', 'role'];
+  const propertiesToDelete = ['_id', 'id'];
   for (const key of propertiesToDelete) {
     if (key in obj) {
       delete obj[key];

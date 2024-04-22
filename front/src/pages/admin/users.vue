@@ -36,6 +36,8 @@ let userDBData: { user: User } | null;
 
 // 修正ボタンを押したらモーダル画面にデータ反映
 const sendData = async (userData: any) => {
+  // メッセージ初期化
+  serverMessage.value = '';
   name.value = userData.name;
   mail.value = userData.mail;
   animal.value = userData.animal;
@@ -53,17 +55,18 @@ const schema = object({
   animal: string().matches(/^[^ -~｡-ﾟ]/, {
     message: '漢字・カタカナ・ひらがなを全角で入力してください',
   }),
-  password: string().min(10, '10文字以上で入力してください'),
 });
 const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { handleChange: handleChangeName } = useField('name');
-const { handleChange: handleChangeMail } = useField('mail');
-const { handleChange: handleChangeAnimal } = useField('animal');
-const { handleChange: handleChangeRole } = useField('role');
-const { handleChange: handleChangeDeleted } = useField('deleted');
+const { value: fieldName, handleChange: handleChangeName } = useField('name');
+const { value: fieldMail, handleChange: handleChangeMail } = useField('mail');
+const { value: fieldAnimal, handleChange: handleChangeAnimal } =
+  useField('animal');
+const { value: fieldRole, handleChange: handleChangeRole } = useField('role');
+const { value: fieldDeleted, handleChange: handleChangeDeleted } =
+  useField('deleted');
 
 const allDBUsers = async () => {
   try {
@@ -98,6 +101,7 @@ const submit = handleSubmit(async (values) => {
     }
     if (field === 'deleted') {
       userData[field] = deleted.value;
+      // detedAtの処理がない
     }
   });
 
@@ -105,9 +109,8 @@ const submit = handleSubmit(async (values) => {
   formData.append('body', JSON.stringify(userData));
 
   try {
-    // ログイン者の情報を書き換えている
     const result = await infoUpdate(formData);
-    console.log('users.vue', result);
+
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
         serverMessage.value = result.message;
@@ -121,11 +124,16 @@ const submit = handleSubmit(async (values) => {
   } catch (error) {
     console.log('Error updating information:', error);
   }
-
+  // formDataを空に
   formData = new FormData();
+  // 再表示
+  displayAllUsers();
 }, handleError);
 
-onMounted(async () => {
+onMounted(() => {
+  displayAllUsers();
+});
+async function displayAllUsers() {
   users.value = await allDBUsers();
 
   if (userDBData && userDBData.user) {
@@ -135,8 +143,7 @@ onMounted(async () => {
     role.value = userDBData.user.role;
     deleted.value = userDBData.user.deleted;
   }
-});
-
+}
 definePageMeta({
   middleware: 'admin',
   layout: false,
