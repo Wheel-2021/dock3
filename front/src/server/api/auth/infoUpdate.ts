@@ -17,7 +17,7 @@ interface FileItem {
 }
 
 async function processFile(file: FileItem[], event: H3Event) {
-  let body, newFileName, dirName, userId, roleFlag;
+  let body, newFileName, dirName, userId, pagePath;
 
   for (const item of file) {
     switch (item.name) {
@@ -29,6 +29,9 @@ async function processFile(file: FileItem[], event: H3Event) {
         break;
       case 'dirName':
         dirName = item.data.toString();
+        break;
+      case 'pagePath':
+        pagePath = item.data.toString();
         break;
       case 'file':
         {
@@ -47,6 +50,9 @@ async function processFile(file: FileItem[], event: H3Event) {
         deleteSpecificProperties(body);
         deleteEmptyProperties(body);
 
+        if (!body.mail || !body.animal || !body.password) {
+          return { message: '必須項目に記入漏れがあります' };
+        }
         // パスワード対応
         if (body.password) {
           body.password = await hash(body.password);
@@ -62,10 +68,8 @@ async function processFile(file: FileItem[], event: H3Event) {
           }
         }
 
-        // roleを取得
-        if (body.role === 'user') {
-          roleFlag = true;
-        }
+        // 削除フラグによって、削除日時を設定排除する new Date().toISOString()
+        body.deletedAt = body.deleted ? new Date() : '';
     }
   }
   await User.updateOne({ _id: userId }, body);
@@ -78,7 +82,7 @@ async function processFile(file: FileItem[], event: H3Event) {
   }
 
   // roleがuserの時だけセッションを設定。ログイン情報にも関連
-  if (roleFlag) {
+  if (!pagePath) {
     const user = await createSession(event, userWithPassword);
     console.log('infoupdate', user);
     return {

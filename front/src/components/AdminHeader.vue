@@ -11,7 +11,6 @@ import {
   UsersIcon,
   ListBulletIcon,
   QueueListIcon,
-  ComputerDesktopIcon,
 } from '@heroicons/vue/24/outline';
 import { useAuth, useAuthUser } from '@/composables/auth';
 
@@ -41,7 +40,6 @@ const signOut = async () => {
   try {
     await logout().then((result) => {
       console.log(result);
-      // location.href = '/';
       const redirect = '/';
       router.push({ path: redirect });
     });

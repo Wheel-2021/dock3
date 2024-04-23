@@ -23,13 +23,16 @@ const animal = ref('');
 const filename = ref('');
 const password = ref('');
 
-// const formData = new FormData();
-
 const schema = object({
-  mail: string().email('メールアドレスの形式ではありません'),
-  animal: string().matches(/^[^ -~｡-ﾟ]/, {
-    message: '漢字・カタカナ・ひらがなを全角で入力してください',
-  }),
+  name: string().required('必須項目です'),
+  mail: string()
+    .required('必須項目です')
+    .email('メールアドレスの形式ではありません'),
+  animal: string()
+    .required('必須項目です')
+    .matches(/^[^ -~｡-ﾟ]/, {
+      message: '漢字・カタカナ・ひらがなを全角で入力してください',
+    }),
   password: string().min(10, '10文字以上で入力してください'),
 });
 const { errors, handleSubmit } = useForm({
@@ -57,12 +60,6 @@ const userData: User = {
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
 const { uploadFile, fileData, isErrorOpen, errorMessage } = useImageUpload();
-console.log(isErrorOpen, errorMessage);
-// const updateIfChanged = (value: string, oldValue: string, key: string) => {
-//   if (value !== oldValue) {
-//     userData[key] = value;
-//   }
-// };
 
 const submit = handleSubmit(async (values) => {
   let { formData, newFileName } = prepareFormData(fileData, setDirName);
@@ -200,7 +197,7 @@ definePageMeta({
                   placeholder="例) xxxxx@xxxxx.xx"
                   aria-label="Email Address"
                   name="mail"
-                  :value="mail"
+                  v-model="mail"
                   @change="handleChangeMail"
                 />
 

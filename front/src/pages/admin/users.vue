@@ -31,6 +31,7 @@ const deleted = ref(false);
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
+  resetForm();
 };
 let userDBData: { user: User } | null;
 
@@ -51,21 +52,33 @@ const sendData = async (userData: any) => {
 };
 
 const schema = object({
-  mail: string().email('メールアドレスの形式ではありません'),
-  animal: string().matches(/^[^ -~｡-ﾟ]/, {
-    message: '漢字・カタカナ・ひらがなを全角で入力してください',
-  }),
+  name: string().required('必須項目です'),
+  mail: string()
+    .required('必須項目です')
+    .email('メールアドレスの形式ではありません'),
+  animal: string()
+    .required('必須項目です')
+    .matches(/^[^ -~｡-ﾟ]/, {
+      message: '漢字・カタカナ・ひらがなを全角で入力してください',
+    }),
 });
-const { errors, handleSubmit } = useForm({
+const { errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
+  // initialValues: {
+  //   name: name.value,
+  //   mail: mail.value,
+  //   animal: animal.value,
+  //   role: role.value,
+  //   deleted: deleted.value,
+  // },
 });
 
-const { value: fieldName, handleChange: handleChangeName } = useField('name');
-const { value: fieldMail, handleChange: handleChangeMail } = useField('mail');
-const { value: fieldAnimal, handleChange: handleChangeAnimal } =
+const { value: nameVal, handleChange: handleChangeName } = useField('name');
+const { value: mailVal, handleChange: handleChangeMail } = useField('mail');
+const { value: animalVal, handleChange: handleChangeAnimal } =
   useField('animal');
-const { value: fieldRole, handleChange: handleChangeRole } = useField('role');
-const { value: fieldDeleted, handleChange: handleChangeDeleted } =
+const { value: roleVal, handleChange: handleChangeRole } = useField('role');
+const { value: deletedVal, handleChange: handleChangeDeleted } =
   useField('deleted');
 
 const allDBUsers = async () => {
@@ -92,16 +105,30 @@ const handleError = useErrorHandler(errors);
 
 const submit = handleSubmit(async (values) => {
   formData.append('userId', userDBData?.user._id || '');
-  console.log('submit', deleted.value); //deleted.valueは値がとれる
+  formData.append('pagePath', 'admin');
   const fieldsToUpdate = ['name', 'mail', 'animal', 'role', 'deleted'];
+  type FormValType = {
+    name: string;
+    mail: string;
+    animal: string;
+    role: string;
+    deleted: boolean;
+    [key: string]: string | boolean;
+  };
+
+  const formVal: Partial<FormValType> = {};
 
   fieldsToUpdate.forEach((field) => {
+    // ここでフォームの値をバックアップしておく
+    formVal[field] = values[field];
+
+    // ここで照合がうまくいってないメールアドレス
     if (values[field] !== userDBData?.user[field]) {
+      console.log(userDBData?.user[field]);
       userData[field] = values[field];
     }
     if (field === 'deleted') {
       userData[field] = deleted.value;
-      // detedAtの処理がない
     }
   });
 
@@ -114,6 +141,12 @@ const submit = handleSubmit(async (values) => {
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
         serverMessage.value = result.message;
+        // フォーム内データ再設定
+        if (formVal.name !== undefined) name.value = formVal.name;
+        if (formVal.mail !== undefined) mail.value = formVal.mail;
+        if (formVal.animal !== undefined) animal.value = formVal.animal;
+        if (formVal.role !== undefined) role.value = formVal.role;
+        if (formVal.deleted !== undefined) deleted.value = formVal.deleted;
       } else {
         serverMessage.value = result.message;
       }
@@ -126,7 +159,8 @@ const submit = handleSubmit(async (values) => {
   }
   // formDataを空に
   formData = new FormData();
-  // 再表示
+
+  // 一覧再表示
   displayAllUsers();
 }, handleError);
 
@@ -135,14 +169,6 @@ onMounted(() => {
 });
 async function displayAllUsers() {
   users.value = await allDBUsers();
-
-  if (userDBData && userDBData.user) {
-    name.value = userDBData.user.name;
-    mail.value = userDBData.user.mail;
-    animal.value = userDBData.user.animal;
-    role.value = userDBData.user.role;
-    deleted.value = userDBData.user.deleted;
-  }
 }
 definePageMeta({
   middleware: 'admin',
@@ -381,7 +407,7 @@ definePageMeta({
                           placeholder="例) xxxxx@xxxxx.xx"
                           aria-label="Email Address"
                           name="mail"
-                          :value="mail"
+                          v-model="mail"
                           @change="handleChangeMail"
                         />
 
