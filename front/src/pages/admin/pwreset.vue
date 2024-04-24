@@ -1,4 +1,24 @@
 <script lang="ts" setup>
+import { useAdminControll } from '@/composables/admin';
+
+const { getPwresetUsers } = useAdminControll();
+const uuides = ref();
+
+const pwresetUsers = async () => {
+  try {
+    const result = await getPwresetUsers();
+    uuides.value = result.uuides;
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+onMounted(() => {
+  pwresetUsers();
+});
+
 definePageMeta({
   middleware: 'admin',
   layout: false,
@@ -7,13 +27,59 @@ definePageMeta({
 <template>
   <div>
     <NuxtLayout name="custom">
-      <article class="contents__inner bg-gray-100 h-screen py-16 px-4">
-        <div
-          class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
-        >
-          <a href="/admin/">管理画面トップページ</a>
-          こんてんつ
-        </div>
+      <section class="bg-white py-12">
+        <h1 class="mb-4 text-3xl font-medium text-center">パスワード一覧</h1>
+        <p class="text-center text-gray-400 text-sm leading-relaxed">
+          パスワードをリセットしたユーザーの一覧です。
+        </p>
+      </section>
+      <article class="contents__inner bg-gray-100 py-16 px-4">
+        <section class="mx-auto p-4 bg-white rounded-lg shadow-sm">
+          <div class="relative pt-40 md:pt-20 lg:pt-12 overscroll-y-auto">
+            <dl
+              class="absolute top-0 left-0 grid grid-cols-3 w-full bg-gray-800 text-gray-200"
+            >
+              <dt
+                class="p-2 bg-gray-800 border-b border-gray-600 lg:border-0 font-normal text-sm"
+              >
+                ID
+              </dt>
+              <dt
+                class="p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
+              >
+                削除UUID
+              </dt>
+              <dt
+                class="p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
+              >
+                期限
+              </dt>
+            </dl>
+
+            <dl
+              class="grid lg:gap-2 grid-cols-3 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
+              v-for="(uuid, index) in uuides"
+              :key="index"
+            >
+              <dt
+                class="flex items-center p-2 border-b border-l border-gray-200 border-dotted lg:border-none font-normal"
+              >
+                {{ uuid._id }}
+              </dt>
+
+              <dd
+                class="flex items-center p-2 border-b border-l border-gray-200 border-dotted lg:border-none"
+              >
+                {{ uuid.uuid }}
+              </dd>
+              <dd
+                class="flex items-center p-2 border-b border-l border-r-0 border-gray-200 border-dotted sm:border-r lg:border-none"
+              >
+                {{ new Date(uuid.expires) }}
+              </dd>
+            </dl>
+          </div>
+        </section>
       </article>
     </NuxtLayout>
   </div>

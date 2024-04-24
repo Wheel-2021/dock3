@@ -12,14 +12,14 @@ import { UserCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useAuthUser, useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
-import { useAdmini } from '@/composables/admin';
+import { useAdminControll } from '@/composables/admin';
 import useImageUpload from '@/composables/useImageUpload';
 import useErrorHandler from '@/composables/useErrorHandler';
 import { prepareFormData } from '@/utils/prepareImageFormData';
 import type { User } from '@/types/user';
 
 const currentUser = useAuthUser();
-const { getAllUsers } = useAdmini();
+const { getAllUsers } = useAdminControll();
 const { getDBUser, infoUpdate } = useAuth();
 const userDBData = currentUser.value
   ? ((await getDBUser(currentUser.value.mail)) as { user: User })

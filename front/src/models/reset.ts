@@ -6,10 +6,11 @@ interface IReset {
   expires: number;
 }
 
-export interface ResetDocument extends IReset, Document {}
+interface ResetDocument extends IReset, Document {}
 
 interface ResetModelInterface extends Model<ResetDocument> {
   getExpiresByUuid(uuid: string): Promise<ResetDocument>;
+  getIdes(): Promise<ResetDocument>;
 }
 
 const schema = new mongoose.Schema(
@@ -24,6 +25,11 @@ const schema = new mongoose.Schema(
 schema.statics.getExpiresByUuid = async (uuid: string) => {
   const expires = await Reset.findOne({ uuid: uuid });
   return expires;
+};
+
+schema.statics.getIdes = async () => {
+  const ides = await Reset.find();
+  return ides;
 };
 
 const Reset: ResetModelInterface = mongoose.model<

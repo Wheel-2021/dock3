@@ -16,20 +16,13 @@ const useImageUpload = () => {
       const fileName = file.name;
       const fileExtension = fileName.split('.').pop()?.toLowerCase();
 
-      const imageExtensions = [
-        'jpg',
-        'jpeg',
-        'png',
-        'gif',
-        'bmp',
-        'webp',
-        'svg',
-      ];
+      const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
       if (fileExtension && imageExtensions.includes(fileExtension)) {
         uploadDataName.value = fileName;
       } else {
         // alert('画像ファイルを選択してください。');
-        errorMessage.value = '画像ファイルを選択してください。';
+        errorMessage.value =
+          '画像ファイルを選択してください。<br />jpg・jpeg・png・gif・webp・svg拡張子が有効です。';
         isErrorOpen.value = true;
       }
     }

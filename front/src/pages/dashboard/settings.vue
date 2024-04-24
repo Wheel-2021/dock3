@@ -24,27 +24,22 @@ const filename = ref('');
 const password = ref('');
 
 const schema = object({
-  name: string().required('必須項目です'),
-  mail: string()
-    .required('必須項目です')
-    .email('メールアドレスの形式ではありません'),
-  animal: string()
-    .required('必須項目です')
-    .matches(/^[^ -~｡-ﾟ]/, {
-      message: '漢字・カタカナ・ひらがなを全角で入力してください',
-    }),
+  // 必須項目は外す。
+  name: string(),
+  mail: string().email('メールアドレスの形式ではありません'),
+  animal: string().matches(/^[^ -~｡-ﾟ]/, {
+    message: '漢字・カタカナ・ひらがなを全角で入力してください',
+  }),
   password: string().min(10, '10文字以上で入力してください'),
 });
 const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { value: fieldName, handleChange: handleChangeName } = useField('name');
-const { value: fieldMail, handleChange: handleChangeMail } = useField('mail');
-const { value: fieldAnimal, handleChange: handleChangeAnimal } =
-  useField('animal');
-const { value: fieldPassword, handleChange: handleChangePassword } =
-  useField('password');
+const { handleChange: handleChangeName } = useField('name');
+const { handleChange: handleChangeMail } = useField('mail');
+const { handleChange: handleChangeAnimal } = useField('animal');
+const { handleChange: handleChangePassword } = useField('password');
 
 const userData: User = {
   _id: null,
@@ -62,7 +57,8 @@ const handleError = useErrorHandler(errors);
 const { uploadFile, fileData, isErrorOpen, errorMessage } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
-  let { formData, newFileName } = prepareFormData(fileData, setDirName);
+  let { formData } = prepareFormData(fileData, setDirName);
+  const { newFileName } = prepareFormData(fileData, setDirName);
   formData.append('userId', userDBData?.user._id || '');
 
   if (newFileName) {
@@ -112,17 +108,13 @@ const submit = handleSubmit(async (values) => {
 const EyeOpen = ref(false);
 
 onMounted(async () => {
-  try {
-    if (userDBData && userDBData.user) {
-      name.value = userDBData.user.name;
-      mail.value = userDBData.user.mail;
-      animal.value = userDBData.user.animal;
-      if (userDBData.user.filename) {
-        filename.value = `/${setDirName}/${userDBData.user.filename}`;
-      }
+  if (userDBData && userDBData.user) {
+    name.value = userDBData.user.name;
+    mail.value = userDBData.user.mail;
+    animal.value = userDBData.user.animal;
+    if (userDBData.user.filename) {
+      filename.value = `/${setDirName}/${userDBData.user.filename}`;
     }
-  } catch (error) {
-    console.error('Error mounting component:', error);
   }
 });
 

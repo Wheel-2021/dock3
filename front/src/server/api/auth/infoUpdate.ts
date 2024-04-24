@@ -50,9 +50,9 @@ async function processFile(file: FileItem[], event: H3Event) {
         deleteSpecificProperties(body);
         deleteEmptyProperties(body);
 
-        if (!body.mail || !body.animal || !body.password) {
-          return { message: '必須項目に記入漏れがあります' };
-        }
+        // if (!body.mail || !body.animal || !body.password) {
+        //   return { message: '必須項目に記入漏れがあります' };
+        // }
         // パスワード対応
         if (body.password) {
           body.password = await hash(body.password);

@@ -12,11 +12,11 @@ import { UserCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
-import { useAdmini } from '@/composables/admin';
+import { useAdminControll } from '@/composables/admin';
 import useErrorHandler from '@/composables/useErrorHandler';
 import type { User } from '@/types/user';
 
-const { getAllUsers } = useAdmini();
+const { getAllUsers, deleteUserOne } = useAdminControll();
 const { getDBUser, infoUpdate } = useAuth();
 let formData = new FormData();
 const users = ref();
@@ -36,7 +36,7 @@ const setIsOpen = (value: boolean) => {
 let userDBData: { user: User } | null;
 
 // 修正ボタンを押したらモーダル画面にデータ反映
-const sendData = async (userData: any) => {
+const sendData = async (userData: User) => {
   // メッセージ初期化
   serverMessage.value = '';
   name.value = userData.name;
@@ -51,35 +51,35 @@ const sendData = async (userData: any) => {
     : null;
 };
 
+// ユーザー即時削除
+const deleteUser = async (userData: User) => {
+  try {
+    const result = await deleteUserOne(userData.mail);
+    console.log(result);
+    // 一覧再表示
+    displayAllUsers();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const schema = object({
-  name: string().required('必須項目です'),
-  mail: string()
-    .required('必須項目です')
-    .email('メールアドレスの形式ではありません'),
-  animal: string()
-    .required('必須項目です')
-    .matches(/^[^ -~｡-ﾟ]/, {
-      message: '漢字・カタカナ・ひらがなを全角で入力してください',
-    }),
+  // 必須項目は外す。
+  name: string(),
+  mail: string().email('メールアドレスの形式ではありません'),
+  animal: string().matches(/^[^ -~｡-ﾟ]/, {
+    message: '漢字・カタカナ・ひらがなを全角で入力してください',
+  }),
 });
 const { errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
-  // initialValues: {
-  //   name: name.value,
-  //   mail: mail.value,
-  //   animal: animal.value,
-  //   role: role.value,
-  //   deleted: deleted.value,
-  // },
 });
 
-const { value: nameVal, handleChange: handleChangeName } = useField('name');
-const { value: mailVal, handleChange: handleChangeMail } = useField('mail');
-const { value: animalVal, handleChange: handleChangeAnimal } =
-  useField('animal');
-const { value: roleVal, handleChange: handleChangeRole } = useField('role');
-const { value: deletedVal, handleChange: handleChangeDeleted } =
-  useField('deleted');
+const { handleChange: handleChangeName } = useField('name');
+const { handleChange: handleChangeMail } = useField('mail');
+const { handleChange: handleChangeAnimal } = useField('animal');
+const { handleChange: handleChangeRole } = useField('role');
+const { handleChange: handleChangeDeleted } = useField('deleted');
 
 const allDBUsers = async () => {
   try {
@@ -243,7 +243,7 @@ definePageMeta({
               >
                 <NuxtImg
                   v-if="user.filename"
-                  :src="user.filename"
+                  :src="`/avator/${user.filename}`"
                   width="30"
                   class=""
                   :alt="user.name || ''"
@@ -304,8 +304,9 @@ definePageMeta({
                 <button
                   class="px-2 py-2 text-xs font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-400 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
+                  @click="deleteUser(user)"
                 >
-                  強制削除
+                  即時削除
                 </button>
               </dd>
             </dl>

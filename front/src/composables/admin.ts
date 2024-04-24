@@ -1,1 +1,1 @@
-export { useAdmini } from './admin/useAdmini';
+export { useAdminControll } from './admin/useAdminControll';
