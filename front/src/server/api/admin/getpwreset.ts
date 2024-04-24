@@ -1,13 +1,13 @@
 import { Reset } from '@/models';
 
 export default defineEventHandler(async () => {
-  const uuides = await Reset.getIdes();
-  if (!uuides) {
+  const uuid = await Reset.getIdes();
+  if (!uuid) {
     return { message: 'uuidが見つかりません' };
   }
 
   return {
-    uuides,
+    uuid,
     message: '取得成功！',
   };
 });

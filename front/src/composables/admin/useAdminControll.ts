@@ -1,4 +1,5 @@
 import type { ApiResponse } from '@/types/apires';
+import type { PwResetResponse } from '@/types/pwreset';
 
 export const useAdminControll = () => {
   const getAllUsers = async () => {
@@ -31,7 +32,7 @@ export const useAdminControll = () => {
 
   const getPwresetUsers = async () => {
     try {
-      const data = await $fetch<ApiResponse>('/api/admin/getpwreset', {
+      const data = await $fetch<PwResetResponse>('/api/admin/getpwreset', {
         method: 'POST',
       });
       return data;
