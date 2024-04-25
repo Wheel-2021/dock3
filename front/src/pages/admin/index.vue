@@ -7,7 +7,55 @@ import {
   ComputerDesktopIcon,
 } from '@heroicons/vue/24/outline';
 import { useAuthUser } from '@/composables/auth';
+import { useAdminControll } from '@/composables/admin';
+
+const { getDeletedUsers, deleteUserOne } = useAdminControll();
 const currentUser = useAuthUser();
+
+// 一週間経て削除するロジック
+const checkDletedCancel = async () => {
+  try {
+    const result = await getDeletedUsers();
+    // result.userは配列になっている
+    if (Array.isArray(result.user)) {
+      result.user.forEach((user) => {
+        const currentDeletedAt = user.deletedAt;
+        if (
+          currentDeletedAt &&
+          new Date(
+            new Date(currentDeletedAt).getTime() + 7 * 24 * 60 * 60 * 1000
+          ).toLocaleString() < new Date().toLocaleString()
+        ) {
+          console.log(
+            'check',
+            new Date(
+              new Date(currentDeletedAt).getTime() + 7 * 24 * 60 * 60 * 1000
+            ).toLocaleString(),
+            new Date().toLocaleString()
+          );
+          // delete cancel
+          if (result.user) {
+            deleteUser(result.user.mail);
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// ユーザー即時削除
+const deleteUser = async (mail: string) => {
+  try {
+    const result = await deleteUserOne(mail);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+checkDletedCancel();
 
 definePageMeta({
   middleware: 'admin',

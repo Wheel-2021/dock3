@@ -37,7 +37,7 @@ definePageMeta({
         <section class="mx-auto p-4 bg-white rounded-lg shadow-sm">
           <div class="relative pt-40 md:pt-20 lg:pt-12 overscroll-y-auto">
             <dl
-              class="absolute top-0 left-0 grid grid-cols-3 w-full bg-gray-800 text-gray-200"
+              class="absolute top-0 left-0 grid grid-cols-1 sm:grid-cols-3 w-full bg-gray-800 text-gray-200"
             >
               <dt
                 class="p-2 bg-gray-800 border-b border-gray-600 lg:border-0 font-normal text-sm"
@@ -57,7 +57,7 @@ definePageMeta({
             </dl>
 
             <dl
-              class="grid lg:gap-2 grid-cols-3 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
+              class="grid lg:gap-2 grid-cols-1 sm:grid-cols-3 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
               v-for="(uuid, index) in uuides"
               :key="index"
             >

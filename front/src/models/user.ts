@@ -1,7 +1,6 @@
 import mongoose, { Document, Model } from 'mongoose';
 import { userRoles } from './types/role';
 
-
 const { roles } = userRoles();
 
 interface IUser extends Document {
@@ -20,6 +19,7 @@ interface IUserModel extends Model<IUser> {
   getUserByEmail(email: string): Promise<IUser>;
   getUserById(_id: mongoose.Types.ObjectId): Promise<IUser>;
   getUsers(): Promise<IUser[]>;
+  getUsersByDeleted(): Promise<IUser[]>;
 }
 
 const schema = new mongoose.Schema(
@@ -60,6 +60,11 @@ schema.statics.getUserById = async (_id: mongoose.Types.ObjectId) => {
 
 schema.statics.getUsers = async () => {
   const users = await User.find();
+  return users;
+};
+
+schema.statics.getUsersByDeleted = async () => {
+  const users = await User.find({ deleted: true });
   return users;
 };
 

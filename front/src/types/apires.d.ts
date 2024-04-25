@@ -8,6 +8,7 @@ export type ApiResponse = {
     filename?: string;
     role: string;
     deleted: boolean;
+    deletedAt?: string;
   };
   message?: string;
 };

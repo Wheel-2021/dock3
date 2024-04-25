@@ -41,9 +41,22 @@ export const useAdminControll = () => {
       throw error;
     }
   };
+
+  const getDeletedUsers = async () => {
+    try {
+      const data = await $fetch<ApiResponse>('/api/admin/getdeletedusers', {
+        method: 'POST',
+      });
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
   return {
     getAllUsers,
     deleteUserOne,
     getPwresetUsers,
+    getDeletedUsers,
   };
 };
