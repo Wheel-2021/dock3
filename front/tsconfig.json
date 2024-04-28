@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "paths": {
       "~/*": ["./src/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "#imports": [".nuxt/imports.d.ts"]
     },
     "skipLibCheck": true,
     "sourceMap": true,

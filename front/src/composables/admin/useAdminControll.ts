@@ -1,10 +1,11 @@
 import type { ApiResponse } from '@/types/apires';
 import type { PwResetResponse } from '@/types/pwreset';
+import type { User } from '@/types/user';
 
 export const useAdminControll = () => {
   const getAllUsers = async () => {
     try {
-      const data = await $fetch<ApiResponse>('/api/admin/users', {
+      const data = await $fetch<User[]>('/api/admin/users', {
         method: 'POST',
       });
 

@@ -112,3 +112,9 @@ async function verifyToken(username, token) {
 }
 AI で生成されたコード。ご確認のうえ、慎重にご使用ください。FAQ で詳細を確認。
 以上の手順を踏むことで、一意のトークンを含むURLを生成し、そのトークンに有効期限を設けることでセキュリティを確保することが可能です。ただし、これらのコードは一例であり、具体的な実装はプロジェクトの要件や設定により異なる場合があります。また、セキュリティに関わる実装のため、適切な知識と理解を持って行うことが重要です。必要に応じて専門家の意見を求めることをお勧めします。
+
+Nuxt ui pagenation
+https://stackoverflow.com/questions/77581672/pagination-with-nuxt-ui
+
+パスキー
+https://qiita.com/Kodak_tmo/items/9fb6f1d65621cb5e1f90

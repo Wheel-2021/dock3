@@ -8,6 +8,7 @@ export interface User {
   filename?: string | undefined;
   role: string;
   deleted: boolean;
+  deletedAt?: string;
   [key: string]: any;
 }
 

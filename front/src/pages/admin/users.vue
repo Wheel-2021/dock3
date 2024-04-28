@@ -19,7 +19,8 @@ import type { User } from '@/types/user';
 const { getAllUsers, deleteUserOne } = useAdminControll();
 const { getDBUser, infoUpdate } = useAuth();
 let formData = new FormData();
-const users = ref();
+const users = ref<User[]>([]);
+
 const serverMessage = ref();
 
 const name = ref('');
@@ -27,6 +28,9 @@ const mail = ref('');
 const animal = ref('');
 const role = ref();
 const deleted = ref(false);
+
+const page = ref(1);
+const pageCount = 2;
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
@@ -54,8 +58,7 @@ const sendData = async (userData: User) => {
 // ユーザー即時削除
 const deleteUser = async (userData: User) => {
   try {
-    const result = await deleteUserOne(userData.mail);
-    console.log(result);
+    await deleteUserOne(userData.mail);
     // 一覧再表示
     displayAllUsers();
   } catch (error) {
@@ -167,9 +170,21 @@ const submit = handleSubmit(async (values) => {
 onMounted(() => {
   displayAllUsers();
 });
+
 async function displayAllUsers() {
-  users.value = await allDBUsers();
+  const userList = await allDBUsers();
+  if (userList) {
+    users.value = userList;
+  }
 }
+
+const rows = computed(() => {
+  return users.value.slice(
+    (page.value - 1) * pageCount,
+    page.value * pageCount
+  );
+});
+
 definePageMeta({
   middleware: 'admin',
   layout: false,
@@ -186,9 +201,9 @@ definePageMeta({
       </section>
       <article class="contents__inner bg-gray-100 py-16 px-4">
         <section class="mx-auto p-4 bg-white rounded-lg shadow-sm">
-          <div class="relative pt-40 md:pt-20 lg:pt-12 overscroll-y-auto">
+          <div class="pt-40 md:pt-20 lg:pt-12">
             <dl
-              class="absolute top-0 left-0 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full bg-gray-800 text-gray-200"
+              class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full bg-gray-800 text-gray-200"
             >
               <dt
                 class="p-2 bg-gray-800 border-b border-gray-600 lg:border-0 font-normal text-sm"
@@ -229,7 +244,7 @@ definePageMeta({
 
             <dl
               class="grid lg:gap-2 grid-cols-2 md:grid-cols-5 lg:grid-cols-10 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
-              v-for="(user, index) in users"
+              v-for="(user, index) in rows"
               :key="index"
             >
               <dt
@@ -310,8 +325,14 @@ definePageMeta({
                 </button>
               </dd>
             </dl>
+            <UPagination
+              v-model="page"
+              :page-count="pageCount"
+              :total="users.length"
+            />
           </div>
         </section>
+
         <TransitionRoot :show="isOpen">
           <Dialog
             :open="isOpen"

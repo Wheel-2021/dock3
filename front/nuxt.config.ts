@@ -20,7 +20,6 @@ export default defineNuxtConfig({
   },
   css: [
     '@/assets/css/reset.css',
-    '@/assets/css/main.css',
     '@/assets/css/style.scss',
   ],
   devtools: { enabled: true },
@@ -28,15 +27,9 @@ export default defineNuxtConfig({
     domains: [],
     screens: {},
   },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
+  modules: ['@nuxt/image', '@nuxt/ui'],
   nitro: {
     plugins: ['@/server/index.ts'],
-  },
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
   },
   routeRules: {
     '@/server/api/admin/**': {
