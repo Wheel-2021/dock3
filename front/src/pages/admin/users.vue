@@ -21,6 +21,7 @@ const { getDBUser, infoUpdate } = useAuth();
 let formData = new FormData();
 const users = ref<User[]>([]);
 
+
 const serverMessage = ref();
 
 const name = ref('');
@@ -175,6 +176,10 @@ async function displayAllUsers() {
   const userList = await allDBUsers();
   if (userList) {
     users.value = userList;
+  //   rows.value = users.value.slice(
+  //     (page.value - 1) * pageCount,
+  //     page.value * pageCount
+  //   );
   }
 }
 

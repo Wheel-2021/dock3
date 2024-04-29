@@ -6,13 +6,12 @@ import {
   QueueListIcon,
   ComputerDesktopIcon,
 } from '@heroicons/vue/24/outline';
-import { useAuthUser } from '@/composables/auth';
+
 import { useAdminControll } from '@/composables/admin';
 
 const { getDeletedUsers, deleteUserOne } = useAdminControll();
-const currentUser = useAuthUser();
 
-// 一週間経て削除するロジック
+// 一週間経て削除するロジック ※どうも機能していないみたい
 const checkDletedCancel = async () => {
   try {
     const result = await getDeletedUsers();
@@ -34,8 +33,9 @@ const checkDletedCancel = async () => {
             new Date().toLocaleString()
           );
           // delete cancel
-          if (result.user) {
-            deleteUser(result.user.mail);
+          if (user) {
+            console.log('delete cancel', user.mail);
+            deleteUser(user.mail);
           }
         }
       });
@@ -138,21 +138,6 @@ definePageMeta({
               ユーザー画面
             </NuxtLink>
           </div>
-        </div>
-      </article>
-
-      <article class="contents__inner bg-gray-100 h-screen py-16 px-4">
-        <div
-          class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
-        >
-          登録者一覧<br />
-          パスワードリセット一覧<br />
-          登録者退会(1週間後にDBから削除：論理削除から物理削除へ)
-
-          <span v-if="currentUser">{{ currentUser.name }}</span>
-          <a href="/admin/sample">サンプルページ</a><br />
-          こんてんつ<br />
-          <a href="/dashboard/">ダッシュボード</a>
         </div>
       </article>
     </NuxtLayout>

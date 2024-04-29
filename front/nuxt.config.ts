@@ -18,10 +18,7 @@ export default defineNuxtConfig({
       mode: 'out-in',
     },
   },
-  css: [
-    '@/assets/css/reset.css',
-    '@/assets/css/style.scss',
-  ],
+  css: ['@/assets/css/reset.css', '@/assets/css/style.scss'],
   devtools: { enabled: true },
   image: {
     domains: [],
@@ -67,6 +64,9 @@ export default defineNuxtConfig({
         usePolling: true,
       },
     },
+  },
+  tailwindcss: {
+    quiet: true,
   },
   typescript: {
     shim: false,

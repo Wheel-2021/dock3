@@ -1,18 +1,16 @@
 <script lang="ts" setup>
 import { useAuth } from '@/composables/auth';
+import { useAuthUser } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import useErrorHandler from '@/composables/useErrorHandler';
 
+const currentUser = useAuthUser();
 const router = useRouter();
 const { sendMail } = useAuth();
 const serverMessage = ref();
 
 const schema = object({
-  name: string().required('必須項目です'),
-  mail: string()
-    .required('必須項目です')
-    .email('メールアドレスの形式ではありません'),
   contents: string()
     .required('必須項目です')
     .test('is-not-blank', '空白の行は許可されていません', (value) => {
@@ -23,9 +21,6 @@ const { errors, handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-const { value: name } = useField<string>('name');
-const { value: mail, handleChange: handleChangeMail } =
-  useField<string>('mail');
 const { value: contents } = useField<string>('contents');
 
 const mailData = {
@@ -37,11 +32,12 @@ const mailData = {
 const handleError = useErrorHandler(errors);
 
 const submit = handleSubmit(async (values) => {
-  mailData.name = values.name;
-  mailData.mail = values.mail;
+  mailData.name = `${currentUser.value?.name} [${currentUser.value?.mail}]`;
+  mailData.mail = 'info@sixwheel.net';
   mailData.contents = values.contents;
 
   try {
+    // mailData.mailがtoになっている 送り先を変えるか判断する
     const result = await sendMail(
       mailData.name,
       mailData.mail,
@@ -72,7 +68,7 @@ definePageMeta({
 </script>
 <template>
   <div>
-    <!--　名前とメールアドレスはわかっているので、除いてもいい -->
+    <!-- 名前とメールアドレスはわかっているので、除いてもいい -->
     <NuxtLayout name="custom">
       <section class="bg-white py-12">
         <h1 class="mb-4 text-3xl font-medium text-center">お問い合わせ</h1>
@@ -90,72 +86,6 @@ definePageMeta({
         <div class="sm:px-6">
           <form @submit.prevent="submit">
             <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <span
-                  class="inline-block mr-2 p-1 bg-red-700 text-white font-bold text-xs"
-                >
-                  必須
-                </span>
-                <label
-                  class="text-gray-700 dark:text-gray-200 text-lg font-bold"
-                  for="name"
-                  >名前</label
-                >
-                <input
-                  id="name"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-                  type="text"
-                  placeholder="例) 山田 太郎"
-                  aria-label="Name"
-                  name="name"
-                  v-model="name"
-                />
-                <p class="mt-2">
-                  <span v-if="!errors.name" class="text-gray-400 text-xs"
-                    >全角か半角で入力してください</span
-                  >
-                  <span
-                    v-if="errors.name"
-                    class="text-red-700 text-xs font-bold"
-                    >{{ errors.name }}</span
-                  >
-                </p>
-              </div>
-
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <span
-                  class="inline-block mr-2 p-1 bg-red-700 text-white font-bold text-xs"
-                >
-                  必須
-                </span>
-                <label
-                  class="text-gray-700 dark:text-gray-200 font-bold"
-                  for="mail"
-                  >メールアドレス</label
-                >
-                <input
-                  id="mail"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-                  type="email"
-                  placeholder="例) xxxxx@xxxxx.xx"
-                  aria-label="Email Address"
-                  name="mail"
-                  @change="handleChangeMail"
-                  :value="mail"
-                />
-
-                <p class="mt-2">
-                  <span v-if="!errors.mail" class="text-gray-400 text-xs"
-                    >半角で入力してください</span
-                  >
-                  <span
-                    v-if="errors.mail"
-                    class="text-red-700 text-xs font-bold"
-                    >{{ errors.mail }}</span
-                  >
-                </p>
-              </div>
-
               <div class="p-4 bg-white rounded-lg shadow-sm">
                 <span
                   class="inline-block mr-2 p-1 bg-red-700 text-white font-bold text-xs"
