@@ -26,7 +26,6 @@ const signOut = async () => {
   try {
     await logout().then((result) => {
       console.log(result);
-      // location.href = '/';
       const redirect = '/';
       router.push({ path: redirect });
     });
@@ -35,7 +34,7 @@ const signOut = async () => {
   }
 };
 
-const submit = handleSubmit(async (values) => {
+const submit = handleSubmit(async () => {
   deletedInfo.mail = currentUser.value?.mail;
   deletedInfo.deletedFlag = true;
 

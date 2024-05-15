@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-
-
 definePageMeta({
   layout: false,
 });
@@ -62,7 +60,20 @@ definePageMeta({
       </div>
     </div>
 
-    <section class="text-center">ここにもはいるよ。。。</section>
+    <section>
+      <p class="font-roboto font-bold text-main text-center">Roboto</p>
+      <p class="font-roboto font-normal text-sub text-center">Roboto</p>
+      <p class="font-roboto font-light text-spare text-center">Roboto</p>
+      <p class="font-noto font-bold text-caution text-center">
+        ここにもはいるよ。。。
+      </p>
+      <p class="font-noto font-normal text-accent text-center">
+        ここにもはいるよ。。。
+      </p>
+      <p class="font-noto font-light text-gold text-center">
+        ここにもはいるよ。。。
+      </p>
+    </section>
 
     <PageFooter />
   </div>
