@@ -4,7 +4,7 @@ import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import useErrorHandler from '@/composables/useErrorHandler';
-import type { ErrorsType } from '@/types/error';
+// import type { ErrorsType } from '@/types/error';
 
 const router = useRouter();
 const { checkUuid, updatePw } = useAuth();
@@ -77,35 +77,41 @@ const EyeOpen = ref(false);
 <template>
   <article class="contents__inner bg-gray-100 h-screen py-16 px-4">
     <div
-      class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
+      class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm"
     >
-      <div class="px-6 py-4 bg-indigo-600">
-        <h1 class="mb-2 text-xl font-medium text-center text-white">
-          パスワードの再設定画面
-        </h1>
+      <section class="w-full p-6 bg-main">
+        <hgroup>
+          <span
+            class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+            >RESET</span
+          >
+          <h1
+            class="mb-4 text-3xl text-center text-white font-noto font-normal"
+          >
+            パスワードの再設定画面
+          </h1>
 
-        <p class="mt-1 text-center text-gray-200 text-sm">
-          新しいパスワードを入力し、送信ボタンを押してください。
-        </p>
-      </div>
-      <div class="px-6 py-4">
+          <p class="mt-1 text-center text-gray-50 text-sm font-noto font-light">
+            新しいパスワードを入力し、送信ボタンを押してください。
+          </p>
+        </hgroup>
+      </section>
+      <div class="p-6">
         <form @submit.prevent="submit">
-          <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
             <div>
               <span
-                class="inline-block mr-2 p-1 bg-red-700 text-white font-bold text-xs"
+                class="inline-block mr-2 p-1 bg-caution text-white font-bold text-[10px]"
               >
                 必須
               </span>
-              <label
-                class="text-gray-700 dark:text-gray-200 font-bold"
-                for="password"
+              <label class="text-accent font-bold font-noto" for="password"
                 >パスワード</label
               >
               <div class="relative block w-full">
                 <input
                   id="password"
-                  class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-input border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                   :type="EyeOpen ? 'text' : 'password'"
                   placeholder="例) xxxxxxxxx"
                   aria-label="Password"
@@ -137,7 +143,7 @@ const EyeOpen = ref(false);
                 >
                 <span
                   v-if="errors.password"
-                  class="text-red-700 text-xs font-bold"
+                  class="text-caution text-xs font-bold"
                   >{{ errors.password }}</span
                 >
               </p>
@@ -148,15 +154,15 @@ const EyeOpen = ref(false);
             <p>
               <span
                 v-if="serverMessage"
-                class="text-red-700 text-xs font-bold"
+                class="text-caution text-xs font-bold"
                 >{{ serverMessage }}</span
               >
             </p>
             <button
-              class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+              class="px-6 py-2 text-sm font-medium tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
               type="submit"
             >
-              送信
+              設定
             </button>
           </div>
         </form>

@@ -8,7 +8,7 @@ import {
   TransitionChild,
   Switch,
 } from '@headlessui/vue';
-import { UserCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { UserIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
@@ -21,7 +21,6 @@ const { getDBUser, infoUpdate } = useAuth();
 let formData = new FormData();
 const users = ref<User[]>([]);
 
-
 const serverMessage = ref();
 
 const name = ref('');
@@ -30,8 +29,29 @@ const animal = ref('');
 const role = ref();
 const deleted = ref(false);
 
+const pageList = [
+  {
+    name: '2行',
+    value: 2,
+  },
+  {
+    name: '50行',
+    value: 50,
+  },
+  {
+    name: '100行',
+    value: 100,
+  },
+];
+const pageNumber = ref(pageList[0].value);
+
 const page = ref(1);
-const pageCount = 2;
+const pageCount = ref();
+pageCount.value = pageNumber.value;
+
+function rowsChange(newValue: number) {
+  pageCount.value = Number(newValue);
+}
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
@@ -176,17 +196,17 @@ async function displayAllUsers() {
   const userList = await allDBUsers();
   if (userList) {
     users.value = userList;
-  //   rows.value = users.value.slice(
-  //     (page.value - 1) * pageCount,
-  //     page.value * pageCount
-  //   );
+    //   rows.value = users.value.slice(
+    //     (page.value - 1) * pageCount,
+    //     page.value * pageCount
+    //   );
   }
 }
 
 const rows = computed(() => {
   return users.value.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount
+    (page.value - 1) * pageCount.value,
+    page.value * pageCount.value
   );
 });
 
@@ -198,50 +218,69 @@ definePageMeta({
 <template>
   <div>
     <NuxtLayout name="custom">
-      <section class="bg-white py-12">
-        <h1 class="mb-4 text-3xl font-medium text-center">登録ユーザー一覧</h1>
-        <p class="text-center text-gray-400 text-sm leading-relaxed">
-          登録されたユーザーが表示されています。全権限が与えられているので、操作にご注意を。
-        </p>
+      <section class="bg-bgBlue py-12">
+        <hgroup>
+          <span
+            class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+            >USER LIST</span
+          >
+          <h1 class="mb-4 text-3xl font-medium text-center font-noto">
+            登録ユーザー一覧
+          </h1>
+          <p
+            class="text-center text-gray-400 text-sm leading-relaxed font-noto"
+          >
+            登録されたユーザーが表示されています。全権限が与えられているので、操作にご注意を。
+          </p>
+        </hgroup>
       </section>
-      <article class="contents__inner bg-gray-100 py-16 px-4">
+      <article class="contents__inner bg-bgBlue pb-16 px-4">
         <section class="mx-auto p-4 bg-white rounded-lg shadow-sm">
-          <div class="pt-40 md:pt-20 lg:pt-12">
+          <div class="">
+            <div class="flex justify-end">
+              <USelect
+                v-model="pageNumber"
+                :options="pageList"
+                option-attribute="name"
+                class="w-24 mb-2"
+                @change="rowsChange"
+              />
+            </div>
             <dl
-              class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full bg-gray-800 text-gray-200"
+              class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 w-full bg-accent text-gray-200"
             >
               <dt
-                class="p-2 bg-gray-800 border-b border-gray-600 lg:border-0 font-normal text-sm"
+                class="p-2 bg-accent border-b border-gray-600 lg:border-0 font-normal text-sm"
               >
                 ID
               </dt>
               <dt
-                class="col-span-2 p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
+                class="col-span-2 p-2 bg-accent border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 名前
               </dt>
               <dt
-                class="col-span-2 p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
+                class="col-span-2 p-2 bg-accent border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 メールアドレス
               </dt>
               <dt
-                class="p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
+                class="p-2 bg-accent border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 動物名
               </dt>
               <dt
-                class="p-2 bg-gray-800 border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
+                class="p-2 bg-accent border-b border-l border-gray-600 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 権限
               </dt>
               <dt
-                class="p-2 bg-gray-800 border-b border-l border-r border-gray-600 md:border-r-0 lg:border-b-0 lg:border-l font-normal text-sm"
+                class="p-2 bg-accent border-b border-l border-r border-gray-600 md:border-r-0 lg:border-b-0 lg:border-l font-normal text-sm"
               >
                 削除
               </dt>
               <dt
-                class="col-span-2 p-2 border-b border-l border-r border-gray-600 lg:border-b-0 lg:border-l bg-gray-800 font-normal text-sm"
+                class="col-span-2 p-2 border-b border-l border-r border-gray-600 lg:border-b-0 lg:border-l bg-accent font-normal text-sm"
               >
                 操作
               </dt>
@@ -264,16 +303,17 @@ definePageMeta({
                 <NuxtImg
                   v-if="user.filename"
                   :src="`/avator/${user.filename}`"
-                  width="30"
-                  class=""
+                  width="44"
                   :alt="user.name || ''"
+                  class="rounded-full"
                 />
-                <UserCircleIcon
+                <div
                   v-else
-                  stroke-width="0.1"
-                  class="w-8 h-8text-gray-500"
-                />
-                <span class="ml-2">{{ user.name }}</span>
+                  class="inline-flex items-center justify-center rounded-full p-2.5 bg-gray-200"
+                >
+                  <UserIcon stroke-width="0.1" class="w-6 text-gray-500" />
+                </div>
+                <span class="ml-2 font-noto">{{ user.name }}</span>
               </dd>
               <dd
                 class="flex items-center col-span-2 p-2 border-b border-l border-r-0 border-gray-200 border-dotted sm:border-r lg:border-none"
@@ -281,21 +321,21 @@ definePageMeta({
                 {{ user.mail }}
               </dd>
               <dd
-                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none"
+                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none font-noto"
               >
                 {{ user.animal }}
               </dd>
               <dd
-                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none"
+                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none font-noto"
               >
                 <span
                   v-if="user.role === 'admin'"
-                  class="p-2 rounded-full bg-blue-600 text-white text-xs"
+                  class="p-2 border border-sub text-sub text-xs"
                   >管理者</span
                 >
                 <span
                   v-if="user.role === 'user'"
-                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-xs whitespace-nowrap"
+                  class="p-2 border border-accent text-accent text-xs whitespace-nowrap"
                   >ユーザー</span
                 >
               </dd>
@@ -304,7 +344,7 @@ definePageMeta({
               >
                 <span
                   v-if="user.deleted"
-                  class="p-2 border border-blue-600 text-blue-600 text-xs"
+                  class="p-2 border border-caution text-caution bg-white text-xs"
                   >削除対象</span
                 >
               </dd>
@@ -312,7 +352,7 @@ definePageMeta({
                 class="flex items-center justify-end col-span-2 p-2 border-l border-r border-gray-200 border-dotted lg:border-none whitespace-nowrap"
               >
                 <button
-                  class="mr-1 px-6 py-2 text-xs font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="mr-1 px-6 py-3 text-xs tracking-wide text-white capitalize transition-colors duration-300 transform bg-main rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 font-noto"
                   type="submit"
                   @click="
                     setIsOpen(true);
@@ -322,7 +362,7 @@ definePageMeta({
                   編集
                 </button>
                 <button
-                  class="px-2 py-2 text-xs font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-400 rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="px-6 py-2 text-sm tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                   @click="deleteUser(user)"
                 >
@@ -330,11 +370,13 @@ definePageMeta({
                 </button>
               </dd>
             </dl>
-            <UPagination
-              v-model="page"
-              :page-count="pageCount"
-              :total="users.length"
-            />
+            <div class="flex justify-center pt-6 border-t-2 border-accent">
+              <UPagination
+                v-model="page"
+                :page-count="pageCount"
+                :total="users.length"
+              />
+            </div>
           </div>
         </section>
 
@@ -351,7 +393,7 @@ definePageMeta({
                 leave="duration-150 ease-in"
                 leave-to="opacity-0"
               >
-                <DialogOverlay class="fixed inset-0 bg-gray-800 opacity-80" />
+                <DialogOverlay class="fixed inset-0 bg-accent opacity-80" />
               </TransitionChild>
 
               <TransitionChild
@@ -363,37 +405,50 @@ definePageMeta({
                 leave-to="opacity-0 scale-0"
               >
                 <div
-                  class="relative w-5/6 sm:w-full p-8 my-4 mx-auto overflow-y-auto bg-white rounded-lg"
+                  class="relative sm:w-full mx-auto overflow-y-auto bg-white rounded-lg"
                 >
-                  <button
-                    class="absolute top-2.5 right-2.5 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-                    @click="setIsOpen(false)"
-                  >
-                    <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-                  </button>
-                  <DialogTitle>
-                    <h1 class="mb-4 text-xl font-medium text-center">
-                      アカウント設定画面
-                    </h1>
-                  </DialogTitle>
-
-                  <DialogDescription>
-                    <p
-                      class="mt-1 px-4 text-left sm:text-center text-gray-600 text-sm leading-relaxed"
+                  <section class="w-full p-6 bg-main">
+                    <button
+                      class="absolute top-2.5 right-2.5 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                      @click="setIsOpen(false)"
                     >
-                      設定を変更する場合は、情報を更新してください。<br
-                        class="hidden sm:!block"
-                      />メールアドレスが重複している場合は更新できません。
-                    </p>
-                  </DialogDescription>
+                      <XMarkIcon
+                        class="h-6 w-6 text-white"
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <hgroup>
+                      <span
+                        class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+                        >SETTINGS</span
+                      >
+                      <DialogTitle>
+                        <h1
+                          class="mb-4 text-3xl text-center text-white font-noto font-normal"
+                        >
+                          アカウント設定画面
+                        </h1>
+                      </DialogTitle>
+
+                      <DialogDescription>
+                        <p
+                          class="mt-1 text-center text-gray-50 text-sm font-noto font-light"
+                        >
+                          設定を変更する場合は、情報を更新してください。<br
+                            class="hidden sm:!block"
+                          />メールアドレスが重複している場合は更新できません。
+                        </p>
+                      </DialogDescription>
+                    </hgroup>
+                  </section>
 
                   <form @submit.prevent="submit">
                     <div
-                      class="grid gap-6 mt-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                      class="grid gap-6 p-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                     >
                       <div class="col-span-1">
                         <label
-                          class="text-gray-700 dark:text-gray-200 text-lg font-bold"
+                          class="text-gray-700 font-bold font-noto"
                           for="name"
                           >名前</label
                         >
@@ -415,7 +470,7 @@ definePageMeta({
                           >
                           <span
                             v-if="errors.name"
-                            class="text-red-700 text-xs font-bold"
+                            class="text-caution text-xs font-bold"
                             >{{ errors.name }}</span
                           >
                         </p>
@@ -423,7 +478,7 @@ definePageMeta({
 
                       <div class="col-span-1">
                         <label
-                          class="text-gray-700 dark:text-gray-200 font-bold"
+                          class="text-gray-700 font-bold font-noto"
                           for="mail"
                           >メールアドレス</label
                         >
@@ -446,7 +501,7 @@ definePageMeta({
                           >
                           <span
                             v-if="errors.mail"
-                            class="text-red-700 text-xs font-bold"
+                            class="text-caution text-xs font-bold"
                             >{{ errors.mail }}</span
                           >
                         </p>
@@ -454,7 +509,7 @@ definePageMeta({
 
                       <div class="col-span-1">
                         <label
-                          class="text-gray-700 dark:text-gray-200 text-lg font-bold"
+                          class="text-gray-700 font-bold font-noto"
                           for="animal"
                           >好きな動物</label
                         >
@@ -476,7 +531,7 @@ definePageMeta({
                           >
                           <span
                             v-if="errors.animal"
-                            class="text-red-700 text-xs font-bold"
+                            class="text-caution text-xs font-bold"
                             >{{ errors.animal }}</span
                           >
                         </p>
@@ -484,7 +539,7 @@ definePageMeta({
 
                       <div class="col-span-1">
                         <label
-                          class="text-gray-700 dark:text-gray-200 font-bold"
+                          class="text-gray-700 font-bold font-noto"
                           for="role"
                           >役割</label
                         >
@@ -501,7 +556,7 @@ definePageMeta({
 
                       <div class="">
                         <label
-                          class="text-gray-700 dark:text-gray-200 font-bold"
+                          class="text-gray-700 font-bold font-noto"
                           for="deleted"
                           >削除</label
                         >
@@ -531,12 +586,12 @@ definePageMeta({
                         <p>
                           <span
                             v-if="serverMessage"
-                            class="text-red-700 text-xs font-bold"
+                            class="text-caution text-xs font-bold"
                             >{{ serverMessage }}</span
                           >
                         </p>
                         <button
-                          class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                          class="px-6 py-2 text-sm font-medium tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                           type="submit"
                         >
                           更新

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {
+  Squares2X2Icon,
   UsersIcon,
   Cog6ToothIcon,
   ListBulletIcon,
@@ -66,75 +67,121 @@ definePageMeta({
   <div>
     <NuxtLayout name="custom">
       <section class="bg-white py-12">
-        <h1 class="mb-4 text-3xl font-medium text-center">
-          管理者ダッシュボード
-        </h1>
-        <p class="text-center text-gray-400 text-sm leading-relaxed">
-          管理者専用の領域です。全権限が与えられているので、操作にご注意を。
-        </p>
+        <hgroup>
+          <span
+            class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+            >ADMIN DASHBOARD</span
+          >
+          <h1 class="mb-4 text-3xl font-medium text-center font-noto">
+            管理者ダッシュボード
+          </h1>
+          <p
+            class="text-center text-gray-400 text-sm leading-relaxed font-noto"
+          >
+            管理者専用の領域です。全権限が与えられているので、操作にご注意を。
+          </p>
+        </hgroup>
       </section>
-      <article class="contents__inner bg-gray-100 py-16 px-4">
-        <div
-          class="mx-auto p-4 overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
-        >
-          ここにメッセージが入る。
-        </div>
+      <article class="contents__inner bg-bgBlue py-16 px-4">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 mt-4">
           <div
-            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="relative bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100 sm:h-32"
           >
+            <div
+              class="absolute top-3 left-3 inline-flex items-center justify-center rounded-full p-1 bg-main"
+            >
+              <Squares2X2Icon class="w-4 h-4 text-white" />
+            </div>
+
             <NuxtLink
-              class="flex flex-col justify-center items-center"
+              class="flex flex-col justify-center items-center h-full p-6"
+              to="/admin/"
+            >
+              管理者ダッシュボード
+            </NuxtLink>
+          </div>
+
+          <div
+            class="relative bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+          >
+            <div
+              class="absolute top-3 left-3 inline-flex items-center justify-center rounded-full p-1 bg-main"
+            >
+              <UsersIcon class="w-4 h-4 text-white" />
+            </div>
+
+            <NuxtLink
+              class="flex flex-col justify-center items-center h-full p-6"
               to="/admin/users"
             >
-              <UsersIcon class="w-6 h-6 mb-2 text-sky-500" />
               ユーザー一覧
             </NuxtLink>
           </div>
 
           <div
-            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="relative bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100 sm:h-32"
           >
-            <NuxtLink
-              class="flex flex-col justify-center items-center"
-              to="/dashboard/settings"
+            <div
+              class="absolute top-3 left-3 inline-flex items-center justify-center rounded-full p-1 bg-main"
             >
-              <Cog6ToothIcon class="w-6 h-6 mb-2 text-sky-500" />
+              <Cog6ToothIcon class="w-4 h-4 text-white" />
+            </div>
+
+            <NuxtLink
+              class="flex flex-col justify-center items-center h-full p-6"
+              to="/admin/users"
+            >
               設定変更
             </NuxtLink>
           </div>
 
           <div
-            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="relative bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100 sm:h-32"
           >
+            <div
+              class="absolute top-3 left-3 inline-flex items-center justify-center rounded-full p-1 bg-main"
+            >
+              <ListBulletIcon class="w-4 h-4 text-white" />
+            </div>
+
             <NuxtLink
-              class="flex flex-col justify-center items-center"
+              class="flex flex-col justify-center items-center h-full p-6"
               to="/admin/cancel"
             >
-              <ListBulletIcon class="w-6 h-6 mb-2 text-sky-500" />
               現在の退会申請一覧
             </NuxtLink>
           </div>
 
           <div
-            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="relative bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100 sm:h-32"
           >
+            <div
+              class="absolute top-3 left-3 inline-flex items-center justify-center rounded-full p-1 bg-main"
+            >
+              <QueueListIcon class="w-4 h-4 text-white" />
+            </div>
+
             <NuxtLink
-              class="flex flex-col justify-center items-center"
+              class="flex flex-col justify-center items-center h-full p-6"
               to="/admin/pwreset"
             >
-              <QueueListIcon class="w-6 h-6 mb-2 text-sky-500" />
               パスワードリセット一覧
             </NuxtLink>
           </div>
+
           <div
-            class="p-6 bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100"
+            class="relative bg-white rounded-lg shadow-sm transition duration-300 ease-in-out hover:bg-sky-100 sm:h-32"
           >
-            <NuxtLink
-              class="flex flex-col justify-center items-center"
-              to="/dashboard"
+            <div
+              class="absolute top-3 left-3 inline-flex items-center justify-center rounded-full p-1 bg-main"
             >
-              <ComputerDesktopIcon class="w-6 h-6 mb-2 text-sky-500" />
+              <ComputerDesktopIcon class="w-4 h-4 text-white" />
+            </div>
+
+            <NuxtLink
+              class="flex flex-col justify-center items-center h-full p-6"
+              to="/dashboard/"
+            >
               ユーザー画面
             </NuxtLink>
           </div>

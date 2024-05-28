@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import {
-  Bars3Icon,
+  Bars3BottomRightIcon,
   XMarkIcon,
-  UserCircleIcon,
+  UserIcon,
+  ArrowRightStartOnRectangleIcon,
   Cog6ToothIcon,
   PencilIcon,
   ExclamationCircleIcon,
@@ -75,42 +76,33 @@ const menuBtnAction = (flag: boolean) => {
             :src="avator.image"
             width="36"
             :alt="avator.name || ''"
+            class="rounded-full"
           />
-          <UserCircleIcon
+          <div
             v-else
-            stroke-width="0.1"
-            class="w-10 h-10 text-gray-500"
-          />
+            class="inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50"
+          >
+            <UserIcon stroke-width="0.1" class="w-6 h-6 text-gray-700" />
+          </div>
         </div>
         <div class="hidden sm:!block mr-6">
           <button
             @click="signOut"
-            class="headerLogin flex items-center justify-center px-6 mt-4 text-sm font-medium tracking-wide text-gray-700 capitalize transition-all duration-200 transform border border-gray-300 rounded-lg sm:mt-0 gap-x-2 h-11 dark:text-white hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 focus:ring focus:ring-blue-300 dark:focus:ring-white/10 focus:ring-opacity-80"
+            class="headerLogin inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50 text-gray-700 transition-colors duration-300 transform hover:bg-main hover:text-white"
           >
-            ログアウト
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-              ></path>
-            </svg>
+            <ArrowRightStartOnRectangleIcon
+              class="h-6 w-6"
+              aria-hidden="true"
+            />
           </button>
         </div>
         <div class="flex">
           <button
             type="button"
-            class="naviWrap__open -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            class="naviWrap__open -m-2.5 inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50 text-gray-700 transition-colors duration-300 transform hover:bg-main hover:text-white"
             @click="menuBtnAction(true)"
           >
-            <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+            <Bars3BottomRightIcon class="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -125,7 +117,7 @@ const menuBtnAction = (flag: boolean) => {
         <div class="flex items-center justify-end">
           <button
             type="button"
-            class="menu__btn naviWrap__close -m-2.5 rounded-md p-2.5 text-gray-700"
+            class="menu__btn naviWrap__close -m-2.5 inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50 text-gray-700 transition-colors duration-300 transform hover:bg-main hover:text-white"
             @click="menuBtnAction(false)"
           >
             <XMarkIcon class="h-6 w-6" aria-hidden="true" />

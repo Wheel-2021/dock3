@@ -126,22 +126,28 @@ definePageMeta({
 <template>
   <div>
     <NuxtLayout name="custom">
-      <section class="bg-white py-12">
-        <h1 class="mb-4 text-3xl font-medium text-center">
-          アカウント設定画面
-        </h1>
-        <p
-          class="mt-1 px-4 text-left sm:text-center text-gray-600 text-sm leading-relaxed"
-        >
-          設定を変更する場合は、情報を更新してください。<br
-            class="hidden sm:!block"
-          />メールアドレスが重複している場合は更新できません。
-        </p>
+      <section class="bg-bgBlue py-12">
+        <hgroup>
+          <span
+            class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+            >SETTINGS</span
+          >
+          <h1 class="mb-4 text-3xl font-medium text-center font-noto">
+            アカウント設定画面
+          </h1>
+          <p
+            class="text-center text-gray-400 text-sm leading-relaxed font-noto"
+          >
+            設定を変更する場合は、情報を更新してください。<br
+              class="hidden sm:!block"
+            />メールアドレスが重複している場合は更新できません。
+          </p>
+        </hgroup>
       </section>
-      <article class="contents__inner bg-gray-100 py-12 px-4">
+      <article class="contents__inner bg-bgBlue pb-16 px-4">
         <div class="sm:flex"></div>
         <div
-          class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm dark:bg-gray-800"
+          class="w-8/12 min-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-sm"
         ></div>
         <div class="sm:px-6">
           <form @submit.prevent="submit">
@@ -149,14 +155,12 @@ definePageMeta({
               class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2 lg:grid-cols-3"
             >
               <div class="p-4 bg-white rounded-lg shadow-sm">
-                <label
-                  class="text-gray-700 dark:text-gray-200 text-lg font-bold"
-                  for="name"
+                <label class="text-accent font-bold font-noto" for="name"
                   >名前</label
                 >
                 <input
                   id="name"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 border border-gray-200 rounded-md bg-sky-50 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                  class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-input border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                   type="text"
                   placeholder="例) 山田 太郎"
                   aria-label="Name"
@@ -170,21 +174,19 @@ definePageMeta({
                   >
                   <span
                     v-if="errors.name"
-                    class="text-red-700 text-xs font-bold"
+                    class="text-caution text-xs font-bold"
                     >{{ errors.name }}</span
                   >
                 </p>
               </div>
 
               <div class="p-4 bg-white rounded-lg shadow-sm">
-                <label
-                  class="text-gray-700 dark:text-gray-200 font-bold"
-                  for="mail"
+                <label class="text-accent font-bold font-noto" for="mail"
                   >メールアドレス</label
                 >
                 <input
                   id="mail"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 border border-gray-200 rounded-md bg-sky-50 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                  class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-input border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                   type="email"
                   placeholder="例) xxxxx@xxxxx.xx"
                   aria-label="Email Address"
@@ -199,21 +201,19 @@ definePageMeta({
                   >
                   <span
                     v-if="errors.mail"
-                    class="text-red-700 text-xs font-bold"
+                    class="text-caution text-xs font-bold"
                     >{{ errors.mail }}</span
                   >
                 </p>
               </div>
 
               <div class="p-4 bg-white rounded-lg shadow-sm">
-                <label
-                  class="text-gray-700 dark:text-gray-200 text-lg font-bold"
-                  for="animal"
+                <label class="text-accent font-bold font-noto" for="animal"
                   >好きな動物</label
                 >
                 <input
                   id="animal"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 border border-gray-200 rounded-md bg-sky-50 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                  class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-input border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                   type="text"
                   placeholder="例) いぬ"
                   aria-label="Animal"
@@ -227,7 +227,7 @@ definePageMeta({
                   >
                   <span
                     v-if="errors.animal"
-                    class="text-red-700 text-xs font-bold"
+                    class="text-caution text-xs font-bold"
                     >{{ errors.animal }}</span
                   >
                 </p>
@@ -235,7 +235,7 @@ definePageMeta({
 
               <div class="p-4 bg-white rounded-lg shadow-sm">
                 <label
-                  class="text-gray-700 dark:text-gray-200 font-bold"
+                  class="text-accent font-bold font-noto"
                   for="passwordConfirmation"
                   >アバター</label
                 >
@@ -272,15 +272,13 @@ definePageMeta({
               </div>
 
               <div class="p-4 bg-white rounded-lg shadow-sm">
-                <label
-                  class="text-gray-700 dark:text-gray-200 font-bold"
-                  for="password"
+                <label class="text-accent font-bold font-noto" for="password"
                   >パスワード</label
                 >
                 <div class="relative block w-full">
                   <input
                     id="password"
-                    class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                    class="block w-full pl-4 pr-10 py-2 mt-2 text-gray-700 bg-input border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                     :type="EyeOpen ? 'text' : 'password'"
                     placeholder="パスワードを更新する場合のみ、入力してください"
                     aria-label="Password"
@@ -312,7 +310,7 @@ definePageMeta({
                   >
                   <span
                     v-if="errors.password"
-                    class="text-red-700 text-xs font-bold"
+                    class="text-caution text-xs font-bold"
                     >{{ errors.password }}</span
                   >
                 </p>
@@ -322,12 +320,12 @@ definePageMeta({
                 <p>
                   <span
                     v-if="serverMessage"
-                    class="text-red-700 text-xs font-bold"
+                    class="text-caution text-xs font-bold"
                     >{{ serverMessage }}</span
                   >
                 </p>
                 <button
-                  class="px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="px-6 py-2 text-sm font-medium tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                 >
                   更新

@@ -14,8 +14,6 @@ const displayDeleteUser = async () => {
   }
 };
 
-
-
 onMounted(() => {
   displayDeleteUser();
 });
@@ -27,15 +25,23 @@ definePageMeta({
 <template>
   <div>
     <NuxtLayout name="custom">
-      <section class="bg-white py-12">
-        <h1 class="mb-4 text-3xl font-medium text-center">
-          削除対象ユーザー一覧
-        </h1>
-        <p class="text-center text-gray-400 text-sm leading-relaxed">
-          退会するユーザーが表示されています。
-        </p>
+      <section class="bg-bgBlue py-12">
+        <hgroup>
+          <span
+            class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+            >CANCEL LIST</span
+          >
+          <h1 class="mb-4 text-3xl font-medium text-center font-noto">
+            削除対象ユーザー一覧
+          </h1>
+          <p
+            class="text-center text-gray-400 text-sm leading-relaxed font-noto"
+          >
+            退会するユーザーが表示されています。
+          </p>
+        </hgroup>
       </section>
-      <article class="contents__inner bg-gray-100 py-16 px-4">
+      <article class="contents__inner bg-bgBlue pb-16 px-4">
         <section class="mx-auto p-4 bg-white rounded-lg shadow-sm">
           <div class="relative pt-30 md:pt-20 lg:pt-12 overscroll-y-auto">
             <dl
@@ -141,6 +147,7 @@ definePageMeta({
                 }}
               </dd>
             </dl>
+            <div class="flex justify-center border-t-2 border-accent"></div>
           </div>
         </section>
       </article>

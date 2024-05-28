@@ -33,6 +33,6 @@ export default defineEventHandler(async (event) => {
   console.log('login', user);
   return {
     ...user,
-    message: 'ログイン成功！',
+    message: 'サインイン成功！',
   };
 });

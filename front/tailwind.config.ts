@@ -1,3 +1,5 @@
+
+
 export default {
   content: [
     './src/components/**/*.{js,vue,ts}',
@@ -21,6 +23,8 @@ export default {
         caution: '#BE123C',
         accent: '#27272A',
         gold: '#F9E088',
+        bgBlue: '#E9F8FD',
+        input: '#F1F1F1',
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
@@ -28,5 +32,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+
+  ],
 };
