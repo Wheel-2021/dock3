@@ -1,4 +1,33 @@
 <script lang="ts" setup>
+import {
+  Dialog,
+  DialogOverlay,
+  DialogTitle,
+  DialogDescription,
+  TransitionRoot,
+  TransitionChild,
+} from '@headlessui/vue';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
+import useImageUpload from '@/composables/useImageUpload';
+const image = ref();
+const { uploadFile, imgData, isErrorOpen, errorMessage } = useImageUpload();
+
+const isOpen = ref(false);
+const setIsOpen = (value: boolean) => {
+  isOpen.value = value;
+};
+
+const handleFileChange = (event: Event) => {
+  uploadFile(event);
+  if (!isErrorOpen.value) {
+    setIsOpen(true);
+  }
+};
+
+onMounted(() => {
+  image.value = imgData;
+});
+
 definePageMeta({
   layout: false,
 });
@@ -61,18 +90,106 @@ definePageMeta({
     </div>
 
     <section>
-      <p class="font-roboto font-bold text-main text-center">Roboto</p>
-      <p class="font-roboto font-normal text-sub text-center">Roboto</p>
-      <p class="font-roboto font-light text-spare text-center">Roboto</p>
-      <p class="font-noto font-bold text-caution text-center">
-        ここにもはいるよ。。。
-      </p>
-      <p class="font-noto font-normal text-accent text-center">
-        ここにもはいるよ。。。
-      </p>
-      <p class="font-noto font-light text-gold text-center">
-        ここにもはいるよ。。。
-      </p>
+      <div class="w-32 mx-auto">
+        <div class="flex items-center">
+          <span
+            class="inline-block mr-2 p-1 bg-accent text-white font-bold text-[10px]"
+          >
+            任意
+          </span>
+          <label
+            class="text-accent font-bold font-noto"
+            for="passwordConfirmation"
+            >アバター</label
+          >
+        </div>
+
+        <div
+          role="button"
+          tabindex="0"
+          class="imageButton block whitespace-nowrap overflow-hidden w-full px-4 py-2 mt-2 text-gray-400 bg-input border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
+        >
+          ファイルを選択
+        </div>
+        <input
+          id="imageInput"
+          name="imageInput"
+          type="file"
+          class="hidden"
+          @change="handleFileChange"
+        />
+        <p class="mt-2">
+          <span class="text-gray-400 text-xs">登録後でも設定できます</span>
+        </p>
+        <ErrorDialog
+          :isErrorDialog="isErrorOpen"
+          @update:isErrorDialog="isErrorOpen = $event"
+          :message="errorMessage"
+        />
+      </div>
+
+      <TransitionRoot :show="isOpen">
+        <Dialog
+          :open="isOpen"
+          class="fixed inset-0 z-50 overflow-y-auto"
+          @close="setIsOpen"
+        >
+          <div class="flex items-center justify-center min-h-screen">
+            <TransitionChild
+              enter="duration-150 ease-out"
+              enter-frame="opacity-0"
+              leave="duration-150 ease-in"
+              leave-to="opacity-0"
+            >
+              <DialogOverlay class="fixed inset-0 bg-accent opacity-80" />
+            </TransitionChild>
+
+            <TransitionChild
+              enter="duration-100 ease-out"
+              enter-from="opacity-0 scale-0"
+              enter-to="opacity-50 scale-100"
+              leave="duration-100 ease-in"
+              leave-from="opacity-50 scale-100"
+              leave-to="opacity-0 scale-0"
+            >
+              <div
+                class="relative sm:w-full mx-auto overflow-y-auto bg-white rounded-lg"
+              >
+                <section class="w-full p-6 bg-main">
+                  <button
+                    class="absolute top-2.5 right-2.5 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                    @click="setIsOpen(false)"
+                  >
+                    <XMarkIcon class="h-6 w-6 text-white" aria-hidden="true" />
+                  </button>
+                  <hgroup>
+                    <span
+                      class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+                      >CROP</span
+                    >
+                    <DialogTitle>
+                      <h1
+                        class="mb-4 text-3xl text-center text-white font-noto font-normal"
+                      >
+                        画像調整
+                      </h1>
+                    </DialogTitle>
+
+                    <DialogDescription>
+                      <p
+                        class="mt-1 text-center text-gray-50 text-sm font-noto font-light"
+                      >
+                        画像をお好みで調整してください。
+                      </p>
+                    </DialogDescription>
+                  </hgroup>
+                </section>
+                <Cropper v-if="image.value" :imageData="image.value" />
+              </div>
+            </TransitionChild>
+          </div>
+        </Dialog>
+      </TransitionRoot>
     </section>
 
     <PageFooter />

@@ -2,6 +2,7 @@
 const useImageUpload = () => {
   const uploadDataName = ref();
   const fileData = ref();
+  const imgData = ref();
   const isErrorOpen = ref<boolean>(false);
   const errorMessage = ref<string>('');
 
@@ -10,7 +11,6 @@ const useImageUpload = () => {
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
       fileData.value = file;
-      console.log(fileData);
 
       // 以下アラート対応
       const fileName = file.name;
@@ -19,10 +19,17 @@ const useImageUpload = () => {
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
       if (fileExtension && imageExtensions.includes(fileExtension)) {
         uploadDataName.value = fileName;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imgData.value = e.target?.result as string;
+        };
+
+        reader.readAsDataURL(file);
       } else {
         // alert('画像ファイルを選択してください。');
         errorMessage.value =
-          '画像ファイルを選択してください。<br />jpg・jpeg・png・gif・webp・svg拡張子が有効です。';
+          '画像ファイルを選択してください。\njpg・jpeg・png・gif・webp・svg拡張子が有効です。';
         isErrorOpen.value = true;
       }
     }
@@ -54,6 +61,7 @@ const useImageUpload = () => {
   return {
     uploadFile,
     fileData,
+    imgData,
     isErrorOpen,
     errorMessage,
   };

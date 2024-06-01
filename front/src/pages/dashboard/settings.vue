@@ -254,10 +254,13 @@ definePageMeta({
                   @change="uploadFile"
                 />
                 <ErrorDialog
-                  v-model:isErrorDialog="isErrorOpen"
+                  :isErrorDialog="isErrorOpen"
+                  @update:isErrorDialog="isErrorOpen = $event"
                   :message="errorMessage"
                 />
-                <!-- <p class="mt-2">
+                <!--
+                  v-model:isErrorDialog="isErrorOpen"
+                   <p class="mt-2">
                     <span class="text-gray-400 text-xs"
                       >登録後でも設定できます</span
                     >

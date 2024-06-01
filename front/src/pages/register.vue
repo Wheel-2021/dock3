@@ -12,7 +12,7 @@ const router = useRouter();
 const { signUp } = useAuth();
 const setDirName = 'avator';
 const serverMessage = ref();
-const formData = new FormData();
+// const formData = new FormData();
 
 const schema = object({
   name: string().required('必須項目です'),
