@@ -5,6 +5,13 @@ import 'vue-advanced-cropper/dist/style.css';
 const props = defineProps({
   imageData: String,
 });
+type Emits = {
+  (event: 'imageCropped', value: string): void;
+  (event: 'cropOut'): void;
+};
+
+const emits = defineEmits<Emits>();
+
 const img = props.imageData;
 // 1回目がundifinedになる
 console.log(img);
@@ -12,7 +19,7 @@ const cropperChange = () => {
   console.log('yes');
 };
 
-const getImage = ref(null);
+const getImage = ref<string | null>(null);
 const cropperRef = ref();
 const coordinates = ref({
   width: 0,
@@ -28,6 +35,10 @@ onMounted(() => {
     coordinates.value = newCordinates;
     getImage.value = canvas.toDataURL();
     console.log(getImage);
+    if (getImage.value !== null) {
+      emits('imageCropped', getImage.value);
+      emits('cropOut');
+    }
   };
 });
 </script>
@@ -55,7 +66,7 @@ onMounted(() => {
 <style lang="scss">
 .cropper {
   height: 300px;
-
+  width: 300px;
   background: #ddd;
 }
 </style>

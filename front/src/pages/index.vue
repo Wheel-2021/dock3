@@ -28,6 +28,14 @@ onMounted(() => {
   image.value = imgData;
 });
 
+const handleImageCropped = (croppedImage: string) => {
+  console.log(croppedImage);
+};
+
+const onCropOut = () => {
+  isOpen.value = false;
+};
+
 definePageMeta({
   layout: false,
 });
@@ -184,7 +192,12 @@ definePageMeta({
                     </DialogDescription>
                   </hgroup>
                 </section>
-                <Cropper v-if="image.value" :imageData="image.value" />
+                <Cropper
+                  v-if="image.value"
+                  :imageData="image.value"
+                  @imageCropped="handleImageCropped"
+                  @cropOut="onCropOut"
+                />
               </div>
             </TransitionChild>
           </div>

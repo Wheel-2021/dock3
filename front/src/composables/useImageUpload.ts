@@ -20,6 +20,7 @@ const useImageUpload = () => {
       if (fileExtension && imageExtensions.includes(fileExtension)) {
         uploadDataName.value = fileName;
 
+        // ここはファイルデータの取得
         const reader = new FileReader();
         reader.onload = (e) => {
           imgData.value = e.target?.result as string;
