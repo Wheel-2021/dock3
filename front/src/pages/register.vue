@@ -53,7 +53,8 @@ const handleError = useErrorHandler(errors);
 const { uploadFile, fileData } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
-  let { formData, newFileName } = prepareFormData(fileData, setDirName);
+  let { formData } = prepareFormData(fileData, setDirName);
+  const { newFileName } = prepareFormData(fileData, setDirName);
   userData.filename = newFileName;
   userData.name = values.name;
   userData.mail = values.mail;

@@ -15,7 +15,6 @@ const useImageUpload = () => {
       // 以下アラート対応
       const fileName = file.name;
       const fileExtension = fileName.split('.').pop()?.toLowerCase();
-
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
       if (fileExtension && imageExtensions.includes(fileExtension)) {
         uploadDataName.value = fileName;
@@ -24,9 +23,14 @@ const useImageUpload = () => {
         const reader = new FileReader();
         reader.onload = (e) => {
           imgData.value = e.target?.result as string;
+          console.log(imgData.value);
         };
 
         reader.readAsDataURL(file);
+
+        watch(imgData, (newImgData) => {
+          console.log('useImageUploadでimgDataが変化', newImgData);
+        });
       } else {
         // alert('画像ファイルを選択してください。');
         errorMessage.value =

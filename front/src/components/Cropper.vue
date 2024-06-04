@@ -8,13 +8,14 @@ const props = defineProps({
 type Emits = {
   (event: 'imageCropped', value: string): void;
   (event: 'cropOut'): void;
+  (event: 'resetImageData'): void;
 };
 
 const emits = defineEmits<Emits>();
 
-const img = props.imageData;
-// 1回目がundifinedになる
-console.log(img);
+let img = props.imageData;
+
+console.log('Cropper', img);
 const cropperChange = () => {
   console.log('yes');
 };
@@ -38,7 +39,9 @@ onMounted(() => {
     if (getImage.value !== null) {
       emits('imageCropped', getImage.value);
       emits('cropOut');
+      emits('resetImageData');
     }
+    img = '';
   };
 });
 </script>

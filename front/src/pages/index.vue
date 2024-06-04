@@ -9,8 +9,13 @@ import {
 } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import useImageUpload from '@/composables/useImageUpload';
-const image = ref();
-const { uploadFile, imgData, isErrorOpen, errorMessage } = useImageUpload();
+import { dataURLtoFile } from '@/utils/imageUtils';
+import Cropper from '~/components/Cropper.vue';
+import type { Ref } from 'vue';
+
+const selectedImage: Ref = ref('');
+const { uploadFile, fileData, imgData, isErrorOpen, errorMessage } =
+  useImageUpload();
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
@@ -25,15 +30,24 @@ const handleFileChange = (event: Event) => {
 };
 
 onMounted(() => {
-  image.value = imgData;
+  // selectedImage.value = imgData;
+  watchEffect(() => {
+    selectedImage.value = imgData;
+    console.log('indexでimgDataが変化', imgData.value);
+  });
 });
 
 const handleImageCropped = (croppedImage: string) => {
-  console.log(croppedImage);
+  const file = dataURLtoFile(croppedImage, fileData.value.name);
+  console.log(file);
 };
 
 const onCropOut = () => {
   isOpen.value = false;
+};
+
+const resetSelectedImage = () => {
+  selectedImage.value = '';
 };
 
 definePageMeta({
@@ -193,10 +207,11 @@ definePageMeta({
                   </hgroup>
                 </section>
                 <Cropper
-                  v-if="image.value"
-                  :imageData="image.value"
+                  v-if="selectedImage.value"
+                  :imageData="selectedImage.value"
                   @imageCropped="handleImageCropped"
                   @cropOut="onCropOut"
+                  @resetImageData="resetSelectedImage"
                 />
               </div>
             </TransitionChild>
