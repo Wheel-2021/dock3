@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import { CircleStencil, Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
+import type { Ref } from 'vue';
 
 const props = defineProps({
   imageData: String,
+  'stencil-size': Object,
+  'stencil-props': Object,
 });
+
 type Emits = {
   (event: 'imageCropped', value: string): void;
   (event: 'cropOut'): void;
@@ -12,13 +16,13 @@ type Emits = {
 };
 
 const emits = defineEmits<Emits>();
+const img: Ref = ref('');
+img.value = props.imageData;
 
-let img = props.imageData;
-
-console.log('Cropper', img);
-const cropperChange = () => {
-  console.log('yes');
-};
+console.log('Cropper');
+// const cropperChange = () => {
+//   console.log('yes');      @change="cropperChange"
+// };
 
 const getImage = ref<string | null>(null);
 const cropperRef = ref();
@@ -31,8 +35,9 @@ const coordinates = ref({
 let crop = () => {};
 onMounted(() => {
   crop = () => {
-    console.log(cropperRef.value);
+    // console.log(cropperRef.value);
     const { coordinates: newCordinates, canvas } = cropperRef.value.getResult();
+    // typeがimage/pngに変換されている
     coordinates.value = newCordinates;
     getImage.value = canvas.toDataURL();
     console.log(getImage);
@@ -41,7 +46,7 @@ onMounted(() => {
       emits('cropOut');
       emits('resetImageData');
     }
-    img = '';
+    img.value = '';
   };
 });
 </script>
@@ -52,10 +57,8 @@ onMounted(() => {
       class="cropper"
       :src="img"
       :stencil-component="CircleStencil"
-      :stencil-props="{
-        aspectRatio: 1 / 1,
-      }"
-      @change="cropperChange"
+      :stencil-props="props['stencil-props']"
+      :stencil-size="props['stencil-size']"
     />
     <button
       class="px-6 py-2 text-sm font-medium tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"

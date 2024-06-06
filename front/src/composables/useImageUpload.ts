@@ -5,7 +5,6 @@ const useImageUpload = () => {
   const imgData = ref();
   const isErrorOpen = ref<boolean>(false);
   const errorMessage = ref<string>('');
-
   const uploadFile = (event: Event) => {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
@@ -23,13 +22,12 @@ const useImageUpload = () => {
         const reader = new FileReader();
         reader.onload = (e) => {
           imgData.value = e.target?.result as string;
-          console.log(imgData.value);
         };
 
         reader.readAsDataURL(file);
 
-        watch(imgData, (newImgData) => {
-          console.log('useImageUploadでimgDataが変化', newImgData);
+        watch(imgData, () => {
+          console.log('useImageUploadでimgDataが変化');
         });
       } else {
         // alert('画像ファイルを選択してください。');

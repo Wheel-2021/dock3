@@ -13,7 +13,6 @@ export function prepareFormData(fileData: FileData, dirName: string) {
   if (fileData.value) {
     const extension = fileData.value.name.split('.').pop();
     newFileName = `${dirName}_${uuid}.${extension}`;
-
     formData.append('newFileName', newFileName);
     formData.append('dirName', dirName);
     if (fileData.value instanceof File) {

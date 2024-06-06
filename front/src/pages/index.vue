@@ -9,37 +9,44 @@ import {
 } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import useImageUpload from '@/composables/useImageUpload';
-import { dataURLtoFile } from '@/utils/imageUtils';
 import Cropper from '~/components/Cropper.vue';
 import type { Ref } from 'vue';
 
+const croppedImg: Ref = ref('');
 const selectedImage: Ref = ref('');
-const { uploadFile, fileData, imgData, isErrorOpen, errorMessage } =
-  useImageUpload();
+
+const { uploadFile, imgData, isErrorOpen, errorMessage } = useImageUpload();
 
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
+  if (!value) {
+    selectedImage.value = '';
+    console.log('trt');
+  }
 };
 
 const handleFileChange = (event: Event) => {
+  // inputでファイルを扱う
   uploadFile(event);
   if (!isErrorOpen.value) {
     setIsOpen(true);
   }
 };
-
+watchEffect(() => {
+  if (imgData.value) {
+    selectedImage.value = imgData;
+    console.log('watch発動');
+  }
+});
 onMounted(() => {
   // selectedImage.value = imgData;
-  watchEffect(() => {
-    selectedImage.value = imgData;
-    console.log('indexでimgDataが変化', imgData.value);
-  });
 });
 
 const handleImageCropped = (croppedImage: string) => {
-  const file = dataURLtoFile(croppedImage, fileData.value.name);
-  console.log(file);
+  // console.log(file);
+  croppedImg.value = croppedImage;
+  // console.log(croppedImg.value);
 };
 
 const onCropOut = () => {
@@ -140,6 +147,7 @@ definePageMeta({
           class="hidden"
           @change="handleFileChange"
         />
+        <NuxtImg v-if="croppedImg" :src="croppedImg" alt="Cropped Image" />
         <p class="mt-2">
           <span class="text-gray-400 text-xs">登録後でも設定できます</span>
         </p>
@@ -209,6 +217,13 @@ definePageMeta({
                 <Cropper
                   v-if="selectedImage.value"
                   :imageData="selectedImage.value"
+                  :stencil-props="{
+                    aspectRatio: 1 / 1,
+                  }"
+                  :stencil-size="{
+                    width: 280,
+                    height: 280,
+                  }"
                   @imageCropped="handleImageCropped"
                   @cropOut="onCropOut"
                   @resetImageData="resetSelectedImage"

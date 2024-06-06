@@ -1,12 +1,24 @@
 <script lang="ts" setup>
+import {
+  Dialog,
+  DialogOverlay,
+  DialogTitle,
+  DialogDescription,
+  TransitionRoot,
+  TransitionChild,
+} from '@headlessui/vue';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { useAuthUser, useAuth } from '@/composables/auth';
 import { useField, useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 import useImageUpload from '@/composables/useImageUpload';
+import { dataURLtoFile } from '@/utils/imageUtils';
+import Cropper from '~/components/Cropper.vue';
 import useErrorHandler from '@/composables/useErrorHandler';
 import { prepareFormData } from '@/utils/prepareImageFormData';
 import type { User } from '@/types/user';
+import type { Ref } from 'vue';
 
 const router = useRouter();
 const currentUser = useAuthUser();
@@ -22,6 +34,19 @@ const mail = ref('');
 const animal = ref('');
 const filename = ref('');
 const password = ref('');
+
+const selectedImage: Ref = ref('');
+const isOpen = ref(false);
+const setIsOpen = (value: boolean) => {
+  isOpen.value = value;
+};
+
+const handleFileChange = (event: Event) => {
+  uploadFile(event);
+  if (!isErrorOpen.value) {
+    setIsOpen(true);
+  }
+};
 
 const schema = object({
   // 必須項目は外す。
@@ -54,11 +79,16 @@ const userData: User = {
 };
 // veevalidateのエラー表示部分
 const handleError = useErrorHandler(errors);
-const { uploadFile, fileData, isErrorOpen, errorMessage } = useImageUpload();
+const { uploadFile, imgData, isErrorOpen, errorMessage } = useImageUpload();
 
 const submit = handleSubmit(async (values) => {
-  let { formData } = prepareFormData(fileData, setDirName);
-  const { newFileName } = prepareFormData(fileData, setDirName);
+  const imageFile = dataURLtoFile(imgData.value, 'image.png');
+  //prepareFormDataを通過するとその回数分uuidの名前が変わるので注意
+  let { formData, newFileName } = prepareFormData(
+    { value: imageFile },
+    setDirName
+  );
+
   formData.append('userId', userDBData?.user._id || '');
 
   if (newFileName) {
@@ -106,8 +136,19 @@ const submit = handleSubmit(async (values) => {
 }, handleError);
 
 const EyeOpen = ref(false);
+const handleImageCropped = (croppedImage: string) => {
+  imgData.value = croppedImage;
+};
 
-onMounted(async () => {
+const onCropOut = () => {
+  isOpen.value = false;
+};
+
+const resetSelectedImage = () => {
+  console.log(selectedImage.value);
+  selectedImage.value = '';
+};
+onMounted(() => {
   if (userDBData && userDBData.user) {
     name.value = userDBData.user.name;
     mail.value = userDBData.user.mail;
@@ -116,6 +157,9 @@ onMounted(async () => {
       filename.value = `/${setDirName}/${userDBData.user.filename}`;
     }
   }
+  watchEffect(() => {
+    selectedImage.value = imgData;
+  });
 });
 
 definePageMeta({
@@ -251,28 +295,95 @@ definePageMeta({
                   name="imageInput"
                   type="file"
                   class="hidden"
-                  @change="uploadFile"
+                  @change="handleFileChange"
                 />
                 <ErrorDialog
                   :isErrorDialog="isErrorOpen"
                   @update:isErrorDialog="isErrorOpen = $event"
                   :message="errorMessage"
                 />
-                <!--
-                  v-model:isErrorDialog="isErrorOpen"
-                   <p class="mt-2">
-                    <span class="text-gray-400 text-xs"
-                      >登録後でも設定できます</span
-                    >
-                  </p> -->
-                <!-- <NuxtImg
-                    v-if="filename"
-                    :src="filename"
-                    width="36"
-                    alt="アバター"
-                    class="mt-2"
-                  /> -->
               </div>
+
+              <TransitionRoot :show="isOpen">
+                <Dialog
+                  :open="isOpen"
+                  class="fixed inset-0 z-50 overflow-y-auto"
+                  @close="setIsOpen"
+                >
+                  <div class="flex items-center justify-center min-h-screen">
+                    <TransitionChild
+                      enter="duration-150 ease-out"
+                      enter-frame="opacity-0"
+                      leave="duration-150 ease-in"
+                      leave-to="opacity-0"
+                    >
+                      <DialogOverlay
+                        class="fixed inset-0 bg-accent opacity-80"
+                      />
+                    </TransitionChild>
+
+                    <TransitionChild
+                      enter="duration-100 ease-out"
+                      enter-from="opacity-0 scale-0"
+                      enter-to="opacity-50 scale-100"
+                      leave="duration-100 ease-in"
+                      leave-from="opacity-50 scale-100"
+                      leave-to="opacity-0 scale-0"
+                    >
+                      <div
+                        class="relative sm:w-full mx-auto overflow-y-auto bg-white rounded-lg"
+                      >
+                        <section class="w-full p-6 bg-main">
+                          <button
+                            class="absolute top-2.5 right-2.5 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                            @click="setIsOpen(false)"
+                          >
+                            <XMarkIcon
+                              class="h-6 w-6 text-white"
+                              aria-hidden="true"
+                            />
+                          </button>
+                          <hgroup>
+                            <span
+                              class="block w-fit mx-auto mb-1 px-1 py-0.5 font-roboto bg-accent text-gold text-[10px]"
+                              >CROP</span
+                            >
+                            <DialogTitle>
+                              <h1
+                                class="mb-4 text-3xl text-center text-white font-noto font-normal"
+                              >
+                                画像調整
+                              </h1>
+                            </DialogTitle>
+
+                            <DialogDescription>
+                              <p
+                                class="mt-1 text-center text-gray-50 text-sm font-noto font-light"
+                              >
+                                画像をお好みで調整してください。
+                              </p>
+                            </DialogDescription>
+                          </hgroup>
+                        </section>
+                        <Cropper
+                          v-if="selectedImage.value"
+                          :imageData="selectedImage.value"
+                          :stencil-props="{
+                            aspectRatio: 1 / 1,
+                          }"
+                          :stencil-size="{
+                            width: 280,
+                            height: 280,
+                          }"
+                          @imageCropped="handleImageCropped"
+                          @cropOut="onCropOut"
+                          @resetImageData="resetSelectedImage"
+                        />
+                      </div>
+                    </TransitionChild>
+                  </div>
+                </Dialog>
+              </TransitionRoot>
 
               <div class="p-4 bg-white rounded-lg shadow-sm">
                 <label class="text-accent font-bold font-noto" for="password"
