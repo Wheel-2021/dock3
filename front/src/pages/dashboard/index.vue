@@ -54,7 +54,7 @@ definePageMeta({
 
             <NuxtLink
               class="flex flex-col justify-center items-center h-full p-6"
-              to="/admin/"
+              to="/dashboard/"
             >
               ダッシュボード
             </NuxtLink>

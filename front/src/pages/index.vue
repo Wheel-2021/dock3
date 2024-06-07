@@ -22,7 +22,6 @@ const setIsOpen = (value: boolean) => {
   isOpen.value = value;
   if (!value) {
     selectedImage.value = '';
-    console.log('trt');
   }
 };
 
@@ -36,7 +35,6 @@ const handleFileChange = (event: Event) => {
 watchEffect(() => {
   if (imgData.value) {
     selectedImage.value = imgData;
-    console.log('watch発動');
   }
 });
 onMounted(() => {
@@ -44,9 +42,7 @@ onMounted(() => {
 });
 
 const handleImageCropped = (croppedImage: string) => {
-  // console.log(file);
   croppedImg.value = croppedImage;
-  // console.log(croppedImg.value);
 };
 
 const onCropOut = () => {

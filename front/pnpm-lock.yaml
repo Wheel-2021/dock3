@@ -26,9 +26,6 @@ importers:
       cookie-signature:
         specifier: ^1.2.1
         version: 1.2.1
-      cropperjs:
-        specifier: ^1.6.2
-        version: 1.6.2
       ioredis:
         specifier: ^5.3.2
         version: 5.4.1
@@ -2487,9 +2484,6 @@ packages:
   cronstrue@2.49.0:
     resolution: {integrity: sha512-FWZBqdStQaPR8ZTBQGALh1EK9Hl1HcG70dyGvD1rKLPafFO3H73o38dz/e8YkIlbLn3JxmBI/f6Doe3Nh+DcEQ==}
     hasBin: true
-
-  cropperjs@1.6.2:
-    resolution: {integrity: sha512-nhymn9GdnV3CqiEHJVai54TULFAE3VshJTXSqSJKa8yXAKyBKDWdhHarnlIPrshJ0WMFTGuFvG02YjLXfPiuOA==}
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -9338,8 +9332,6 @@ snapshots:
   croner@8.0.2: {}
 
   cronstrue@2.49.0: {}
-
-  cropperjs@1.6.2: {}
 
   cross-spawn@7.0.3:
     dependencies:

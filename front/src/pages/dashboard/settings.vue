@@ -39,6 +39,9 @@ const selectedImage: Ref = ref('');
 const isOpen = ref(false);
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;
+  if (!value) {
+    selectedImage.value = '';
+  }
 };
 
 const handleFileChange = (event: Event) => {
@@ -81,19 +84,18 @@ const userData: User = {
 const handleError = useErrorHandler(errors);
 const { uploadFile, imgData, isErrorOpen, errorMessage } = useImageUpload();
 
+let formData = new FormData();
 const submit = handleSubmit(async (values) => {
-  const imageFile = dataURLtoFile(imgData.value, 'image.png');
-  //prepareFormDataを通過するとその回数分uuidの名前が変わるので注意
-  let { formData, newFileName } = prepareFormData(
-    { value: imageFile },
-    setDirName
-  );
+  // roleがadminでも更新するとuserになる
+  if (imgData.value) {
+    const imageFile = dataURLtoFile(imgData.value, 'image.png');
+    //prepareFormDataを通過するとその回数分uuidの名前が変わるので注意
+    const result = prepareFormData({ value: imageFile }, setDirName);
+    userData.filename = result.newFileName;
+    formData = result.formData;
+  }
 
   formData.append('userId', userDBData?.user._id || '');
-
-  if (newFileName) {
-    userData.filename = newFileName;
-  }
 
   if (values.password) {
     userData.password = values.password;
@@ -106,12 +108,12 @@ const submit = handleSubmit(async (values) => {
       userData[field] = values[field];
     }
   });
-  console.log('settings', userData);
+
   formData.append('body', JSON.stringify(userData));
 
   try {
     const result = await infoUpdate(formData);
-    console.log('settings.vue', result);
+
     if (result && 'message' in result) {
       if (result.message === '更新成功！') {
         serverMessage.value =
@@ -145,7 +147,6 @@ const onCropOut = () => {
 };
 
 const resetSelectedImage = () => {
-  console.log(selectedImage.value);
   selectedImage.value = '';
 };
 onMounted(() => {
@@ -158,7 +159,9 @@ onMounted(() => {
     }
   }
   watchEffect(() => {
-    selectedImage.value = imgData;
+    if (imgData.value) {
+      selectedImage.value = imgData;
+    }
   });
 });
 

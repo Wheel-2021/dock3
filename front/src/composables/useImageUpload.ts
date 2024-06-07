@@ -26,9 +26,9 @@ const useImageUpload = () => {
 
         reader.readAsDataURL(file);
 
-        watch(imgData, () => {
-          console.log('useImageUploadでimgDataが変化');
-        });
+        // watch(imgData, () => {
+        //   console.log('useImageUploadでimgDataが変化');
+        // });
       } else {
         // alert('画像ファイルを選択してください。');
         errorMessage.value =

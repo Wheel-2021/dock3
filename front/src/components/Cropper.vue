@@ -20,9 +20,6 @@ const img: Ref = ref('');
 img.value = props.imageData;
 
 console.log('Cropper');
-// const cropperChange = () => {
-//   console.log('yes');      @change="cropperChange"
-// };
 
 const getImage = ref<string | null>(null);
 const cropperRef = ref();
@@ -35,7 +32,7 @@ const coordinates = ref({
 let crop = () => {};
 onMounted(() => {
   crop = () => {
-    // console.log(cropperRef.value);
+
     const { coordinates: newCordinates, canvas } = cropperRef.value.getResult();
     // typeがimage/pngに変換されている
     coordinates.value = newCordinates;
@@ -46,12 +43,12 @@ onMounted(() => {
       emits('cropOut');
       emits('resetImageData');
     }
-    img.value = '';
+
   };
 });
 </script>
 <template>
-  <div class="">
+  <div class="bg-white">
     <cropper
       ref="cropperRef"
       class="cropper"
@@ -60,19 +57,21 @@ onMounted(() => {
       :stencil-props="props['stencil-props']"
       :stencil-size="props['stencil-size']"
     />
-    <button
-      class="px-6 py-2 text-sm font-medium tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-      @click="crop"
-      type="button"
-    >
-      確定
-    </button>
+    <div class="flex justify-center py-2">
+      <button
+        class="px-6 py-2 text-sm font-medium tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+        @click="crop"
+        type="button"
+      >
+        確定
+      </button>
+    </div>
   </div>
 </template>
 <style lang="scss">
 .cropper {
   height: 300px;
   width: 300px;
-  background: #ddd;
+  background: #fff;
 }
 </style>
