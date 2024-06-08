@@ -80,73 +80,77 @@ definePageMeta({
               </dt>
             </dl>
 
-            <dl
-              class="grid lg:gap-2 grid-cols-3 md:grid-cols-5 lg:grid-cols-7 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b lg:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
-              v-for="(user, index) in users"
-              :key="index"
-            >
-              <dt
-                class="flex items-center justify-end col-span-1 p-2 border-b border-l border-gray-200 border-dotted lg:border-none font-normal"
+            <div v-if="users && users.length">
+              <dl
+                class="grid lg:gap-2 grid-cols-3 md:grid-cols-5 lg:grid-cols-7 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b lg:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
+                v-for="(user, index) in users"
+                :key="index"
               >
-                {{ user.id }}
-              </dt>
+                <dt
+                  class="flex items-center justify-end col-span-1 p-2 border-b border-l border-gray-200 border-dotted lg:border-none font-normal"
+                >
+                  {{ user.id }}
+                </dt>
 
-              <dd
-                class="flex items-center col-span-2 p-2 border-b border-l border-gray-200 border-dotted lg:border-none"
-              >
-                <NuxtImg
-                  v-if="user.filename"
-                  :src="`/avator/${user.filename}`"
-                  width="30"
-                  class=""
-                  :alt="user.name || ''"
-                />
-                <UserCircleIcon
-                  v-else
-                  stroke-width="0.1"
-                  class="w-8 h-8text-gray-500"
-                />
-                <span class="ml-2">{{ user.name }}</span>
-              </dd>
+                <dd
+                  class="flex items-center col-span-2 p-2 border-b border-l border-gray-200 border-dotted lg:border-none"
+                >
+                  <NuxtImg
+                    v-if="user.filename"
+                    :src="`/avator/${user.filename}`"
+                    width="30"
+                    class=""
+                    :alt="user.name || ''"
+                  />
+                  <UserCircleIcon
+                    v-else
+                    stroke-width="0.1"
+                    class="w-8 h-8text-gray-500"
+                  />
+                  <span class="ml-2">{{ user.name }}</span>
+                </dd>
 
-              <dd
-                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted lg:border-none"
-              >
-                <span
-                  v-if="user.role === 'admin'"
-                  class="p-2 rounded-full bg-blue-600 text-white text-xs"
-                  >管理者</span
+                <dd
+                  class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted lg:border-none"
                 >
-                <span
-                  v-if="user.role === 'user'"
-                  class="p-2 rounded-full border border-blue-600 text-blue-600 text-xs whitespace-nowrap"
-                  >ユーザー</span
+                  <span
+                    v-if="user.role === 'admin'"
+                    class="p-2 rounded-full bg-blue-600 text-white text-xs"
+                    >管理者</span
+                  >
+                  <span
+                    v-if="user.role === 'user'"
+                    class="p-2 rounded-full border border-blue-600 text-blue-600 text-xs whitespace-nowrap"
+                    >ユーザー</span
+                  >
+                </dd>
+                <dd
+                  class="flex items-center p-2 border-b border-l border-r border-gray-200 border-dotted md:border-r-0 lg:border-none"
                 >
-              </dd>
-              <dd
-                class="flex items-center p-2 border-b border-l border-r border-gray-200 border-dotted md:border-r-0 lg:border-none"
-              >
-                <span
-                  v-if="user.deleted"
-                  class="p-2 border border-blue-600 text-blue-600 text-xs"
-                  >削除対象</span
+                  <span
+                    v-if="user.deleted"
+                    class="p-2 border border-blue-600 text-blue-600"
+                    >削除対象</span
+                  >
+                </dd>
+                <dd
+                  class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none"
                 >
-              </dd>
-              <dd
-                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none"
-              >
-                {{ new Date(user.deletedAt).toLocaleString() }}
-              </dd>
-              <dd
-                class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none text-red-600"
-              >
-                {{
-                  new Date(
-                    new Date(user.deletedAt).getTime() + 7 * 24 * 60 * 60 * 1000
-                  ).toLocaleString()
-                }}
-              </dd>
-            </dl>
+                  {{ new Date(user.deletedAt).toLocaleString() }}
+                </dd>
+                <dd
+                  class="flex items-center col-span-1 p-2 border-b border-l border-gray-200 border-dotted md:border-b-0 lg:border-none text-red-600"
+                >
+                  {{
+                    new Date(
+                      new Date(user.deletedAt).getTime() +
+                        7 * 24 * 60 * 60 * 1000
+                    ).toLocaleString()
+                  }}
+                </dd>
+              </dl>
+            </div>
+            <p v-else class="p-2">まだありません</p>
             <div class="flex justify-center border-t-2 border-accent"></div>
           </div>
         </section>

@@ -77,7 +77,7 @@ const userData: User = {
   animal: '',
   password: '',
   filename: '',
-  role: 'user',
+  role: '',
   deleted: false,
 };
 // veevalidateのエラー表示部分

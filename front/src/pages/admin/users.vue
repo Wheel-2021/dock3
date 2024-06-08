@@ -31,8 +31,8 @@ const deleted = ref(false);
 
 const pageList = [
   {
-    name: '2行',
-    value: 2,
+    name: '10行',
+    value: 10,
   },
   {
     name: '50行',
@@ -352,7 +352,7 @@ definePageMeta({
                 class="flex items-center justify-end col-span-2 p-2 border-l border-r border-gray-200 border-dotted lg:border-none whitespace-nowrap"
               >
                 <button
-                  class="mr-1 px-6 py-3 text-xs tracking-wide text-white capitalize transition-colors duration-300 transform bg-main rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 font-noto"
+                  class="mr-1 px-6 py-2 text-xs tracking-wide text-white capitalize transition-colors duration-300 transform bg-accent rounded-lg whitespace-nowrap hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 font-noto"
                   type="submit"
                   @click="
                     setIsOpen(true);
@@ -362,7 +362,7 @@ definePageMeta({
                   編集
                 </button>
                 <button
-                  class="px-6 py-2 text-sm tracking-wide text-white font-noto capitalize transition-colors duration-300 transform bg-accent rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                  class="px-6 py-2 tracking-wide text-white text-xs font-noto capitalize transition-colors duration-300 transform bg-caution rounded-full hover:bg-spare focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                   type="submit"
                   @click="deleteUser(user)"
                 >
@@ -375,6 +375,9 @@ definePageMeta({
                 v-model="page"
                 :page-count="pageCount"
                 :total="users.length"
+                :ui="{
+                  base: '',
+                }"
               />
             </div>
           </div>

@@ -65,7 +65,7 @@ definePageMeta({
                 リセット日時
               </dt>
             </dl>
-
+            <div v-if="uuides && uuides.length">
             <dl
               class="grid lg:gap-2 grid-cols-1 sm:grid-cols-3 w-full lg:py-2 odd:bg-gray-50 even:bg-white border-gray-200 border-dotted border-r border-b sm:border-r-0 text-sm transition-colors duration-300 transform hover:bg-blue-50"
               v-for="(uuid, index) in uuides"
@@ -88,6 +88,9 @@ definePageMeta({
                 {{ new Date(uuid.expires).toLocaleString() }}
               </dd>
             </dl>
+            </div>
+
+                        <p v-else class="p-2">まだありません</p>
             <div class="flex justify-center border-t-2 border-accent"></div>
           </div>
         </section>

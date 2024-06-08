@@ -25,12 +25,7 @@ const useImageUpload = () => {
         };
 
         reader.readAsDataURL(file);
-
-        // watch(imgData, () => {
-        //   console.log('useImageUploadでimgDataが変化');
-        // });
       } else {
-        // alert('画像ファイルを選択してください。');
         errorMessage.value =
           '画像ファイルを選択してください。\njpg・jpeg・png・gif・webp・svg拡張子が有効です。';
         isErrorOpen.value = true;

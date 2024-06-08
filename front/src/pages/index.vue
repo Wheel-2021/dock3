@@ -37,9 +37,7 @@ watchEffect(() => {
     selectedImage.value = imgData;
   }
 });
-onMounted(() => {
-  // selectedImage.value = imgData;
-});
+
 
 const handleImageCropped = (croppedImage: string) => {
   croppedImg.value = croppedImage;

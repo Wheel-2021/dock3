@@ -71,30 +71,48 @@ const menuBtnAction = (flag: boolean) => {
       </div>
       <div class="flex items-center justify-end">
         <div class="mr-4">
-          <NuxtImg
-            v-if="avator.image"
-            :src="avator.image"
-            width="36"
-            :alt="avator.name || ''"
-            class="rounded-full"
-          />
-          <div
-            v-else
-            class="inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50"
+          <UTooltip
+            :text="avator.name || ''"
+            :ui="{
+              base: 'text-[11px] p-2 leading-none font-noto',
+              background: 'bg-gray-900',
+              color: 'text-white',
+            }"
           >
-            <UserIcon stroke-width="0.1" class="w-6 h-6 text-gray-700" />
-          </div>
+            <NuxtImg
+              v-if="avator.image"
+              :src="avator.image"
+              width="36"
+              :alt="avator.name || ''"
+              class="rounded-full"
+            />
+            <div
+              v-else
+              class="inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50"
+            >
+              <UserIcon stroke-width="0.1" class="w-6 h-6 text-gray-700" />
+            </div>
+          </UTooltip>
         </div>
         <div class="hidden sm:!block mr-6">
-          <button
-            @click="signOut"
-            class="headerLogin inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50 text-gray-700 transition-colors duration-300 transform hover:bg-main hover:text-white"
+          <UTooltip
+            text="サインアウト"
+            :ui="{
+              base: 'text-[11px] p-2 leading-none font-noto',
+              background: 'bg-gray-900',
+              color: 'text-white',
+            }"
           >
-            <ArrowRightStartOnRectangleIcon
-              class="h-6 w-6"
-              aria-hidden="true"
-            />
-          </button>
+            <button
+              @click="signOut"
+              class="headerLogin inline-flex items-center justify-center rounded-full p-2.5 bg-gray-50 text-gray-700 transition-colors duration-300 transform hover:bg-main hover:text-white"
+            >
+              <ArrowRightStartOnRectangleIcon
+                class="h-6 w-6"
+                aria-hidden="true"
+              />
+            </button>
+          </UTooltip>
         </div>
         <div class="flex">
           <button
