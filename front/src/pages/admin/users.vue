@@ -372,12 +372,12 @@ definePageMeta({
             </dl>
             <div class="flex justify-center pt-6 border-t-2 border-accent">
               <UPagination
+                :active-button="{
+                  color: 'black',
+                }"
                 v-model="page"
                 :page-count="pageCount"
                 :total="users.length"
-                :ui="{
-                  base: '',
-                }"
               />
             </div>
           </div>

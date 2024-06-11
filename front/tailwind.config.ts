@@ -1,6 +1,6 @@
+import type { Config } from 'tailwindcss';
 
-
-export default {
+export default <Partial<Config>>{
   content: [
     './src/components/**/*.{js,vue,ts}',
     './src/layouts/**/*.vue',
@@ -25,6 +25,19 @@ export default {
         gold: '#F9E088',
         bgBlue: '#E9F8FD',
         input: '#F1F1F1',
+        gray: {
+          50: ' #F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9ca3af',
+          500: '#6b7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
+          950: '#071203',
+        },
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
@@ -32,7 +45,5 @@ export default {
       },
     },
   },
-  plugins: [
-
-  ],
+  plugins: [],
 };
